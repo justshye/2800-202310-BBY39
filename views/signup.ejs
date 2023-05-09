@@ -1,0 +1,9 @@
+<%- include('templates/header.ejs') %>
+  <h4>Sign Up:</h4>
+  <form action="/signupSubmit" method="POST">
+    <input type="text" placeholder="Username" name="username" required>
+    <input type="email" placeholder="Email" name="email" required>
+    <input type="password" placeholder="Password" name="password" required>
+    <button>Submit</button>
+  </form>
+<%- include('templates/footer.ejs') %>
