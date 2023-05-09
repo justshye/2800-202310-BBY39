@@ -1,3 +1,4 @@
+const { Configuration, OpenAIApi } = require("openai");
 require('./utils.js');
 
 require('dotenv').config();
@@ -37,6 +38,27 @@ var mongoStore = MongoStore.create({
     }
 });
 
+const configuration = new Configuration({
+	apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+async function getOpenAIResponse() {
+	const response = await openai.createCompletion({
+	  model: "text-davinci-003",
+	  prompt: "This is a test",
+	  temperature: 0,
+	  max_tokens: 1,
+	  top_p: 1.0,
+	  frequency_penalty: 0.0,
+	  presence_penalty: 0.0,
+	});
+  
+	const generatedMessage = response.data.choices[0].text;
+	console.log(generatedMessage); // Log the generated message
+	return response;
+}
+
 app.use(session({
     secret: node_session_secret,
         store: mongoStore, //default is memory, but we want to use mongo
@@ -67,6 +89,21 @@ app.use(express.static(__dirname + "/public"));
 // app.get('/', (req, res) => {
 // 	res.
 // });
+
+app.get('/openai', async (req, res) => {
+	try {
+	  const response = await getOpenAIResponse();
+	  const prompts = response.data.choices.map(choice => choice.prompt);
+	  res.render('openai', { prompts });
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Internal Server Error');
+	}
+  });
+
+  
+  
+  
 
 app.get("*", (req, res) => {
     res.status(404);
