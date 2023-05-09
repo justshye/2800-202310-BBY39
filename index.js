@@ -64,7 +64,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.get('/', (req, res) => {
     res.render("homepage", {
-        user: req.session.user,
+        user: req.session.username,
         authenticated: req.session.authenticated
     });
 });
