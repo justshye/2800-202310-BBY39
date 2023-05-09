@@ -1,6 +1,11 @@
 <%- include("templates/header") %>
 <h1>OpenAI</h1>
-<% prompts.forEach(function(prompt) { %>
-  <p><%= prompt %></p>
-<% }); %>
+<form action="/openai" method="GET">
+  <input type="text" name="prompt" placeholder="Enter your prompt">
+  <button type="submit">Generate Message</button>
+</form>
+<% if (prompt && generatedMessage) { %>
+  <p>Prompt: <%= prompt %></p>
+  <p>Generated Message: <%= generatedMessage %></p>
+<% } %>
 <%- include("templates/footer") %>
