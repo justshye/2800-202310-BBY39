@@ -68,6 +68,14 @@ app.use(express.static(__dirname + "/public"));
 // 	res.
 // });
 
+app.get('/signup', (req, res) => {
+    res.render('signup');
+});
+
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
 app.get("*", (req, res) => {
     res.status(404);
     res.render("404");

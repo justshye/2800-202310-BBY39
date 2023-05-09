@@ -1,0 +1,7 @@
+<%- include('templates/header.ejs') %>
+  <h4>Log In:</h4>
+  <form action="/loginSubmit" method="POST">
+    <input type="email" placeholder="Email" name="email" required>
+    <input type="password" placeholder="Password" name="password" required>
+  </form>
+<%- include('templates/footer.ejs') %>
