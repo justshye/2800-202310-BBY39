@@ -64,9 +64,12 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(express.static(__dirname + "/public"));
 
-// app.get('/', (req, res) => {
-// 	res.
-// });
+app.get('/', (req, res) => {
+    res.render("homepage", {
+        user: req.session.user,
+        authenticated: req.session.authenticated
+    });
+});
 
 app.get("*", (req, res) => {
     res.status(404);
