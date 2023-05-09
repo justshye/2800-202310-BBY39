@@ -1,0 +1,16 @@
+<%- include("templates/header") %>
+  <% if (validationError) { %>
+    <h2>Invalid Email/Password Combination:</h2>
+    <div><%= validationMessage %></div>
+    <br/>
+    <%- include("templates/back-to-login") %>
+  <% } else if (!userFound) { %>
+    <h2>User Not Found!</h2>
+    <br/>
+    <%- include("templates/back-to-login") %>
+  <% } else if (!correctPassword) { %>
+    <h2>Incorrect Password!</h2>
+    <br/>
+    <%- include("templates/back-to-login") %>
+  <% } %>
+<%- include("templates/footer") %>
