@@ -1,0 +1,19 @@
+<%- include("templates/header") %>
+    <% var imageSrc="[user's img filepath goes here]" ; %>
+        <p>
+            <%= user %>'s Profile
+        </p>
+        <img src="<%= imageSrc %>" style="width: 256px;" />
+        <form action="/">
+            <button>Friends</button>
+        </form>
+        <form action="/">
+            <button>Stats</button>
+        </form>
+        <form action="/">
+            <button>Home</button>
+        </form>
+        <form action="/logout">
+            <button>Log Out</button>
+        </form>
+        <%- include("templates/footer") %>

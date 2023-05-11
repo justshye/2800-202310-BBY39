@@ -210,6 +210,16 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+app.get('/profile', function(req, res) {
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else {
+    // render the profile template
+    res.render("profile", { user: req.session.username });
+  }
+});
+
+
 app.get('/openai', async (req, res) => {
 	try {
 	  const prompt = req.query.prompt || ''; // Get the prompt from the query parameter or use an empty string as the default
