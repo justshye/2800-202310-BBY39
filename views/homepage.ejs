@@ -9,17 +9,18 @@
             </form>
             </div>
         </div>
-    <% } else { %>
-        <div class="container text-center">
-            <div class="row">
-                <form action='/signup' method='get'>
-                    <button>Sign Up</button>
-                </form>
-                &nbsp;
-               <form action='/login' method='get'>
-                   <button>Login</button>
-            </form>
+        <%- include("templates/bottomnav") %>
+        <% } else { %>
+            <div class="container text-center">
+                <div class="row">
+                    <form action='/signup' method='get'>
+                        <button>Sign Up</button>
+                    </form>
+                    &nbsp;
+                    <form action='/login' method='get'>
+                        <button>Login</button>
+                    </form>
+                </div>
             </div>
-        </div>
+            <%- include("templates/footer") %> 
     <% } %>
-<%- include("templates/footer") %> 
