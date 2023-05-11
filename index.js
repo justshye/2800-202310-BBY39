@@ -25,6 +25,8 @@ const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
+const email_auto = process.env.EMAIL_AUTO;
+const email_password = process.env.EMAIL_PASSWORD;
 /* secret information */
 
 var { database } = include("./databaseConnection.js");
@@ -91,8 +93,8 @@ async function main() {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "moviemate2000@gmail.com", // generated ethereal user
-      pass: "alqztbqfxqhducol", // generated ethereal password
+      user: email_auto, // generated ethereal user
+      pass: email_password, // generated ethereal password
     },
   });
 
@@ -120,7 +122,7 @@ The MovieMate Support Team</p>`;
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"MovieMate 👻" <moviemate2000@gmail.com>', // sender address
+    from: `"MovieMate 👻" <${email_auto}>`, // sender address
     to: "nico140895@gmail.com", // list of receivers
     subject: "Password Reset", // Subject line
     text: textBody, // plain text body
@@ -132,7 +134,7 @@ The MovieMate Support Team</p>`;
 
   console.log("Message sent: %s", info.messageId);
 }
-// main().catch(console.error);
+main().catch(console.error);
 
 async function generateResetToken() {
   // Generate a random string or value to use as the reset token
@@ -203,8 +205,8 @@ app.post("/resetPassword", async (req, res) => {
       // Specify your email service provider and credentials
       service: "gmail",
       auth: {
-        user: "moviemate2000@gmail.com",
-        pass: "Sl@mSiblings1",
+        user: email_auto,
+        pass: email_password,
       },
     });
 
