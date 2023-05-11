@@ -219,6 +219,24 @@ app.get('/profile', function(req, res) {
   }
 });
 
+app.get('/stats', function(req, res) {
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else {
+    // render the profile template
+    res.render("stats", { user: req.session.username });
+  }
+});
+
+app.get('/friends', function(req, res) {
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else {
+    // render the profile template
+    res.render("friends", { user: req.session.username });
+  }
+});
+
 
 app.get('/openai', async (req, res) => {
 	try {
