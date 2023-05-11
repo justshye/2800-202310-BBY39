@@ -91,6 +91,16 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/watchlist', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist", {
+      user: req.session.username,
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+
 app.get("/signup", (req, res) => {
   res.render("signup");
 });
