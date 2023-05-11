@@ -236,11 +236,13 @@ app.post("/resetPassword", async (req, res) => {
   //   await transporter.sendMail(mailOptions);
 
     // 8. Handle successful email sending
-    res.status(200).send("Password reset link has been sent to your email.");
+    // res.status(200).send("Password reset link has been sent to your email.");
+    res.render("post-recover-password",{ login: "/login" });
   } catch (error) {
     // 9. Handle error
     console.error("Error sending password reset email:", error);
     res.status(500).send("An error occurred while sending the password reset email.");
+    res.render("post-recover-password");
   }
 });
 
