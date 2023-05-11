@@ -1,4 +1,5 @@
-require("./utils.js");
+const { Configuration, OpenAIApi } = require("openai");
+require('./utils.js');
 
 require("dotenv").config();
 
@@ -35,8 +36,29 @@ var mongoStore = MongoStore.create({
   },
 });
 
-app.use(
-  session({
+const configuration = new Configuration({
+	organization: process.env.OPENAI_ORGANIZATION_ID,
+	apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+async function getOpenAIResponse(prompt) {
+	const completion = await openai.createChatCompletion({
+		model: "gpt-3.5-turbo",
+		messages: [
+			{role: "user", content: prompt},
+		],
+		max_tokens: 10,
+		temperature: 0,
+		top_p: 1,
+		frequency_penalty: 0,
+		presence_penalty: 0,
+	});
+	console.log(completion.data.choices[0].message);
+	return completion.data.choices[0].message.content;
+  }
+
+app.use(session({
     secret: node_session_secret,
     store: mongoStore, //default is memory, but we want to use mongo
     saveUninitialized: false,
@@ -78,15 +100,15 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/loginSubmit", async (req, res) => {
-  var email = req.body.email;
+  var username = req.body.username;
   var password = req.body.password;
 
   const schema = Joi.object({
-    email: Joi.string().email().required(),
+    username: Joi.string().alphanum().required(),
     password: Joi.string().max(20).required(),
   });
 
-  const validationResult = schema.validate({ email, password });
+  const validationResult = schema.validate({ username, password });
 
   if (validationResult.error != null) {
     res.render("login-submit", {
@@ -97,8 +119,8 @@ app.post("/loginSubmit", async (req, res) => {
   }
 
   const result = await userCollection
-    .find({ email: email })
-    .project({ email: 1, username: 1, password: 1, user_type: 1, _id: 1 })
+    .find({ username: username })
+    .project({ username: 1, password: 1, user_type: 1, _id: 1 })
     .toArray();
 
   if (result.length != 1) {
@@ -111,7 +133,6 @@ app.post("/loginSubmit", async (req, res) => {
 
   if (await bcrypt.compare(password, result[0].password)) {
     req.session.authenticated = true;
-    req.session.email = email;
     req.session.cookie.maxAge = expireTime;
     req.session.username = result[0].username;
     req.session.user_type = result[0].user_type;
@@ -189,6 +210,23 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+app.get('/openai', async (req, res) => {
+	try {
+	  const prompt = req.query.prompt || ''; // Get the prompt from the query parameter or use an empty string as the default
+	  let response;
+	  if (prompt != '' ) {
+		 response = await getOpenAIResponse(prompt);
+	  } 
+	  else {
+		 response = '';
+	  }
+	  res.render('openai', { prompt, generatedMessage: response });
+	} catch (error) {
+	  console.error(error);
+	  res.status(500).send('Internal Server Error');
+	}
+  });
+  
 app.get("*", (req, res) => {
   res.status(404);
   res.render("404");
