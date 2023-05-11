@@ -82,7 +82,7 @@ function sessionValidation(req, res, next) {
 }
 
 // async..await is not allowed in global scope, must use a wrapper
-async function main() {
+async function sendEmail(email, resetToken, user) {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   // let testAccount = await nodemailer.createTestAccount();
@@ -98,10 +98,9 @@ async function main() {
     },
   });
 
-  const resetToken = "YOUR_RESET_TOKEN"; // Replace with your actual reset token
 
 // Plain text body
-const textBody = `Dear User,
+const textBody = `Dear ${user},
 
 You have requested to reset your password. To proceed with the password reset process, please click on the following link:
 
@@ -113,7 +112,7 @@ Thank you,
 The Support Team`;
 
 // HTML body
-const htmlBody = `<p>Dear User,</p>
+const htmlBody = `<p>Dear ${user},</p>
 <p>You have requested to reset your password. To proceed with the password reset process, please click on the following link:</p>
 <p><a href="http://example.com/reset/${resetToken}">Reset Password</a></p>
 <p>If you did not initiate this request, please ignore this email. Your current password will remain unchanged.</p>
@@ -123,7 +122,7 @@ The MovieMate Support Team</p>`;
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: `"MovieMate 👻" <${email_auto}>`, // sender address
-    to: "nico140895@gmail.com", // list of receivers
+    to: email, // list of receivers
     subject: "Password Reset", // Subject line
     text: textBody, // plain text body
     html: htmlBody, // html body
@@ -134,7 +133,7 @@ The MovieMate Support Team</p>`;
 
   console.log("Message sent: %s", info.messageId);
 }
-main().catch(console.error);
+// sendEmail().catch(console.error);
 
 async function generateResetToken() {
   // Generate a random string or value to use as the reset token
@@ -187,6 +186,7 @@ app.post("/resetPassword", async (req, res) => {
     // 2. Check if the email exists in the database
     const user = await userCollection.findOne({ email });
     console.log(email);
+    console.log(user.username);
     if (!user) {
       res.status(404).send("Email not found.");
       return;
@@ -195,31 +195,40 @@ app.post("/resetPassword", async (req, res) => {
     
 
     // 3. Generate a unique password reset token (you can use a library like uuid or crypto)
-    const resetToken = generateResetToken(); // Replace with your own implementation
+  const resetToken = await bcrypt.hash("your_reset_token_value", 10); // Replace "your_reset_token_value" with your own reset token value
+
+  // Store the reset token securely in the user's document in the database
+  await userCollection.findOneAndUpdate(
+    { email: email }, // Replace with the user's email for whom the reset token is generated
+    { $set: { resetToken: resetToken } },
+  );
+
 
     // 4. Save the reset token to your database for future verification
     // Save the token to the user's document in the database or any other desired approach
 
-    // 5. Create a Nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      // Specify your email service provider and credentials
-      service: "gmail",
-      auth: {
-        user: email_auto,
-        pass: email_password,
-      },
-    });
+    // // 5. Create a Nodemailer transporter
+    // const transporter = nodemailer.createTransport({
+    //   // Specify your email service provider and credentials
+    //   service: "gmail",
+    //   auth: {
+    //     user: email_auto,
+    //     pass: email_password,
+    //   },
+    // });
 
-    // 6. Compose the email
-    const mailOptions = {
-      from: "moviemate2000@gmail.com",
-      to: email,
-      subject: "Password Reset",
-      text: `Click on the following link to reset your password: http://example.com/reset/${resetToken}`,
-    };
+    sendEmail(email, resetToken, user.username);
 
-    // 7. Send the email
-    await transporter.sendMail(mailOptions);
+  //   // 6. Compose the email
+  //   const mailOptions = {
+  //     from: "moviemate2000@gmail.com",
+  //     to: email,
+  //     subject: "Password Reset",
+  //     text: `Click on the following link to reset your password: http://example.com/reset/${resetToken}`,
+  //   };
+
+  //   // 7. Send the email
+  //   await transporter.sendMail(mailOptions);
 
     // 8. Handle successful email sending
     res.status(200).send("Password reset link has been sent to your email.");
