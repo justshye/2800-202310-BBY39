@@ -99,6 +99,10 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
+app.get("/recover-password", (req, res) => {
+  res.render("recover-password");
+});
+
 app.post("/loginSubmit", async (req, res) => {
   var username = req.body.username;
   var password = req.body.password;
