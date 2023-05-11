@@ -245,10 +245,11 @@ app.post("/resetPassword", async (req, res) => {
 });
 
 app.get("/reset/:token", async (req, res) => {
+  console.log(req.params.token)
   res.render("reset-password", { token: req.params.token });
 });
 
-app.post("/reset/:token/changePassword", async (req, res) => {
+app.post("/reset/:token/changedPassword", async (req, res) => {
   res.render("password-changed");
 });
 
