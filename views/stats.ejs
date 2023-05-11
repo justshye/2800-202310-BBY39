@@ -1,2 +1,11 @@
 <%- include("templates/header") %>
+    <form action="/profile">
+        <button>Back</button>
+    </form>
+    <h1>
+        <%= user %>'s Stats
+    </h1>
+    <p>Total movies watched: <%= totalMoviesWatched %>
+    </p>
+    <p>Total watch time: <%= totalWatchTime %> minutes</p>
 <%- include("templates/footer") %>
