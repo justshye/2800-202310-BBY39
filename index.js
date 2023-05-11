@@ -27,6 +27,7 @@ const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
 const email_auto = process.env.EMAIL_AUTO;
 const email_password = process.env.EMAIL_PASSWORD;
+const node_env = process.env.NODE_ENV;
 /* secret information */
 
 var { database } = include("./databaseConnection.js");
@@ -97,14 +98,18 @@ async function sendEmail(email, resetToken, user) {
       pass: email_password, // generated ethereal password
     },
   });
-
-
+  let url = "";
+  if (node_env === "development") {
+    url = `http://localhost:4420/reset/${resetToken}`;
+  } else if (node_env === "production") {
+    url = `http://fwurnptkem.eu09.qoddiapp.com/reset/${resetToken}`;
+  }
 // Plain text body
 const textBody = `Dear ${user},
 
 You have requested to reset your password. To proceed with the password reset process, please click on the following link:
 
-Reset Password: http://example.com/reset/${resetToken}
+Reset Password: ${url}
 
 If you did not initiate this request, please ignore this email. Your current password will remain unchanged.
 
@@ -114,7 +119,7 @@ The Support Team`;
 // HTML body
 const htmlBody = `<p>Dear ${user},</p>
 <p>You have requested to reset your password. To proceed with the password reset process, please click on the following link:</p>
-<p><a href="http://example.com/reset/${resetToken}">Reset Password</a></p>
+<p><a href="${url}">Reset Password</a></p>
 <p>If you did not initiate this request, please ignore this email. Your current password will remain unchanged.</p>
 <p>Thank you,<br>
 The MovieMate Support Team</p>`;
@@ -238,6 +243,20 @@ app.post("/resetPassword", async (req, res) => {
     res.status(500).send("An error occurred while sending the password reset email.");
   }
 });
+
+app.get("/reset/:token", async (req, res) => {
+  res.render("reset-password", { token: req.params.token });
+});
+
+app.post("/reset/:token/changePassword", async (req, res) => {
+  res.render("password-changed");
+});
+
+
+
+
+
+
 
 
 app.post("/loginSubmit", async (req, res) => {
