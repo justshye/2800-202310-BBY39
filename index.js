@@ -100,15 +100,15 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/loginSubmit", async (req, res) => {
-  var email = req.body.email;
+  var username = req.body.username;
   var password = req.body.password;
 
   const schema = Joi.object({
-    email: Joi.string().email().required(),
+    username: Joi.string().alphanum().required(),
     password: Joi.string().max(20).required(),
   });
 
-  const validationResult = schema.validate({ email, password });
+  const validationResult = schema.validate({ username, password });
 
   if (validationResult.error != null) {
     res.render("login-submit", {
@@ -119,8 +119,8 @@ app.post("/loginSubmit", async (req, res) => {
   }
 
   const result = await userCollection
-    .find({ email: email })
-    .project({ email: 1, username: 1, password: 1, user_type: 1, _id: 1 })
+    .find({ username: username })
+    .project({ username: 1, password: 1, user_type: 1, _id: 1 })
     .toArray();
 
   if (result.length != 1) {
@@ -133,7 +133,6 @@ app.post("/loginSubmit", async (req, res) => {
 
   if (await bcrypt.compare(password, result[0].password)) {
     req.session.authenticated = true;
-    req.session.email = email;
     req.session.cookie.maxAge = expireTime;
     req.session.username = result[0].username;
     req.session.user_type = result[0].user_type;
