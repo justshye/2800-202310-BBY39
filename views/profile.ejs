@@ -1,34 +1,31 @@
 <%- include("templates/header") %>
-<style>
-.container {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
-<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-  <h3><%= user %>'s Profile</h3>
-</div>
-<br><br><br>
-
-<div class="container">
-  <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-    <div class="col">
-      <% var imageSrc="avatars/will smith.png" ; %>
-      <img src="<%= imageSrc %>" style="width: 256px;" />
+    <!-- <form method="POST" action="/updateProfile" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <button type="submit">Update profile</button>
+    </form> -->
+    <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
+        <h3><%= user %>'s Profile</h3>
     </div>
+    <br><br><br>
 
-    <p><%= email %></p>
-    <form action="/friends">
-      <button>Friends</button>
-    </form>
-    <form action="/stats">
-      <button>Stats</button>
-    </form>
-    <form action="/logout">
-      <button>Log Out</button>
-    </form>
-  </div>
-</div>
+    <div class="container d-flex justify-content-center">
+        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+            <div class="col">
+                <% var imageSrc="avatars/will smith.png" ; %>
+                <img src="<%= imageSrc %>" style="width: 256px;" />
+            </div>
 
+            <p style="color:lightgray;"><%= email %></p>
+            <form action="/friends">
+                <button>Friends</button>
+            </form>
+            <form action="/stats">
+                <button>Stats</button>
+            </form>
+            <form action="/logout">
+                <button>Log Out</button>
+            </form>
+        </div>
+        
+    </div>
 <%- include("templates/bottomnav") %>
