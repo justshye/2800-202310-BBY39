@@ -14,7 +14,7 @@
             </div>
             <div class="text-center" style="padding-top:2%;">
                 <label for="avatar-select">Select an avatar:</label>
-                <select id="avatar-select" name="avatar" >
+                <select id="avatar-select" name="avatar">
                     <option value="will smith.png">Will Smith</option>
                     <option value="sonic.png">Sonic</option>
                     <option value="lucifer.png">Lucifer</option>
@@ -46,24 +46,46 @@
     </div>
 
     <script>
+        // const select = document.getElementById('avatar-select');
+        // const img = document.querySelector('img');
+        // select.addEventListener('change', (event) => {
+        //     const selectedAvatar = select.value;
+        //     img.src = `avatars/${selectedAvatar}`;
+        //     console.log('Selected avatar:', selectedAvatar);
+        //     fetch('/user-options', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({ avatar: selectedAvatar })
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => console.log('Response:', data))
+        //         .catch(err => console.error('Error:', err));
+        // });
         const select = document.getElementById('avatar-select');
         const img = document.querySelector('img');
         select.addEventListener('change', (event) => {
-          const selectedAvatar = select.value;
-          img.src = `avatars/${selectedAvatar}`;
-          console.log('Selected avatar:', selectedAvatar);
-          fetch('/user-options', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ avatar: selectedAvatar })
-          })
-            .then(response => response.json())
-            .then(data => console.log('Response:', data))
-            .catch(err => console.error('Error:', err));
+            const selectedAvatar = select.value;
+            img.src = `avatars/${selectedAvatar}`;
+            console.log('Selected avatar:', selectedAvatar);
+
+            const params = new URLSearchParams();
+            params.append('avatar', selectedAvatar);
+
+            fetch('/user-options', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => response.json())
+                .then(data => console.log('Response:', data))
+                .catch(err => console.error('Error:', err));
         });
-      </script>
-      
+
+    </script>
+
 
     <%- include("templates/bottomnav") %>
