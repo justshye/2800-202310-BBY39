@@ -444,12 +444,13 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-// app.post('/user-options', sessionValidation, async (req, res) => {
-//   const {option} = req.body;
-//   const username = req.session.username;
-//   const result = await userCollection.findOne({username: username});
-//   res.send(result);
-// });
+app.post('/user-options', sessionValidation, async (req, res) => {
+  const {avatar} = req.body;
+  const username = req.session.username;
+  const result = await userCollection.updateOne({username: username}, {$set: {avatar: avatar}}, {upsert: true});
+  res.send(result);
+});
+
 
 app.get('/profile', function (req, res) {
   if (!req.session.authenticated) {

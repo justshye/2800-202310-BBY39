@@ -1,53 +1,65 @@
 <%- include("templates/header") %>
-    <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-        <h3><%= user %>'s Profile</h3>
+    <div class="navbar navbar-light bg-light text-black"
+        style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
+        <h3>
+            <%= user %>'s Profile
+        </h3>
     </div>
     <br><br><br>
 
     <div class="container d-flex justify-content-center">
         <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
             <div class="col">
-                <% var imageSrc="avatars/will smith.png" ; %>
-                <img src="<%= imageSrc %>" style="width: 256px;" />
+                <img src="avatars/<%= user.avatar %>" style="width: 256px;" />
             </div>
             <div class="text-center" style="padding-top:2%;">
                 <label for="avatar-select">Select an avatar:</label>
                 <select id="avatar-select" name="avatar">
-                  <option value="will smith.png">Will Smith</option>
-                  <option value="sonic.png">Sonic</option>
-                  <option value="lucifer.png">Lucifer</option>
-                  <option value="wednesday.png">Wednesday</option>
+                    <option value="will smith.png">Will Smith</option>
+                    <option value="sonic.png">Sonic</option>
+                    <option value="lucifer.png">Lucifer</option>
+                    <option value="wednesday.png">Wednesday</option>
                 </select>
             </div>
             <br>
 
             <div class="text-center">
-                <p style="color:lightgray;"><%= email %></p>
+                <p style="color:lightgray;">
+                    <%= email %>
+                </p>
                 <form action="/friends" style="padding-bottom: 2%;">
-                  <button type="button" class='btn btn-info promote-button'>Friends</button>
+                    <button type="button" class='btn btn-info promote-button'>Friends</button>
                 </form>
                 <form action="/stats" style="padding-bottom: 2%;">
-                  <button type="button" class='btn btn-info promote-button'>Stats</button>
+                    <button type="button" class='btn btn-info promote-button'>Stats</button>
                 </form>
                 <form action="/logout">
-                  <button type="button" class='btn btn-danger promote-button'>Log Out</button>
+                    <button type="button" class='btn btn-danger promote-button'>Log Out</button>
                 </form>
                 <br>
-                
-              </div>
-              
-            
+
+            </div>
+
+
         </div>
-        
+
     </div>
 
     <script>
         const select = document.getElementById('avatar-select');
         const img = document.querySelector('img');
         select.addEventListener('change', (event) => {
-          const selectedAvatar = event.target.value;
-          img.src = `avatars/${selectedAvatar}`;
+            const selectedAvatar = event.target.value;
+            img.src = `avatars/${selectedAvatar}`;
+            fetch('/user-options', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ avatar: selectedAvatar })
+            });
+
         });
-      </script>
-      
-<%- include("templates/bottomnav") %>
+    </script>
+
+    <%- include("templates/bottomnav") %>
