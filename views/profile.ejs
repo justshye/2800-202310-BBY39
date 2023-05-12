@@ -1,0 +1,22 @@
+<%- include("templates/header") %>
+    <form method="POST" action="/updateProfile" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <button type="submit">Update profile</button>
+    </form>
+  
+    <% var imageSrc="[user's img filepath goes here]" ; %>
+    <h1><%= user %>'s Profile</h1>
+    <img src="<%= imageSrc %>" style="width: 256px;" />
+    <form action="/friends">
+        <button>Friends</button>
+    </form>
+    <form action="/stats">
+        <button>Stats</button>
+    </form>
+    <form action="/">
+        <button>Home</button>
+    </form>
+    <form action="/logout">
+        <button>Log Out</button>
+    </form>
+<%- include("templates/footer") %>

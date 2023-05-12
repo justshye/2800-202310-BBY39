@@ -42,33 +42,33 @@ var mongoStore = MongoStore.create({
 });
 
 const configuration = new Configuration({
-	organization: process.env.OPENAI_ORGANIZATION_ID,
-	apiKey: process.env.OPENAI_API_KEY,
+  organization: process.env.OPENAI_ORGANIZATION_ID,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
 async function getOpenAIResponse(prompt) {
-	const completion = await openai.createChatCompletion({
-		model: "gpt-3.5-turbo",
-		messages: [
-			{role: "user", content: prompt},
-		],
-		max_tokens: 10,
-		temperature: 0,
-		top_p: 1,
-		frequency_penalty: 0,
-		presence_penalty: 0,
-	});
-	console.log(completion.data.choices[0].message);
-	return completion.data.choices[0].message.content;
-  }
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "user", content: prompt },
+    ],
+    max_tokens: 10,
+    temperature: 0,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+  });
+  console.log(completion.data.choices[0].message);
+  return completion.data.choices[0].message.content;
+}
 
 app.use(session({
-    secret: node_session_secret,
-    store: mongoStore, //default is memory, but we want to use mongo
-    saveUninitialized: false,
-    resave: false,
-  })
+  secret: node_session_secret,
+  store: mongoStore, //default is memory, but we want to use mongo
+  saveUninitialized: false,
+  resave: false,
+})
 );
 
 function isValidSession(req) {
@@ -151,10 +151,20 @@ app.use(express.static(__dirname + "/public"));
 
 
 app.get('/', (req, res) => {
-    res.render("homepage", {
-        user: req.session.username,
-        authenticated: req.session.authenticated
+  res.render("homepage", {
+    user: req.session.username,
+    authenticated: req.session.authenticated
+  });
+});
+
+app.get('/watchlist', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist", {
+      user: req.session.username,
     });
+  } else {
+    res.redirect("/");
+  }
 });
 
 app.get("/signup", (req, res) => {
@@ -374,23 +384,61 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+app.get('/profile', function (req, res) {
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else {
+    // render the profile template
+    res.render("profile", { user: req.session.username });
+  }
+});
+
+app.get('/friends', sessionValidation, async (req, res) => {
+  const result = await userCollection.find({}).project({username: 1, email: 1, password: 1, user_type: 1, _id: 1}).toArray();
+  res.render('friends', {users: result});
+})
+
+app.get('/stats', sessionValidation, async (req, res) => {
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else {
+    userCollection.findOne({ username: req.session.username }, function (err, user) {
+      const totalMoviesWatched = user.moviesWatched.length;
+      const totalWatchTime = user.moviesWatched.reduce((total, movie) => total + movie.watchTime, 0);
+
+      res.render('stats', { user: user.username, totalMoviesWatched: totalMoviesWatched, totalWatchTime: totalWatchTime });
+    });
+  }
+});
+
+
+app.get('/friends', function (req, res) {
+  if (!req.session.authenticated) {
+    res.redirect("/");
+  } else {
+    // render the profile template
+    res.render("friends", { user: req.session.username });
+  }
+});
+
+
 app.get('/openai', async (req, res) => {
-	try {
-	  const prompt = req.query.prompt || ''; // Get the prompt from the query parameter or use an empty string as the default
-	  let response;
-	  if (prompt != '' ) {
-		 response = await getOpenAIResponse(prompt);
-	  } 
-	  else {
-		 response = '';
-	  }
-	  res.render('openai', { prompt, generatedMessage: response });
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).send('Internal Server Error');
-	}
-  });
-  
+  try {
+    const prompt = req.query.prompt || ''; // Get the prompt from the query parameter or use an empty string as the default
+    let response;
+    if (prompt != '') {
+      response = await getOpenAIResponse(prompt);
+    }
+    else {
+      response = '';
+    }
+    res.render('openai', { prompt, generatedMessage: response });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get("*", (req, res) => {
   res.status(404);
   res.render("404");
