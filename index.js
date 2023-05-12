@@ -445,11 +445,19 @@ app.get("/logout", (req, res) => {
 });
 
 app.post('/user-options', sessionValidation, async (req, res) => {
-  const {avatar} = req.body;
+  const { avatar } = req.body;
   const username = req.session.username;
-  const result = await userCollection.updateOne({username: username}, {$set: {avatar: avatar}}, {upsert: true});
-  res.send(result);
+  console.log('Updating avatar for user:', username, 'with value:', avatar);
+  try {
+    const result = await userCollection.updateOne({ username: username }, { $set: { avatar: avatar } }, { upsert: true });
+    console.log('Update result:', result);
+    res.send(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating user avatar');
+  }
 });
+
 
 
 app.get('/profile', function (req, res) {
