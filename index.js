@@ -451,6 +451,7 @@ app.post('/user-options', sessionValidation, async (req, res) => {
   try {
     const result = await userCollection.updateOne({ username: username }, { $set: { avatar: avatar } }, { upsert: true });
     console.log('Update result:', result);
+    req.session.avatar = avatar; // update the avatar in the session
     res.send(result);
   } catch (err) {
     console.error(err);
@@ -460,14 +461,22 @@ app.post('/user-options', sessionValidation, async (req, res) => {
 
 
 
-app.get('/profile', function (req, res) {
+
+app.get('/profile', async function (req, res) {
   if (!req.session.authenticated) {
     res.redirect("/");
   } else {
-    // render the profile template
-    res.render("profile", { user: req.session.username, email: req.session.email});
+    const username = req.session.username;
+    try {
+      const user = await userCollection.findOne({ username: username }, { avatar: 1 });
+      res.render("profile", { user: username, email: req.session.email, avatar: user.avatar });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error fetching user data');
+    }
   }
 });
+
 
 app.get('/friends', sessionValidation, async (req, res) => {
   const result = await userCollection.find({}).project({username: 1, email: 1, password: 1, user_type: 1, _id: 1}).toArray();
