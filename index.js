@@ -5,6 +5,8 @@ require("dotenv").config();
 
 const express = require("express");
 const session = require("express-session");
+const fs = require("fs")
+const csv = require("csv-parser");
 const MongoStore = require("connect-mongo");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
@@ -28,6 +30,19 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 
 var { database } = include("./databaseConnection.js");
 const userCollection = database.db(mongodb_database).collection("users");
+const movieCollection = database.db(mongodb_database).collection("movies");
+
+fs.createReadStream('imdb_top_1000.csv')
+  .pipe(csv())
+  .on('data', (data) => {
+    movieCollection.insertOne(data, (err, res) => {
+      if (err) throw err;
+      console.log(`Movie ${data.Title} inserted into database.`);
+    });
+  })
+  .on('end', () => {
+    console.log('CSV file successfully processed.');
+  });
 
 var mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/?retryWrites=true&w=majority`,
