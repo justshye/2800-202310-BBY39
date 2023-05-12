@@ -33,6 +33,55 @@ const node_env = process.env.NODE_ENV;
 
 var { database } = include("./databaseConnection.js");
 const userCollection = database.db(mongodb_database).collection("users");
+const movieCollection = database.db(mongodb_database).collection("movies");
+
+/* 
+Should we have to reimport the data, run the following code until the database
+has 1000 documents in the "movies" collection. You will need to install csv-parser
+through npm to run this snippet.
+
+const csv = require("csv-parser");
+const fs = require("fs");
+
+let count = 0;
+
+fs.createReadStream("./imdb_top_1000.csv")
+  .pipe(csv())
+  .on("data", async (row) => {
+    const title = row["Series_Title"];
+    const movieAlreadyExists = await movieCollection.findOne({ Series_Title: title });
+    if (movieAlreadyExists) {
+      console.log(`A movie with title "${title}" already exists in the database.`);
+    } else {
+      const newMovie = {
+        Poster_Link: row.Poster_Link,
+        Series_Title: title,
+        Released_Year: row.Released_Year,
+        Certificate: row.Certificate,
+        Runtime: row.Runtime,
+        Genre: row.Genre,
+        IMDB_Rating: row.IMDB_Rating,
+        Overview: row.Overview,
+        Meta_score: row.Meta_score,
+        Director: row.Director,
+        Star1: row.Star1,
+        Star2: row.Star2,
+        Star3: row.Star3,
+        Star4: row.Star4,
+        No_of_Votes: row.No_of_Votes,
+        Gross: row.Gross,
+      };
+      const result = await movieCollection.insertOne(newMovie);
+      console.log(`Movie "${title}" inserted into the database.`);
+    }
+    count++;
+  })
+  .on("end", async () => {
+    console.log(`Processed ${count} movies.`);
+    const totalMovies = await movieCollection.countDocuments();
+    console.log(`Total number of movies in collection: ${totalMovies}.`);
+  });
+*/
 
 var mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/?retryWrites=true&w=majority`,
