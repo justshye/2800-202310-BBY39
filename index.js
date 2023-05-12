@@ -91,7 +91,15 @@ app.get('/', (req, res) => {
   });
 });
 
-
+app.get('/watchlist', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist", {
+      user: req.session.username,
+    });
+  } else {
+    res.redirect("/");
+  }
+});
 
 app.get("/signup", (req, res) => {
   res.render("signup");
@@ -217,7 +225,7 @@ app.get('/profile', function (req, res) {
     res.redirect("/");
   } else {
     // render the profile template
-    res.render("profile", { user: req.session.username });
+    res.render("profile", { user: req.session.username, email: req.session.email});
   }
 });
 

@@ -1,12 +1,13 @@
 <%- include("templates/header") %>
-    <form method="POST" action="/updateProfile" enctype="multipart/form-data">
+    <!-- <form method="POST" action="/updateProfile" enctype="multipart/form-data">
         <input type="file" name="image">
         <button type="submit">Update profile</button>
-    </form>
+    </form> -->
   
     <% var imageSrc="[user's img filepath goes here]" ; %>
     <h1><%= user %>'s Profile</h1>
     <img src="<%= imageSrc %>" style="width: 256px;" />
+    <p><%= email %></p>
     <form action="/friends">
         <button>Friends</button>
     </form>
