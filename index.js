@@ -3,6 +3,7 @@ require('./utils.js');
 
 require("dotenv").config();
 
+const {v4: uuidv4} = require('uuid');
 const nodemailer = require("nodemailer");
 const express = require("express");
 const session = require("express-session");
@@ -82,7 +83,6 @@ function sessionValidation(req, res, next) {
   }
 }
 
-// async..await is not allowed in global scope, must use a wrapper
 async function sendEmail(email, resetToken, user) {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
@@ -99,6 +99,7 @@ async function sendEmail(email, resetToken, user) {
     },
   });
   let url = "";
+  console.log("resetToken ", resetToken)
   if (node_env === "development") {
     url = `http://localhost:4420/reset/${resetToken}`;
   } else if (node_env === "production") {
@@ -137,24 +138,9 @@ The MovieMate Support Team</p>`;
   // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
   console.log("Message sent: %s", info.messageId);
+  console.log("resetToken ", resetToken)
+  console.log("Preview URL: %s",url);
 }
-// sendEmail().catch(console.error);
-
-async function generateResetToken() {
-  // Generate a random string or value to use as the reset token
-  const resetToken = await bcrypt.hash("your_reset_token_value", 10); // Replace "your_reset_token_value" with your own reset token value
-
-  // Store the reset token securely in the user's document in the database
-  const user = await userCollection.findOneAndUpdate(
-    { email: "turtino08@gmail.com" }, // Replace with the user's email for whom the reset token is generated
-    { $set: { resetToken: resetToken } },
-    { returnOriginal: false }
-  );
-
-  // Return the reset token
-  return user.resetToken;
-}
-// console.log(generateResetToken());
 
 app.set("view engine", "ejs");
 
@@ -197,49 +183,23 @@ app.post("/resetPassword", async (req, res) => {
       return;
     }
 
-    
-
     // 3. Generate a unique password reset token (you can use a library like uuid or crypto)
-  const resetToken = await bcrypt.hash("your_reset_token_value", 10); // Replace "your_reset_token_value" with your own reset token value
+  const resetToken = uuidv4();
+
 
   // Store the reset token securely in the user's document in the database
   await userCollection.findOneAndUpdate(
     { email: email }, // Replace with the user's email for whom the reset token is generated
     { $set: { resetToken: resetToken } },
   );
-
-
-    // 4. Save the reset token to your database for future verification
-    // Save the token to the user's document in the database or any other desired approach
-
-    // // 5. Create a Nodemailer transporter
-    // const transporter = nodemailer.createTransport({
-    //   // Specify your email service provider and credentials
-    //   service: "gmail",
-    //   auth: {
-    //     user: email_auto,
-    //     pass: email_password,
-    //   },
-    // });
-
+    // 4. Store the reset token securely in the user's document in the database and send the email
     sendEmail(email, resetToken, user.username);
 
-  //   // 6. Compose the email
-  //   const mailOptions = {
-  //     from: "moviemate2000@gmail.com",
-  //     to: email,
-  //     subject: "Password Reset",
-  //     text: `Click on the following link to reset your password: http://example.com/reset/${resetToken}`,
-  //   };
-
-  //   // 7. Send the email
-  //   await transporter.sendMail(mailOptions);
-
-    // 8. Handle successful email sending
+    // 5. Handle successful email sending
     // res.status(200).send("Password reset link has been sent to your email.");
     res.render("post-recover-password",{ login: "/login" });
   } catch (error) {
-    // 9. Handle error
+    // 6. Handle error
     console.error("Error sending password reset email:", error);
     res.status(500).send("An error occurred while sending the password reset email.");
     res.render("post-recover-password");
@@ -247,18 +207,53 @@ app.post("/resetPassword", async (req, res) => {
 });
 
 app.get("/reset/:token", async (req, res) => {
-  console.log(req.params.token)
-  res.render("reset-password", { token: req.params.token });
+  const { token } = req.params;
+
+  console.log("token ", token);
+
+  // Check if the token exists in the database
+  const user = await userCollection.findOne({ resetToken: token });
+
+  if (!user) {
+    res.render("link-expired", { login: "/login" });
+  } else {
+    res.render("reset-password", { token });
+  }
 });
 
 app.post("/reset/:token/changedPassword", async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  const schema = Joi.object({
+    newPassword: Joi.string().max(20).required(),
+  });
+
+  const validationResult = schema.validate({ newPassword });
+  if (validationResult.error != null) {
+    res.render("password-changed", {
+      validationMessage: validationResult.error.message,
+    });
+    return;
+  }
+
+  // 1. Retrieve the user from the database using the reset token
+  const user = await userCollection.findOne({ resetToken: token });
+
+  if (!user) {
+    res.status(404).send("Invalid reset token.");
+    return;
+  }
+
+  // 2. Update the user's password with the new password
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+  await userCollection.findOneAndUpdate(
+    { resetToken: token },
+    { $set: { password: hashedPassword, resetToken: null } }
+  );
+
   res.render("password-changed");
 });
-
-
-
-
-
 
 
 
