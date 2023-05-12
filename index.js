@@ -352,7 +352,7 @@ app.post("/loginSubmit", async (req, res) => {
 
   const result = await userCollection
     .find({ username: username })
-    .project({ username: 1, password: 1, user_type: 1, _id: 1 })
+    .project({ username: 1, password: 1, user_type: 1, _id: 1 , email: 1})
     .toArray();
 
   if (result.length != 1) {
@@ -367,6 +367,7 @@ app.post("/loginSubmit", async (req, res) => {
     req.session.authenticated = true;
     req.session.cookie.maxAge = expireTime;
     req.session.username = result[0].username;
+    req.session.email = result[0].email;
     req.session.user_type = result[0].user_type;
     req.session.save(() => {
       res.redirect("/");
@@ -426,7 +427,8 @@ app.post("/signupSubmit", async (req, res) => {
     email: email,
     password: hashedPassword,
     user_type: "user",
-    moviesWatched: []
+    moviesWatched: [],
+    avatar: "default.png"
   });
 
   req.session.authenticated = true;
@@ -443,14 +445,39 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.get('/profile', function (req, res) {
+app.post('/user-options', sessionValidation, async (req, res) => {
+  const { avatar } = req.body;
+  const username = req.session.username;
+  console.log('Updating avatar for user:', username, 'with value:', avatar);
+  try {
+    const result = await userCollection.updateOne({ username: username }, { $set: { avatar: avatar } }, { upsert: true });
+    console.log('Update result:', result);
+    req.session.avatar = avatar; // update the avatar in the session
+    res.send(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error updating user avatar');
+  }
+});
+
+
+
+
+app.get('/profile', async function (req, res) {
   if (!req.session.authenticated) {
     res.redirect("/");
   } else {
-    // render the profile template
-    res.render("profile", { user: req.session.username });
+    const username = req.session.username;
+    try {
+      const user = await userCollection.findOne({ username: username }, { avatar: 1 });
+      res.render("profile", { user: username, email: req.session.email, avatar: user.avatar });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error fetching user data');
+    }
   }
 });
+
 
 app.get('/friends', sessionValidation, async (req, res) => {
   const result = await userCollection.find({}).project({username: 1, email: 1, password: 1, user_type: 1, _id: 1}).toArray();
