@@ -427,7 +427,8 @@ app.post("/signupSubmit", async (req, res) => {
     email: email,
     password: hashedPassword,
     user_type: "user",
-    moviesWatched: []
+    moviesWatched: [],
+    avatar: "default.png"
   });
 
   req.session.authenticated = true;
