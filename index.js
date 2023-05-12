@@ -220,6 +220,15 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
+app.get('/moviedetails', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("moviedetails", {
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+
 app.get("/login", (req, res) => {
   res.render("login");
 });
