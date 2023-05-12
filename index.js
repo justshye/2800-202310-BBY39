@@ -28,6 +28,7 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 
 var { database } = include("./databaseConnection.js");
 const userCollection = database.db(mongodb_database).collection("users");
+const movieCollection = database.db(mongodb_database).collection("movies");
 
 var mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/?retryWrites=true&w=majority`,
