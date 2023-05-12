@@ -444,12 +444,18 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+// app.post('/user-options', sessionValidation, async (req, res) => {
+//   const {option} = req.body;
+//   const username = req.session.username;
+//   const result = await userCollection.findOne({username: username});
+//   res.send(result);
+// });
+
 app.get('/profile', function (req, res) {
   if (!req.session.authenticated) {
     res.redirect("/");
   } else {
     // render the profile template
-    console.log(req.session.email);
     res.render("profile", { user: req.session.username, email: req.session.email});
   }
 });

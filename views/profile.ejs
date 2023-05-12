@@ -10,22 +10,44 @@
                 <% var imageSrc="avatars/will smith.png" ; %>
                 <img src="<%= imageSrc %>" style="width: 256px;" />
             </div>
+            <div class="text-center" style="padding-top:2%;">
+                <label for="avatar-select">Select an avatar:</label>
+                <select id="avatar-select" name="avatar">
+                  <option value="will smith.png">Will Smith</option>
+                  <option value="sonic.png">Sonic</option>
+                  <option value="lucifer.png">Lucifer</option>
+                  <option value="wednesday.png">Wednesday</option>
+                </select>
+            </div>
             <br>
 
-            <div class="text-center"> <!-- Add the text-center class here -->
+            <div class="text-center">
                 <p style="color:lightgray;"><%= email %></p>
                 <form action="/friends" style="padding-bottom: 2%;">
-                    <button type="button" class='btn btn-info promote-button'>Friends</button>
+                  <button type="button" class='btn btn-info promote-button'>Friends</button>
                 </form>
                 <form action="/stats" style="padding-bottom: 2%;">
-                    <button type="button" class='btn btn-info promote-button'>Stats</button>
+                  <button type="button" class='btn btn-info promote-button'>Stats</button>
                 </form>
                 <form action="/logout">
-                    <button type="button" class='btn btn-danger promote-button'>Log Out</button>
+                  <button type="button" class='btn btn-danger promote-button'>Log Out</button>
                 </form>
-            </div>
+                <br>
+                
+              </div>
+              
             
         </div>
         
     </div>
+
+    <script>
+        const select = document.getElementById('avatar-select');
+        const img = document.querySelector('img');
+        select.addEventListener('change', (event) => {
+          const selectedAvatar = event.target.value;
+          img.src = `avatars/${selectedAvatar}`;
+        });
+      </script>
+      
 <%- include("templates/bottomnav") %>
