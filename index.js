@@ -3,6 +3,8 @@ require('./utils.js');
 
 require("dotenv").config();
 
+const {v4: uuidv4} = require('uuid');
+const nodemailer = require("nodemailer");
 const express = require("express");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -24,10 +26,62 @@ const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
+const email_auto = process.env.EMAIL_AUTO;
+const email_password = process.env.EMAIL_PASSWORD;
+const node_env = process.env.NODE_ENV;
 /* secret information */
 
 var { database } = include("./databaseConnection.js");
 const userCollection = database.db(mongodb_database).collection("users");
+const movieCollection = database.db(mongodb_database).collection("movies");
+
+/* 
+Should we have to reimport the data, run the following code until the database
+has 1000 documents in the "movies" collection. You will need to install csv-parser
+through npm to run this snippet.
+
+const csv = require("csv-parser");
+const fs = require("fs");
+
+let count = 0;
+
+fs.createReadStream("./imdb_top_1000.csv")
+  .pipe(csv())
+  .on("data", async (row) => {
+    const title = row["Series_Title"];
+    const movieAlreadyExists = await movieCollection.findOne({ Series_Title: title });
+    if (movieAlreadyExists) {
+      console.log(`A movie with title "${title}" already exists in the database.`);
+    } else {
+      const newMovie = {
+        Poster_Link: row.Poster_Link,
+        Series_Title: title,
+        Released_Year: row.Released_Year,
+        Certificate: row.Certificate,
+        Runtime: row.Runtime,
+        Genre: row.Genre,
+        IMDB_Rating: row.IMDB_Rating,
+        Overview: row.Overview,
+        Meta_score: row.Meta_score,
+        Director: row.Director,
+        Star1: row.Star1,
+        Star2: row.Star2,
+        Star3: row.Star3,
+        Star4: row.Star4,
+        No_of_Votes: row.No_of_Votes,
+        Gross: row.Gross,
+      };
+      const result = await movieCollection.insertOne(newMovie);
+      console.log(`Movie "${title}" inserted into the database.`);
+    }
+    count++;
+  })
+  .on("end", async () => {
+    console.log(`Processed ${count} movies.`);
+    const totalMovies = await movieCollection.countDocuments();
+    console.log(`Total number of movies in collection: ${totalMovies}.`);
+  });
+*/
 
 var mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/?retryWrites=true&w=majority`,
@@ -78,11 +132,72 @@ function sessionValidation(req, res, next) {
   }
 }
 
+async function sendEmail(email, resetToken, user) {
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  // let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: email_auto, // generated ethereal user
+      pass: email_password, // generated ethereal password
+    },
+  });
+  let url = "";
+  console.log("resetToken ", resetToken)
+  if (node_env === "development") {
+    url = `http://localhost:4420/reset/${resetToken}`;
+  } else if (node_env === "production") {
+    url = `http://fwurnptkem.eu09.qoddiapp.com/reset/${resetToken}`;
+  }
+// Plain text body
+const textBody = `Dear ${user},
+
+You have requested to reset your password. To proceed with the password reset process, please click on the following link:
+
+Reset Password: ${url}
+
+If you did not initiate this request, please ignore this email. Your current password will remain unchanged.
+
+Thank you,
+The Support Team`;
+
+// HTML body
+const htmlBody = `<p>Dear ${user},</p>
+<p>You have requested to reset your password. To proceed with the password reset process, please click on the following link:</p>
+<p><a href="${url}">Reset Password</a></p>
+<p>If you did not initiate this request, please ignore this email. Your current password will remain unchanged.</p>
+<p>Thank you,<br>
+The MovieMate Support Team</p>`;
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: `"MovieMate 👻" <${email_auto}>`, // sender address
+    to: email, // list of receivers
+    subject: "Password Reset", // Subject line
+    text: textBody, // plain text body
+    html: htmlBody, // html body
+  });
+
+  // console.log("Message sent: %s", info.messageId);
+  // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  console.log("Message sent: %s", info.messageId);
+  console.log("resetToken ", resetToken)
+  console.log("Preview URL: %s",url);
+}
+
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(__dirname + "/public"));
+
+
 
 app.get('/', (req, res) => {
   res.render("homepage", {
@@ -105,9 +220,116 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
+app.get('/moviedetails', (req, res) => {
+  if (req.session.authenticated) {
+    res.render("moviedetails", {
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+
 app.get("/login", (req, res) => {
   res.render("login");
 });
+
+app.get("/recover-password", (req, res) => {
+  res.render("recover-password");
+});
+
+app.post("/resetPassword", async (req, res) => {
+  try {
+    // 1. Get the user's email from the request body
+    const { email } = req.body;
+
+    // 2. Check if the email exists in the database
+    const user = await userCollection.findOne({ email });
+    console.log(email);
+    console.log(user.username);
+    if (!user) {
+      res.status(404).send("Email not found.");
+      return;
+    }
+
+    // 3. Generate a unique password reset token (you can use a library like uuid or crypto)
+  const resetToken = uuidv4();
+
+
+  // Store the reset token securely in the user's document in the database
+  await userCollection.findOneAndUpdate(
+    { email: email }, // Replace with the user's email for whom the reset token is generated
+    { $set: { resetToken: resetToken } },
+  );
+    // 4. Store the reset token securely in the user's document in the database and send the email
+    sendEmail(email, resetToken, user.username);
+
+    // 5. Handle successful email sending
+    // res.status(200).send("Password reset link has been sent to your email.");
+    res.render("post-recover-password",{ login: "/login" });
+  } catch (error) {
+    // 6. Handle error
+    console.error("Error sending password reset email:", error);
+    res.status(500).send("An error occurred while sending the password reset email.");
+    res.render("post-recover-password");
+  }
+});
+
+app.get("/reset/:token", async (req, res) => {
+  const { token } = req.params;
+
+  console.log("token ", token);
+
+  // Check if the token exists in the database
+  const user = await userCollection.findOne({ resetToken: token });
+
+  if (!user) {
+    res.render("link-expired", { login: "/login" });
+  } else {
+    res.render("reset-password", { token });
+  }
+});
+
+app.post("/reset/:token/changedPassword", async (req, res) => {
+  const { token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
+
+  const schema = Joi.object({
+    newPassword: Joi.string().max(20).required(),
+    confirmPassword: Joi.any().valid(Joi.ref('newPassword')).required().messages({ 'any.only': 'Passwords do not match.' })
+  });
+
+  try {
+    await schema.validateAsync({ newPassword, confirmPassword });
+
+    // 1. Retrieve the user from the database using the reset token
+    const user = await userCollection.findOne({ resetToken: token });
+
+    if (!user) {
+      res.status(404).send("Invalid reset token.");
+      return;
+    }
+
+    // 2. Update the user's password with the new password
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    await userCollection.findOneAndUpdate(
+      { resetToken: token },
+      { $set: { password: hashedPassword, resetToken: null } }
+    );
+
+    res.render("password-changed", { state: "success", token: token });
+  } catch (error) {
+    res.render("password-changed", {
+      validationMessage: error.details[0].message,
+      state: "error",
+      token: token,
+
+    });
+  }
+});
+
+
+
 
 app.post("/loginSubmit", async (req, res) => {
   var username = req.body.username;
@@ -204,6 +426,7 @@ app.post("/signupSubmit", async (req, res) => {
     email: email,
     password: hashedPassword,
     user_type: "user",
+    moviesWatched: []
   });
 
   req.session.authenticated = true;
