@@ -1,26 +1,67 @@
-<%- include("templates/header") %> 
+<%- include("templates/header") %>
 
-    <% if (authenticated) { %>
-        <div class="container text-center">
-            <div class="row">
-            <h3>Hello, <%= (user) %></h3>
-            <form action='/logout' method='get'>
-                <button>Log Out</button>
-            </form>
+  <% if (authenticated) { %>
+    <div class="container text-center">
+      <div class="row">
+        <h3>Hello, <%= (user) %>
+        </h3>
+        <form action='/logout' method='get'>
+          <button>Log Out</button>
+        </form>
+      </div>
+    </div>
+    <%- include("templates/bottomnav") %>
+      <% } else { %>
+        <section class="py-5 text-center container">
+          <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <h1 class="fw-light">Album example</h1>
+              <p class="lead text-body-secondary">Something short and leading about the collection below—its contents,
+                the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it
+                entirely.
+              </p>
+              <p>
+                <a href="/signup" class="btn btn-primary my-2">
+                  Sign Up
+                </a>
+                <a href="/login" class="btn btn-secondary my-2">
+                  Log In
+                </a>
+              </p>
             </div>
-        </div>
-        <%- include("templates/bottomnav") %>
-        <% } else { %>
-            <div class="container text-center">
-                <div class="row">
-                    <form action='/signup' method='get'>
-                        <button>Sign Up</button>
-                    </form>
-                    &nbsp;
-                    <form action='/login' method='get'>
-                        <button>Login</button>
-                    </form>
+          </div>
+        </section>
+        <div class="album py-5 bg-body-tertiary">
+          <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+              <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <img src="homepage-wireframe.png" class="card-img-top" alt="...">
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                      additional content. This content is a little bit longer.</p>
+                  </div>
                 </div>
+              </div>
+              <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <img src="profilepage-wireframe.png" class="card-img-top" alt="...">
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                      additional content. This content is a little bit longer.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <img src="moviepreview-wireframe.png" class="card-img-top" alt="...">
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                      additional content. This content is a little bit longer.</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <%- include("templates/footer") %> 
-    <% } %>
+          </div>
+        </div>
+        <% } %>
