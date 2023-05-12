@@ -1,8 +1,4 @@
 <%- include("templates/header") %>
-    <!-- <form method="POST" action="/updateProfile" enctype="multipart/form-data">
-        <input type="file" name="image">
-        <button type="submit">Update profile</button>
-    </form> -->
     <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
         <h3><%= user %>'s Profile</h3>
     </div>
@@ -14,17 +10,21 @@
                 <% var imageSrc="avatars/will smith.png" ; %>
                 <img src="<%= imageSrc %>" style="width: 256px;" />
             </div>
+            <br>
 
-            <p style="color:lightgray;"><%= email %></p>
-            <form action="/friends">
-                <button>Friends</button>
-            </form>
-            <form action="/stats">
-                <button>Stats</button>
-            </form>
-            <form action="/logout">
-                <button>Log Out</button>
-            </form>
+            <div class="text-center"> <!-- Add the text-center class here -->
+                <p style="color:lightgray;"><%= email %></p>
+                <form action="/friends">
+                    <button>Friends</button>
+                </form>
+                <form action="/stats">
+                    <button>Stats</button>
+                </form>
+                <form action="/logout">
+                    <button>Log Out</button>
+                </form>
+            </div>
+            
         </div>
         
     </div>
