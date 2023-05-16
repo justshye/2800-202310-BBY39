@@ -477,6 +477,18 @@ app.get('/openai', async (req, res) => {
   }
 });
 
+app.get('/add-to-interested', async (req, res) => {
+  console.log("added to interested list");
+
+  res.redirect('/watchlist');
+});
+
+app.get('/add-to-not-interested', async (req, res) => {
+  console.log("added to not interested");
+  
+  res.redirect('/');
+});
+
 app.get("*", (req, res) => {
   res.status(404);
   res.render("404");
