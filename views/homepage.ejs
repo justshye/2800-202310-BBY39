@@ -1,62 +1,63 @@
 <%- include("templates/header") %>
+<% if (authenticated) { %>
+  <h3 class="lead text-center">Movie recommendations for <%= (user) %> </h3>
 
-  <% if (authenticated) { %>
-    <div class="container text-center">
-      <div class="row">
-        <h3 class="lead">Movie recommendations for <%= (user) %> 
+  <button id="random-movie-button">Random Movie</button>
+  
+  <div id="movie-container" class="pb-5 mx-2">
+    <!-- Your movie HTML here -->
+  </div>
+  
+  <script>
+    $(document).ready(function() {
+  $('#random-movie-button').click(function() {
+    $.ajax({
+      url: '/random-movie',
+      method: 'GET',
+      success: function(movies) {
+        // Save movies to local storage
+        localStorage.setItem('movies', JSON.stringify(movies));
 
-        </h3>
+        // Display movies
+        displayMovies(movies);
+      }
+    });
+  });
+
+  // Check for movies in local storage when page loads
+  const storedMovies = JSON.parse(localStorage.getItem('movies'));
+  if (storedMovies) {
+    displayMovies(storedMovies);
+  }
+});
+
+function displayMovies(movies) {
+  let moviesHtml = '';
+  for (let i = 0; i < movies.length; i++) {
+    const movie = movies[i];
+    moviesHtml += `
+      <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+        <div class="row">
+          <div class="col-4 d-flex justify-content-center">
+            <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+          </div>
+          <div class="col-8">
+            <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
+            ${movie.Overview}
+          </div>
+        </div>
       </div>
-    </div>
-</br>
-    <div class="container"></div>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Mario_Movie.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Mario Movie</b>
-                    </br><i>Comedy</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Guardians3.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Guardians of the Galaxy</b>
-                    </br><i>Comedy, Action</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Suzume.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Suzume</b>
-                    </br><i>Anime, Adventure</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
-</div>
-    <%- include("templates/bottomnav") %>
+    `;
+  }
+
+  $('#movie-container').html(moviesHtml);
+}
+
+  </script>
+  <%- include("templates/bottomnav") %>
+
+
+
       <% } else { %>
         <section class="py-5 text-center container">
           <div class="row py-lg-5">
