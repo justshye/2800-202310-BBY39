@@ -151,12 +151,21 @@ app.use(express.static(__dirname + "/public"));
 
 
 
-app.get('/', (req, res) => {
-  res.render("homepage", {
-    user: req.session.username,
-    authenticated: req.session.authenticated
-  });
+app.get('/', async (req, res) => {
+  try {
+    const movies = await movieCollection.find().toArray();
+    // console.log(movies);
+    res.render("homepage", {
+      user: req.session.username,
+      authenticated: req.session.authenticated,
+      movies: movies
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching movies');
+  }
 });
+
 
 app.get('/watchlist', (req, res) => {
   if (req.session.authenticated) {
