@@ -149,11 +149,27 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(__dirname + "/public"));
 
+let cachedMovies = null;
 
+// Function to fetch the movies array
+async function getMovies() {
+  // If the movies array is already cached, return it
+  if (cachedMovies) {
+    return cachedMovies;
+  }
+
+  // If the movies array is not cached, fetch it from the movie collection
+  const movies = await movieCollection.find().toArray();
+
+  // Cache the movies array for future use
+  cachedMovies = movies;
+
+  return movies;
+}
 
 app.get('/', async (req, res) => {
   try {
-    const movies = await movieCollection.find().toArray();
+    const movies = await getMovies();
     // console.log(movies);
     res.render("homepage", {
       user: req.session.username,
@@ -485,6 +501,20 @@ app.get('/openai', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get('/random-movie', async (req, res) => {
+  const movies = await getMovies();
+  const randomMovies = [];
+
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * movies.length);
+    randomMovies.push(movies[randomIndex]);
+    movies.splice(randomIndex, 1); // remove the selected movie from the array
+  }
+  
+  res.json(randomMovies);
+});
+
 
 app.get("*", (req, res) => {
   res.status(404);
