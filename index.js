@@ -405,6 +405,8 @@ app.post("/signupSubmit", async (req, res) => {
     password: hashedPassword,
     user_type: "user",
     moviesWatched: [],
+    interestingMovies: [],
+    uninterestingMovies: [],
     avatar: "default.png"
   });
 
