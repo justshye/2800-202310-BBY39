@@ -1,6 +1,6 @@
 <%- include("templates/header") %>
 <% if (authenticated) { %>
-
+  <h3 class="lead text-center">Movie recommendations for <%= (user) %> </h3>
 
   <button id="random-movie-button">Random Movie</button>
   
@@ -10,34 +10,49 @@
   
   <script>
     $(document).ready(function() {
-      $('#random-movie-button').click(function() {
-        $.ajax({
-          url: '/random-movie',
-          method: 'GET',
-          success: function(movies) {
-            let moviesHtml = '';
-            for (let i = 0; i < movies.length; i++) {
-              const movie = movies[i];
-              moviesHtml += `
-                <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-                  <div class="row">
-                    <div class="col-4 d-flex justify-content-center">
-                      <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
-                    </div>
-                    <div class="col-8">
-                      <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
-                      ${movie.Overview}
-                    </div>
-                  </div>
-                </div>
-              `;
-            }
-    
-            $('#movie-container').html(moviesHtml);
-          }
-        });
-      });
+  $('#random-movie-button').click(function() {
+    $.ajax({
+      url: '/random-movie',
+      method: 'GET',
+      success: function(movies) {
+        // Save movies to local storage
+        localStorage.setItem('movies', JSON.stringify(movies));
+
+        // Display movies
+        displayMovies(movies);
+      }
     });
+  });
+
+  // Check for movies in local storage when page loads
+  const storedMovies = JSON.parse(localStorage.getItem('movies'));
+  if (storedMovies) {
+    displayMovies(storedMovies);
+  }
+});
+
+function displayMovies(movies) {
+  let moviesHtml = '';
+  for (let i = 0; i < movies.length; i++) {
+    const movie = movies[i];
+    moviesHtml += `
+      <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+        <div class="row">
+          <div class="col-4 d-flex justify-content-center">
+            <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+          </div>
+          <div class="col-8">
+            <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
+            ${movie.Overview}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  $('#movie-container').html(moviesHtml);
+}
+
   </script>
   <%- include("templates/bottomnav") %>
 
