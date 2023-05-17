@@ -53,7 +53,7 @@ async function getOpenAIResponse(prompt) {
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: prompt }],
-    max_tokens: 10,
+    max_tokens: 30,
     temperature: 0,
     top_p: 1,
     frequency_penalty: 0,
@@ -448,14 +448,29 @@ app.get("/profile", async function (req, res) {
   } else {
     const username = req.session.username;
     try {
-      const user = await userCollection.findOne({ username: username }, { avatar: 1, moviesWatched: 1 });
+      const user = await userCollection.findOne(
+        { username: username },
+        { avatar: 1, moviesWatched: 1 }
+      );
       const moviesWatched = user.moviesWatched ? user.moviesWatched.length : 0;
       const movieMateUnlocked = moviesWatched >= 5;
-      res.render("profile", { user: username, email: req.session.email, avatar: user.avatar, moviesWatched, movieMateUnlocked });
+      res.render("profile", {
+        user: username,
+        email: req.session.email,
+        avatar: user.avatar,
+        moviesWatched,
+        movieMateUnlocked,
+      });
     } catch (err) {
       console.error(err);
       const movieMateUnlocked = false; // Set movieMateUnlocked to false
-      res.render("profile", { user: username, email: req.session.email, avatar: user.avatar, moviesWatched: 0, movieMateUnlocked });
+      res.render("profile", {
+        user: username,
+        email: req.session.email,
+        avatar: user.avatar,
+        moviesWatched: 0,
+        movieMateUnlocked,
+      });
     }
   }
 });
@@ -515,6 +530,7 @@ app.get("/openai", async (req, res) => {
 
 app.get("/random-movie", async (req, res) => {
   try {
+
     const movies = await getMovies();
     const randomMovies = [];
 
@@ -544,6 +560,23 @@ app.get("/random-movie", async (req, res) => {
   }
 });
 
+app.get("/display-watchlist", async (req, res) => {
+  try {
+    const filter = { username: req.session.username };
+    const result = await userCollection.findOne(filter);
+
+    if (result) {
+      const watchlist = result.watchlist;
+      res.json(watchlist);
+    } else {
+      console.log("User not found");
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error("Error retrieving watchlist:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // const { ObjectId } = require('mongodb');
 
@@ -554,7 +587,9 @@ app.get("/movie/:id", async (req, res) => {
   const projection = { randomMovies: 5 };
 
   try {
-    const result = await userCollection.findOne({ username: req.session.username });
+    const result = await userCollection.findOne({
+      username: req.session.username,
+    });
     console.log(result);
     if (result) {
       const randomMovies = result.randomMovies;
@@ -571,7 +606,6 @@ app.get("/movie/:id", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
-
 
 app.get("/add-to-interested", async (req, res) => {
   try {
@@ -598,7 +632,7 @@ app.get("/add-to-interested", async (req, res) => {
       Original_Language: movie["Original_Language"],
       Genre: movie["Genre"],
       Poster_Url: movie["Poster_Url"],
-      Watched: false
+      Watched: false,
     };
 
     await userCollection.updateOne(
