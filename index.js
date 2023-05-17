@@ -517,29 +517,36 @@ app.get("/openai", async (req, res) => {
 });
 
 app.get("/random-movie", async (req, res) => {
-  const movies = await getMovies();
-  const randomMovies = [];
+  try {
+    const movies = await getMovies();
+    const randomMovies = [];
 
-  for (let i = 0; i < 5; i++) {
-    const randomIndex = Math.floor(Math.random() * movies.length);
-    randomMovies.push(movies[randomIndex]);
-    const filter = {username: req.session.username}; // Add a filter if you want to update specific documents
+    for (let i = 0; i < 5; i++) {
+      const randomIndex = Math.floor(Math.random() * movies.length);
+      randomMovies.push(movies[randomIndex]);
+      movies.splice(randomIndex, 1); // remove the selected movie from the array
+    }
+
+    const filter = { username: req.session.username };
     const update = { $set: { randomMovies: randomMovies } };
-    const result = await userCollection.findOne({ username: req.session.username });
-    console.log(result);
-    userCollection
-      .updateOne(filter, update)
-      .then((result) => {
-        console.log("Document updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error updating document:", error);
-      });
-    movies.splice(randomIndex, 1); // remove the selected movie from the array
-  }
 
-  res.json(randomMovies);
+    const result = await userCollection.findOne(filter);
+    console.log(result);
+
+    if(result) {
+      await userCollection.updateOne(filter, update);
+      console.log("Document updated successfully");
+    } else {
+      console.log("User not found");
+    }
+
+    res.json(randomMovies);
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
 
 // const { ObjectId } = require('mongodb');
 
@@ -599,7 +606,7 @@ app.get("/add-to-interested", async (req, res) => {
 
     await userCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $push: { interestingMovies: newMovie } }
+      { $push: { watchlist: newMovie } }
     );
 
     res.redirect("/");
@@ -638,7 +645,7 @@ app.get("/add-to-not-interested", async (req, res) => {
 
     await userCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $push: { uninterestingMovies: newMovie } }
+      { $push: { rejectedMovies: newMovie } }
     );
 
     res.redirect("/");
