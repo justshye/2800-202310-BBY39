@@ -502,7 +502,7 @@ app.get("/stats", sessionValidation, async (req, res) => {
     const watchlistSize = user.watchlist.length;
     let moviesWatched = 0;
     for (const movie of user.watchlist) {
-      if (movie.watched) {
+      if (movie.Watched) {
         moviesWatched++;
       }
     }
