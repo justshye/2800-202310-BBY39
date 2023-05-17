@@ -515,6 +515,18 @@ app.get('/random-movie', async (req, res) => {
   res.json(randomMovies);
 });
 
+app.get('/movie/:id', async (req, res) => {
+  const movieId = req.params.id;
+  movies = await getMovies();
+  
+  const movie = movies.find(movie => movie._id.toString() === movieId);
+
+  console.log('Fetching movie with ID:', movieId);
+  console.log('Movie:', movie);
+  // const movie = await getMovieById(movieId);  // Replace with your function to get a movie by ID
+  res.render('moviedetails', { movie: movie });
+});
+
 
 app.get("*", (req, res) => {
   res.status(404);
