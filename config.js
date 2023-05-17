@@ -67,6 +67,7 @@ module.exports = {
   mongodb_user,
   nodemailer,
   OpenAIApi,
+  ObjectId,
   port,
   saltRounds,
   session,

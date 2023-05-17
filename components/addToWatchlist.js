@@ -1,49 +1,43 @@
-const { Configuration, OpenAIApi } = require("openai");
-require("../utils.js");
+const { movieCollection, userCollection, ObjectId } = require('../config');
 
-require("dotenv").config();
+async function addToWatchlist(req, res) {
+  try {
+    const userId = req.session.userId;
 
-const { v4: uuidv4 } = require("uuid");
-const nodemailer = require("nodemailer");
-const express = require("express");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
-const bcrypt = require("bcrypt");
-const Joi = require("joi");
-// const url = require('url');
-const saltRounds = 12;
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
 
-const port = process.env.PORT || 4420;
-const app = express();
+    const movieId = req.query.movieId;
+    const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
 
-const expireTime = 1 * 60 * 60 * 1000; //expires after 1 hour (hours * minutes * seconds * millis)
+    if (!movie) {
+      throw new Error("Movie not found");
+    }
 
-/* secret information */
-const node_session_secret = process.env.NODE_SESSION_SECRET;
-const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
-const mongodb_port = process.env.MONGODB_PORT;
-const mongodb_host = process.env.MONGODB_HOST;
-const mongodb_user = process.env.MONGODB_USER;
-const mongodb_password = process.env.MONGODB_PASSWORD;
-const mongodb_database = process.env.MONGODB_DATABASE;
-const email_auto = process.env.EMAIL_AUTO;
-const email_password = process.env.EMAIL_PASSWORD;
-const node_env = process.env.NODE_ENV;
-/* secret information */
+    const newMovie = {
+      Release_Date: movie["Release_Date"],
+      Title: movie["Title"],
+      Overview: movie["Overview"],
+      Popularity: movie["Popularity"],
+      Vote_Count: movie["Vote_Count"],
+      Vote_Average: movie["Vote_Average"],
+      Original_Language: movie["Original_Language"],
+      Genre: movie["Genre"],
+      Poster_Url: movie["Poster_Url"],
+      Watched: false,
+    };
 
-var { database, ObjectId } = include("./databaseConnection.js");
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $push: { watchlist: newMovie } }
+    );
 
-const userCollection = database.db(mongodb_database).collection("users");
-const movieCollection = database.db(mongodb_database).collection("movies");
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred");
+  }
+}
 
-var mongoStore = MongoStore.create({
-  mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/?retryWrites=true&w=majority`,
-  crypto: {
-    secret: mongodb_session_secret,
-  },
-});
-
-const configuration = new Configuration({
-  organization: process.env.OPENAI_ORGANIZATION_ID,
-  apiKey: process.env.OPENAI_API_KEY,
-});
+module.exports = { addToWatchlist };

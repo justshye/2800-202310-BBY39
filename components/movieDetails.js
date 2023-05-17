@@ -1,6 +1,6 @@
 const { userCollection } = require('../config');
 
-async function movieDetailsHandler(req, res) {
+async function movieDetails(req, res) {
   const movieId = req.params.id;
   const filter = { _id: movieId };
   const projection = { randomMovies: 5 };
@@ -25,4 +25,4 @@ async function movieDetailsHandler(req, res) {
   }
 }
 
-module.exports = { movieDetailsHandler };
+module.exports = { movieDetails };
