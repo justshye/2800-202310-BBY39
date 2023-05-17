@@ -11,7 +11,7 @@
         <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
             <div class="col">
                 <img src="avatars/<%= avatar %>" style="width: 256px;" />
-            </div>
+            </div>              
             <div class="text-center" style="padding-top:2%;">
                 <label for="avatar-select">Select an avatar:</label>
                 <select id="avatar-select" name="avatar">
@@ -20,6 +20,9 @@
                     <option value="sonic.png">Sonic</option>
                     <option value="lucifer.png">Lucifer</option>
                     <option value="wednesday.png">Wednesday</option>
+                    <% if (movieMateUnlocked) { %>
+                        <option value="moviemate.png">MovieMate</option>
+                      <% } %>
                 </select>
             </div>
 
@@ -31,8 +34,7 @@
                     <button type="submit" class='btn btn-info promote-button'>Friends</button>
                 </form>
                 <form action="/stats" style="padding-bottom: 2%;">
-                    <button type="submit" class='btn btn-info promote-button' data-bs-toggle="modal"
-                        data-bs-target="#notavailable">Stats</button>
+                    <button type="submit" class='btn btn-info promote-button' data-bs-toggle="modal" data-bs-target="#notavailable">Stats</button>
                 </form>
                 <form action="/logout">
                     <button type="submit" class='btn btn-danger promote-button'>Log Out</button>
@@ -48,14 +50,14 @@
 
     <div class="modal fade" id="notavailable" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content lavender-blush">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Feature to be Implemented</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+          <div class="modal-content lavender-blush">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addModalLabel">Feature to be Implemented</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
     <script>
         // const select = document.getElementById('avatar-select');
         // const img = document.querySelector('img');
@@ -76,12 +78,6 @@
         // });
         const select = document.getElementById('avatar-select');
         const img = document.querySelector('img');
-        const selectedAvatar = "<%= avatar %>"; // Get the currently selected avatar from the server-side code
-
-        // Set the initial selected avatar in the dropdown
-        select.value = selectedAvatar;
-        img.src = `avatars/${selectedAvatar}`;
-
         select.addEventListener('change', (event) => {
             const selectedAvatar = select.value;
             img.src = `avatars/${selectedAvatar}`;
@@ -101,7 +97,6 @@
                 .then(data => console.log('Response:', data))
                 .catch(err => console.error('Error:', err));
         });
-
 
     </script>
 
