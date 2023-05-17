@@ -419,6 +419,7 @@ app.post("/signupSubmit", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+  // localStorage.clear();
   req.session.destroy();
   res.redirect("/");
 });
