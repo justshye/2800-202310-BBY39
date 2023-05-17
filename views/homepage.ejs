@@ -15,7 +15,7 @@
       url: '/random-movie',
       method: 'GET',
       success: function(movies) {
-        // Save movies to local storage
+        // // Save movies to local storage
         localStorage.setItem('movies', JSON.stringify(movies));
 
         // Display movies
@@ -28,6 +28,7 @@
   const storedMovies = JSON.parse(localStorage.getItem('movies'));
   if (storedMovies) {
     displayMovies(storedMovies);
+    
   }
 });
 
