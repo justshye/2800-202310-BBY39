@@ -1,5 +1,5 @@
 const { Configuration, OpenAIApi } = require("openai");
-require("./utils.js");
+require("../utils.js");
 
 require("dotenv").config();
 
