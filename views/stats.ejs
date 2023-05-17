@@ -5,7 +5,7 @@
     <h1>
         <%= user %>'s Stats
     </h1>
-    <p>Total movies watched: <%= totalMoviesWatched %>
-    </p>
-    <p>Total watch time: <%= totalWatchTime %> minutes</p>
+    <p>Movies on watchlist: <%= watchlistSize %></p>
+    <p>Total movies watched: <%= moviesWatched %></p>
+    <p>Total watch time: <%= watchHours %>h <%= watchMinutes %>min</p>
 <%- include("templates/footer") %>

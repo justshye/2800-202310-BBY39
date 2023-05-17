@@ -480,23 +480,20 @@ app.get("/friends", sessionValidation, async (req, res) => {
 app.get("/stats", sessionValidation, async (req, res) => {
   if (!req.session.authenticated) {
     res.redirect("/");
+    return;
   } else {
-    userCollection.findOne(
-      { username: req.session.username },
-      function (err, user) {
-        const totalMoviesWatched = user.moviesWatched.length;
-        const totalWatchTime = user.moviesWatched.reduce(
-          (total, movie) => total + movie.watchTime,
-          0
-        );
-
-        res.render("stats", {
-          user: user.username,
-          totalMoviesWatched: totalMoviesWatched,
-          totalWatchTime: totalWatchTime,
-        });
+    const username = req.session.username;
+    const user = await userCollection.findOne({ username: username }, { moviesWatched: 1 });
+    const watchlistSize = user.watchlist.length;
+    let moviesWatched = 0;
+    for (const movie of user.watchlist) {
+      if (movie.watched) {
+        moviesWatched++;
       }
-    );
+    }
+    const watchHours = Math.floor((moviesWatched * 130.9) / 60); //average movie duration is 130.9 minutes
+    const watchMinutes = Math.floor((moviesWatched * 130.9) % 60);
+    res.render("stats", { user: username, watchlistSize, moviesWatched, watchHours, watchMinutes });
   }
 });
 
@@ -533,7 +530,7 @@ app.get("/random-movie", async (req, res) => {
     const result = await userCollection.findOne(filter);
     console.log(result);
 
-    if(result) {
+    if (result) {
       await userCollection.updateOne(filter, update);
       console.log("Document updated successfully");
     } else {
@@ -558,7 +555,7 @@ app.get("/movie/:id", async (req, res) => {
 
   try {
     const result = await userCollection.findOne({ username: req.session.username });
-    console.log(result );
+    console.log(result);
     if (result) {
       const randomMovies = result.randomMovies;
       console.log(randomMovies);
