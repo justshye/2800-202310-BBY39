@@ -523,9 +523,10 @@ app.get("/random-movie", async (req, res) => {
   for (let i = 0; i < 5; i++) {
     const randomIndex = Math.floor(Math.random() * movies.length);
     randomMovies.push(movies[randomIndex]);
-    const filter = {}; // Add a filter if you want to update specific documents
+    const filter = {username: req.session.username}; // Add a filter if you want to update specific documents
     const update = { $set: { randomMovies: randomMovies } };
-
+    const result = await userCollection.findOne({ username: req.session.username });
+    console.log(result);
     userCollection
       .updateOne(filter, update)
       .then((result) => {
