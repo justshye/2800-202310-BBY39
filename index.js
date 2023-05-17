@@ -403,9 +403,8 @@ app.post("/signupSubmit", async (req, res) => {
     email: email,
     password: hashedPassword,
     user_type: "user",
-    moviesWatched: [],
-    interestingMovies: [],
-    uninterestingMovies: [],
+    watchlist: [],
+    rejectedMovies: [],
     avatar: "default.png",
   });
 
@@ -594,6 +593,7 @@ app.get("/add-to-interested", async (req, res) => {
       Original_Language: movie["Original_Language"],
       Genre: movie["Genre"],
       Poster_Url: movie["Poster_Url"],
+      Watched: false
     };
 
     await userCollection.updateOne(
