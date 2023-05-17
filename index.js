@@ -521,9 +521,8 @@ app.get('/movie/:id', async (req, res) => {
   
   const movie = movies.find(movie => movie._id.toString() === movieId);
 
-  console.log('Fetching movie with ID:', movieId);
-  console.log('Movie:', movie);
-  // const movie = await getMovieById(movieId);  // Replace with your function to get a movie by ID
+  // console.log('Fetching movie with ID:', movieId);
+  // console.log('Movie:', movie);
   res.render('moviedetails', { movie: movie });
 });
 
