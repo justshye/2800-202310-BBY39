@@ -1,4 +1,4 @@
-const { app, bcrypt, Configuration, email_auto, email_password, expireTime, express, Joi, mongoStore, movieCollection, mongodb_database, mongodb_host, mongodb_password, mongodb_port, mongodb_session_secret, mongodb_user, nodemailer, OpenAIApi, port, saltRounds, session, userCollection, uuidv4 } = require('../config');
+const { userCollection } = require('../config');
 
 async function movieDetailsHandler(req, res) {
   const movieId = req.params.id;
