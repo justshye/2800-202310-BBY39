@@ -31,7 +31,8 @@ const email_password = process.env.EMAIL_PASSWORD;
 const node_env = process.env.NODE_ENV;
 /* secret information */
 
-var { database } = include("./databaseConnection.js");
+var { database, ObjectId } = include("./databaseConnection.js");
+
 const userCollection = database.db(mongodb_database).collection("users");
 const movieCollection = database.db(mongodb_database).collection("movies");
 
@@ -305,9 +306,6 @@ app.post("/reset/:token/changedPassword", async (req, res) => {
   }
 });
 
-
-
-
 app.post("/loginSubmit", async (req, res) => {
   var username = req.body.username;
   var password = req.body.password;
@@ -346,6 +344,7 @@ app.post("/loginSubmit", async (req, res) => {
     req.session.username = result[0].username;
     req.session.email = result[0].email;
     req.session.user_type = result[0].user_type;
+    req.session.userId = result[0]._id;
     req.session.save(() => {
       res.redirect("/");
     });
@@ -405,6 +404,8 @@ app.post("/signupSubmit", async (req, res) => {
     password: hashedPassword,
     user_type: "user",
     moviesWatched: [],
+    interestingMovies: [],
+    uninterestingMovies: [],
     avatar: "default.png"
   });
 
@@ -436,9 +437,6 @@ app.post('/user-options', sessionValidation, async (req, res) => {
     res.status(500).send('Error updating user avatar');
   }
 });
-
-
-
 
 app.get('/profile', async function (req, res) {
   if (!req.session.authenticated) {
@@ -518,14 +516,89 @@ app.get('/random-movie', async (req, res) => {
 app.get('/movie/:id', async (req, res) => {
   const movieId = req.params.id;
   movies = await getMovies();
-  
+
   const movie = movies.find(movie => movie._id.toString() === movieId);
 
-  // console.log('Fetching movie with ID:', movieId);
-  // console.log('Movie:', movie);
   res.render('moviedetails', { movie: movie });
 });
 
+app.get('/add-to-interested', async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const movieId = req.query.movieId;
+    const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
+
+    if (!movie) {
+      throw new Error("Movie not found");
+    }
+
+    const newMovie = {
+      Release_Date: movie["Release_Date"],
+      Title: movie["Title"],
+      Overview: movie["Overview"],
+      Popularity: movie["Popularity"],
+      Vote_Count: movie["Vote_Count"],
+      Vote_Average: movie["Vote_Average"],
+      Original_Language: movie["Original_Language"],
+      Genre: movie["Genre"],
+      Poster_Url: movie["Poster_Url"]
+    };
+
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $push: { interestingMovies: newMovie } }
+    );
+
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred");
+  }
+});
+
+app.get('/add-to-not-interested', async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const movieId = req.query.movieId;
+    const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
+
+    if (!movie) {
+      throw new Error("Movie not found");
+    }
+
+    const newMovie = {
+      Release_Date: movie["Release_Date"],
+      Title: movie["Title"],
+      Overview: movie["Overview"],
+      Popularity: movie["Popularity"],
+      Vote_Count: movie["Vote_Count"],
+      Vote_Average: movie["Vote_Average"],
+      Original_Language: movie["Original_Language"],
+      Genre: movie["Genre"],
+      Poster_Url: movie["Poster_Url"]
+    };
+
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $push: { uninterestingMovies: newMovie } }
+    );
+
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred");
+  }
+});
 
 app.get("*", (req, res) => {
   res.status(404);
