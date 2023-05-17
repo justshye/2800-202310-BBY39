@@ -1,7 +1,7 @@
 <%- include("templates/header") %> 
 <div class="container text-center">
   <div class="row">
-    <h3 class="lead text-center">Movie recommendations for <%= (user) %> </h3>
+    <h3 class="lead text-center"><%= (user) %>'s Watchlist </h3>
   </div>
 </div>
 <div id="filter-button">
@@ -34,27 +34,21 @@
   });
 
   $(document).ready(function() {
-  $('#random-movie-button').click(function() {
-    $.ajax({
-      url: '/random-movie',
-      method: 'GET',
-      success: function(movies) {
-        // // Save movies to local storage
-        localStorage.setItem('movies', JSON.stringify(movies));
+    // Function to fetch and display the watchlist
+    function fetchAndDisplayWatchlist() {
+      $.ajax({
+        url: '/display-watchlist',
+        method: 'GET',
+        success: function(movies) {
+          // Display movies
+          displayMovies(movies);
+        }
+      });
+    }
 
-        // Display movies
-        displayMovies(movies);
-      }
-    });
+    // Call the function to fetch and display the watchlist when the page loads
+    fetchAndDisplayWatchlist();
   });
-
-  // Check for movies in local storage when page loads
-  const storedMovies = JSON.parse(localStorage.getItem('movies'));
-  if (storedMovies) {
-    displayMovies(storedMovies);
-    
-  }
-});
 
 function displayMovies(movies) {
     let moviesHtml = '';
