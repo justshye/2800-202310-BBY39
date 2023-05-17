@@ -1,7 +1,7 @@
 <%- include("templates/header") %> 
 <div class="container text-center">
   <div class="row">
-  <h2><%= (user) %>'s Watchlist</h3>
+    <h3 class="lead text-center"><%= (user) %>'s Watchlist </h3>
   </div>
 </div>
 <div id="filter-button">
@@ -11,37 +11,8 @@
   <div id="filter-button-content"></div>
 </div>
 </br>
-<div class="container"></div>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Mario_Movie.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Mario Movie</b>
-                    </br><i>Comedy</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Guardians3.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Guardians of the Galaxy</b>
-                    </br><i>Comedy, Action</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
+<div id="movie-container" class="pb-5 mx-2">
+  <!-- Your movie HTML here -->
 </div>
 <script>
   var active = false;
@@ -61,5 +32,45 @@
       active = false;
     }
   });
+
+  $(document).ready(function() {
+    // Function to fetch and display the watchlist
+    function fetchAndDisplayWatchlist() {
+      $.ajax({
+        url: '/display-watchlist',
+        method: 'GET',
+        success: function(movies) {
+          // Display movies
+          displayMovies(movies);
+        }
+      });
+    }
+
+    // Call the function to fetch and display the watchlist when the page loads
+    fetchAndDisplayWatchlist();
+  });
+
+function displayMovies(movies) {
+    let moviesHtml = '';
+    for (let i = 0; i < movies.length; i++) {
+      const movie = movies[i];
+      moviesHtml += `
+        <a href="/movie/${movie._id}">
+          <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+            <div class="row">
+              <div class="col-4 d-flex justify-content-center">
+                <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+              </div>
+              <div class="col-8">
+                <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
+                ${movie.Overview}
+              </div>
+            </div>
+          </div>
+        </a>
+      `;
+    }
+    $('#movie-container').html(moviesHtml);
+  }
 </script>
 <%- include("templates/bottomnav") %>

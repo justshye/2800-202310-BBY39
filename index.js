@@ -478,10 +478,19 @@ app.get("/profile", async function (req, res) {
 app.get("/friends", sessionValidation, async (req, res) => {
   const result = await userCollection
     .find({})
-    .project({ username: 1, email: 1, password: 1, user_type: 1, _id: 1 })
+    .project({ username: 1, email: 1, password: 1, user_type: 1, _id: 1, avatar: 1 })
     .toArray();
   res.render("friends", { users: result });
 });
+
+// app.get("/friends", function (req, res) {
+//   if (!req.session.authenticated) {
+//     res.redirect("/");
+//   } else {
+//     // render the profile template
+//     res.render("friends", { user: req.session.username });
+//   }
+// });
 
 app.get("/stats", sessionValidation, async (req, res) => {
   if (!req.session.authenticated) {
@@ -503,15 +512,6 @@ app.get("/stats", sessionValidation, async (req, res) => {
         });
       }
     );
-  }
-});
-
-app.get("/friends", function (req, res) {
-  if (!req.session.authenticated) {
-    res.redirect("/");
-  } else {
-    // render the profile template
-    res.render("friends", { user: req.session.username });
   }
 });
 
@@ -559,6 +559,24 @@ app.get("/random-movie", async (req, res) => {
     res.json(randomMovies);
   } catch (error) {
     console.error("Error updating document:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/display-watchlist", async (req, res) => {
+  try {
+    const filter = { username: req.session.username };
+    const result = await userCollection.findOne(filter);
+
+    if (result) {
+      const watchlist = result.watchlist;
+      res.json(watchlist);
+    } else {
+      console.log("User not found");
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error("Error retrieving watchlist:", error);
     res.status(500).send("Internal Server Error");
   }
 });
