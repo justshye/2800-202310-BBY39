@@ -18,11 +18,12 @@
                     <option value="default.png">Default</option>
                     <option value="will smith.png">Will Smith</option>
                     <option value="sonic.png">Sonic</option>
+                    <option value="detective pikachu.png">Detective Pikachu</option>
                     <option value="lucifer.png">Lucifer</option>
                     <option value="wednesday.png">Wednesday</option>
                     <% if (movieMateUnlocked) { %>
                         <option value="moviemate.png">MovieMate</option>
-                      <% } %>
+                        <% } %>
                 </select>
             </div>
 
@@ -79,6 +80,12 @@
         // });
         const select = document.getElementById('avatar-select');
         const img = document.querySelector('img');
+        const selectedAvatar = "<%= avatar %>"; // Get the currently selected avatar from the server-side code
+
+        // Set the initial selected avatar in the dropdown
+        select.value = selectedAvatar;
+        img.src = `avatars/${selectedAvatar}`;
+
         select.addEventListener('change', (event) => {
             const selectedAvatar = select.value;
             img.src = `avatars/${selectedAvatar}`;
@@ -97,12 +104,6 @@
                 .then(response => response.json())
                 .then(data => console.log('Response:', data))
                 .catch(err => console.error('Error:', err));
-        });
-
-        // Add event listener to the logout button
-        const logoutForm = document.getElementById('logout-form');
-        logoutForm.addEventListener('submit', () => {
-            localStorage.clear(); // Clear local storage
         });
     </script>
 
