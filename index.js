@@ -598,7 +598,7 @@ app.get("/add-to-interested", async (req, res) => {
 
     await userCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $push: { interestingMovies: newMovie } }
+      { $push: { watchlist: newMovie } }
     );
 
     res.redirect("/");
@@ -637,7 +637,7 @@ app.get("/add-to-not-interested", async (req, res) => {
 
     await userCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $push: { uninterestingMovies: newMovie } }
+      { $push: { rejectedMovies: newMovie } }
     );
 
     res.redirect("/");
