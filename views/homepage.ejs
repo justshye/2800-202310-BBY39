@@ -32,26 +32,27 @@
 });
 
 function displayMovies(movies) {
-  let moviesHtml = '';
-  for (let i = 0; i < movies.length; i++) {
-    const movie = movies[i];
-    moviesHtml += `
-      <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-        <div class="row">
-          <div class="col-4 d-flex justify-content-center">
-            <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+    let moviesHtml = '';
+    for (let i = 0; i < movies.length; i++) {
+      const movie = movies[i];
+      moviesHtml += `
+        <a href="/movie/${movie._id}">
+          <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+            <div class="row">
+              <div class="col-4 d-flex justify-content-center">
+                <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+              </div>
+              <div class="col-8">
+                <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
+                ${movie.Overview}
+              </div>
+            </div>
           </div>
-          <div class="col-8">
-            <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
-            ${movie.Overview}
-          </div>
-        </div>
-      </div>
-    `;
+        </a>
+      `;
+    }
+    $('#movie-container').html(moviesHtml);
   }
-
-  $('#movie-container').html(moviesHtml);
-}
 
   </script>
   <%- include("templates/bottomnav") %>
