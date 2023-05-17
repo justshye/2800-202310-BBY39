@@ -581,113 +581,119 @@ app.get("/display-watchlist", async (req, res) => {
   }
 });
 
-// const { ObjectId } = require('mongodb');
+const { movieDetailsHandler, addToInterestedHandler, addToNotInterestedHandler } = require('./movieHandlers');
 
-app.get("/movie/:id", async (req, res) => {
-  const movieId = req.params.id;
+app.get("/movie/:id", movieDetailsHandler);
 
-  const filter = { _id: movieId }; // Convert movieId to ObjectId
-  const projection = { randomMovies: 5 };
+app.get("/add-to-interested", addToInterestedHandler);
 
-  try {
-    const result = await userCollection.findOne({
-      username: req.session.username,
-    });
-    console.log(result);
-    if (result) {
-      const randomMovies = result.randomMovies;
-      console.log(randomMovies);
-      const movie = randomMovies.find((movie) => movie._id == movieId);
-      // Handle the rest of your logic for rendering the movie details
-      res.render("moviedetails", { movie: movie });
-    } else {
-      console.log("Document not found");
-      return res.status(404).send("Movie not found");
-    }
-  } catch (error) {
-    console.error("Error retrieving document:", error);
-    return res.status(500).send("Internal Server Error");
-  }
-});
+app.get("/add-to-not-interested", addToNotInterestedHandler);
 
-app.get("/add-to-interested", async (req, res) => {
-  try {
-    const userId = req.session.userId;
+// app.get("/movie/:id", async (req, res) => {
+//   const movieId = req.params.id;
 
-    if (!userId) {
-      throw new Error("User not authenticated");
-    }
+//   const filter = { _id: movieId }; // Convert movieId to ObjectId
+//   const projection = { randomMovies: 5 };
 
-    const movieId = req.query.movieId;
-    const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
+//   try {
+//     const result = await userCollection.findOne({
+//       username: req.session.username,
+//     });
+//     console.log(result);
+//     if (result) {
+//       const randomMovies = result.randomMovies;
+//       console.log(randomMovies);
+//       const movie = randomMovies.find((movie) => movie._id == movieId);
+//       // Handle the rest of your logic for rendering the movie details
+//       res.render("moviedetails", { movie: movie });
+//     } else {
+//       console.log("Document not found");
+//       return res.status(404).send("Movie not found");
+//     }
+//   } catch (error) {
+//     console.error("Error retrieving document:", error);
+//     return res.status(500).send("Internal Server Error");
+//   }
+// });
 
-    if (!movie) {
-      throw new Error("Movie not found");
-    }
+// app.get("/add-to-interested", async (req, res) => {
+//   try {
+//     const userId = req.session.userId;
 
-    const newMovie = {
-      Release_Date: movie["Release_Date"],
-      Title: movie["Title"],
-      Overview: movie["Overview"],
-      Popularity: movie["Popularity"],
-      Vote_Count: movie["Vote_Count"],
-      Vote_Average: movie["Vote_Average"],
-      Original_Language: movie["Original_Language"],
-      Genre: movie["Genre"],
-      Poster_Url: movie["Poster_Url"],
-      Watched: false,
-    };
+//     if (!userId) {
+//       throw new Error("User not authenticated");
+//     }
 
-    await userCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $push: { watchlist: newMovie } }
-    );
+//     const movieId = req.query.movieId;
+//     const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
 
-    res.redirect("/");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred");
-  }
-});
+//     if (!movie) {
+//       throw new Error("Movie not found");
+//     }
 
-app.get("/add-to-not-interested", async (req, res) => {
-  try {
-    const userId = req.session.userId;
+//     const newMovie = {
+//       Release_Date: movie["Release_Date"],
+//       Title: movie["Title"],
+//       Overview: movie["Overview"],
+//       Popularity: movie["Popularity"],
+//       Vote_Count: movie["Vote_Count"],
+//       Vote_Average: movie["Vote_Average"],
+//       Original_Language: movie["Original_Language"],
+//       Genre: movie["Genre"],
+//       Poster_Url: movie["Poster_Url"],
+//       Watched: false,
+//     };
 
-    if (!userId) {
-      throw new Error("User not authenticated");
-    }
+//     await userCollection.updateOne(
+//       { _id: new ObjectId(userId) },
+//       { $push: { watchlist: newMovie } }
+//     );
 
-    const movieId = req.query.movieId;
-    const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
+//     res.redirect("/");
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred");
+//   }
+// });
 
-    if (!movie) {
-      throw new Error("Movie not found");
-    }
+// app.get("/add-to-not-interested", async (req, res) => {
+//   try {
+//     const userId = req.session.userId;
 
-    const newMovie = {
-      Release_Date: movie["Release_Date"],
-      Title: movie["Title"],
-      Overview: movie["Overview"],
-      Popularity: movie["Popularity"],
-      Vote_Count: movie["Vote_Count"],
-      Vote_Average: movie["Vote_Average"],
-      Original_Language: movie["Original_Language"],
-      Genre: movie["Genre"],
-      Poster_Url: movie["Poster_Url"],
-    };
+//     if (!userId) {
+//       throw new Error("User not authenticated");
+//     }
 
-    await userCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $push: { rejectedMovies: newMovie } }
-    );
+//     const movieId = req.query.movieId;
+//     const movie = await movieCollection.findOne({ _id: new ObjectId(movieId) });
 
-    res.redirect("/");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred");
-  }
-});
+//     if (!movie) {
+//       throw new Error("Movie not found");
+//     }
+
+//     const newMovie = {
+//       Release_Date: movie["Release_Date"],
+//       Title: movie["Title"],
+//       Overview: movie["Overview"],
+//       Popularity: movie["Popularity"],
+//       Vote_Count: movie["Vote_Count"],
+//       Vote_Average: movie["Vote_Average"],
+//       Original_Language: movie["Original_Language"],
+//       Genre: movie["Genre"],
+//       Poster_Url: movie["Poster_Url"],
+//     };
+
+//     await userCollection.updateOne(
+//       { _id: new ObjectId(userId) },
+//       { $push: { rejectedMovies: newMovie } }
+//     );
+
+//     res.redirect("/");
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("An error occurred");
+//   }
+// });
 
 app.get("*", (req, res) => {
   res.status(404);
