@@ -152,4 +152,4 @@ async function movieDetailsHandler(req, res) {
     }
   }
   
-  module.exports = { movieDetailsHandler, addToInterestedHandler, addToNotInterestedHandler };
+  module.exports = { addToInterestedHandler, addToNotInterestedHandler };

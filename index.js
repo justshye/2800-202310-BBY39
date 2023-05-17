@@ -581,7 +581,9 @@ app.get("/display-watchlist", async (req, res) => {
   }
 });
 
-const { movieDetailsHandler, addToInterestedHandler, addToNotInterestedHandler } = require('./components/movieHandlers.js');
+const { addToInterestedHandler, addToNotInterestedHandler } = require('./components/movieHandlers.js');
+
+const { movieDetailsHandler } = require('./components/movieDetails.js');
 
 app.get("/movie/:id", movieDetailsHandler);
 
