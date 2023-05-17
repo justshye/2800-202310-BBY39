@@ -1,9 +1,9 @@
 const { Configuration, OpenAIApi } = require("openai");
-require('./utils.js');
+require("./utils.js");
 
 require("dotenv").config();
 
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const nodemailer = require("nodemailer");
 const express = require("express");
 const session = require("express-session");
@@ -52,9 +52,7 @@ const openai = new OpenAIApi(configuration);
 async function getOpenAIResponse(prompt) {
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-    messages: [
-      { role: "user", content: prompt },
-    ],
+    messages: [{ role: "user", content: prompt }],
     max_tokens: 10,
     temperature: 0,
     top_p: 1,
@@ -65,12 +63,13 @@ async function getOpenAIResponse(prompt) {
   return completion.data.choices[0].message.content;
 }
 
-app.use(session({
-  secret: node_session_secret,
-  store: mongoStore, //default is memory, but we want to use mongo
-  saveUninitialized: false,
-  resave: false,
-})
+app.use(
+  session({
+    secret: node_session_secret,
+    store: mongoStore, //default is memory, but we want to use mongo
+    saveUninitialized: false,
+    resave: false,
+  })
 );
 
 function isValidSession(req) {
@@ -101,14 +100,14 @@ async function sendEmail(email, resetToken, user) {
     },
   });
   let url = "";
-  console.log("resetToken ", resetToken)
+  console.log("resetToken ", resetToken);
   if (node_env === "development") {
     url = `http://localhost:4420/reset/${resetToken}`;
   } else if (node_env === "production") {
     url = `http://fwurnptkem.eu09.qoddiapp.com/reset/${resetToken}`;
   }
-// Plain text body
-const textBody = `Dear ${user},
+  // Plain text body
+  const textBody = `Dear ${user},
 
 You have requested to reset your password. To proceed with the password reset process, please click on the following link:
 
@@ -119,8 +118,8 @@ If you did not initiate this request, please ignore this email. Your current pas
 Thank you,
 The Support Team`;
 
-// HTML body
-const htmlBody = `<p>Dear ${user},</p>
+  // HTML body
+  const htmlBody = `<p>Dear ${user},</p>
 <p>You have requested to reset your password. To proceed with the password reset process, please click on the following link:</p>
 <p><a href="${url}">Reset Password</a></p>
 <p>If you did not initiate this request, please ignore this email. Your current password will remain unchanged.</p>
@@ -140,8 +139,8 @@ The MovieMate Support Team</p>`;
   // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
   console.log("Message sent: %s", info.messageId);
-  console.log("resetToken ", resetToken)
-  console.log("Preview URL: %s",url);
+  console.log("resetToken ", resetToken);
+  console.log("Preview URL: %s", url);
 }
 
 app.set("view engine", "ejs");
@@ -168,23 +167,22 @@ async function getMovies() {
   return movies;
 }
 
-app.get('/', async (req, res) => {
+app.get("/", async (req, res) => {
   try {
     const movies = await getMovies();
     // console.log(movies);
     res.render("homepage", {
       user: req.session.username,
       authenticated: req.session.authenticated,
-      movies: movies
+      movies: movies,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching movies');
+    res.status(500).send("Error fetching movies");
   }
 });
 
-
-app.get('/watchlist', (req, res) => {
+app.get("/watchlist", (req, res) => {
   if (req.session.authenticated) {
     res.render("watchlist", {
       user: req.session.username,
@@ -198,10 +196,9 @@ app.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-app.get('/moviedetails', (req, res) => {
+app.get("/moviedetails", (req, res) => {
   if (req.session.authenticated) {
-    res.render("moviedetails", {
-    });
+    res.render("moviedetails", {});
   } else {
     res.redirect("/");
   }
@@ -230,24 +227,25 @@ app.post("/resetPassword", async (req, res) => {
     }
 
     // 3. Generate a unique password reset token (you can use a library like uuid or crypto)
-  const resetToken = uuidv4();
+    const resetToken = uuidv4();
 
-
-  // Store the reset token securely in the user's document in the database
-  await userCollection.findOneAndUpdate(
-    { email: email }, // Replace with the user's email for whom the reset token is generated
-    { $set: { resetToken: resetToken } },
-  );
+    // Store the reset token securely in the user's document in the database
+    await userCollection.findOneAndUpdate(
+      { email: email }, // Replace with the user's email for whom the reset token is generated
+      { $set: { resetToken: resetToken } }
+    );
     // 4. Store the reset token securely in the user's document in the database and send the email
     sendEmail(email, resetToken, user.username);
 
     // 5. Handle successful email sending
     // res.status(200).send("Password reset link has been sent to your email.");
-    res.render("post-recover-password",{ login: "/login" });
+    res.render("post-recover-password", { login: "/login" });
   } catch (error) {
     // 6. Handle error
     console.error("Error sending password reset email:", error);
-    res.status(500).send("An error occurred while sending the password reset email.");
+    res
+      .status(500)
+      .send("An error occurred while sending the password reset email.");
     res.render("post-recover-password");
   }
 });
@@ -273,7 +271,10 @@ app.post("/reset/:token/changedPassword", async (req, res) => {
 
   const schema = Joi.object({
     newPassword: Joi.string().max(20).required(),
-    confirmPassword: Joi.any().valid(Joi.ref('newPassword')).required().messages({ 'any.only': 'Passwords do not match.' })
+    confirmPassword: Joi.any()
+      .valid(Joi.ref("newPassword"))
+      .required()
+      .messages({ "any.only": "Passwords do not match." }),
   });
 
   try {
@@ -301,7 +302,6 @@ app.post("/reset/:token/changedPassword", async (req, res) => {
       validationMessage: error.details[0].message,
       state: "error",
       token: token,
-
     });
   }
 });
@@ -327,7 +327,7 @@ app.post("/loginSubmit", async (req, res) => {
 
   const result = await userCollection
     .find({ username: username })
-    .project({ username: 1, password: 1, user_type: 1, _id: 1 , email: 1})
+    .project({ username: 1, password: 1, user_type: 1, _id: 1, email: 1 })
     .toArray();
 
   if (result.length != 1) {
@@ -406,7 +406,7 @@ app.post("/signupSubmit", async (req, res) => {
     moviesWatched: [],
     interestingMovies: [],
     uninterestingMovies: [],
-    avatar: "default.png"
+    avatar: "default.png",
   });
 
   req.session.authenticated = true;
@@ -423,57 +423,79 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-app.post('/user-options', sessionValidation, async (req, res) => {
+app.post("/user-options", sessionValidation, async (req, res) => {
   const { avatar } = req.body;
   const username = req.session.username;
-  console.log('Updating avatar for user:', username, 'with value:', avatar);
+  console.log("Updating avatar for user:", username, "with value:", avatar);
   try {
-    const result = await userCollection.updateOne({ username: username }, { $set: { avatar: avatar } }, { upsert: true });
-    console.log('Update result:', result);
+    const result = await userCollection.updateOne(
+      { username: username },
+      { $set: { avatar: avatar } },
+      { upsert: true }
+    );
+    console.log("Update result:", result);
     req.session.avatar = avatar; // update the avatar in the session
     res.send(result);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error updating user avatar');
+    res.status(500).send("Error updating user avatar");
   }
 });
 
-app.get('/profile', async function (req, res) {
+app.get("/profile", async function (req, res) {
   if (!req.session.authenticated) {
     res.redirect("/");
   } else {
     const username = req.session.username;
     try {
-      const user = await userCollection.findOne({ username: username }, { avatar: 1 });
-      res.render("profile", { user: username, email: req.session.email, avatar: user.avatar });
+      const user = await userCollection.findOne(
+        { username: username },
+        { avatar: 1 }
+      );
+      res.render("profile", {
+        user: username,
+        email: req.session.email,
+        avatar: user.avatar,
+      });
     } catch (err) {
       console.error(err);
-      res.status(500).send('Error fetching user data');
+      res.status(500).send("Error fetching user data");
     }
   }
 });
 
+app.get("/friends", sessionValidation, async (req, res) => {
+  const result = await userCollection
+    .find({})
+    .project({ username: 1, email: 1, password: 1, user_type: 1, _id: 1 })
+    .toArray();
+  res.render("friends", { users: result });
+});
 
-app.get('/friends', sessionValidation, async (req, res) => {
-  const result = await userCollection.find({}).project({username: 1, email: 1, password: 1, user_type: 1, _id: 1}).toArray();
-  res.render('friends', {users: result});
-})
-
-app.get('/stats', sessionValidation, async (req, res) => {
+app.get("/stats", sessionValidation, async (req, res) => {
   if (!req.session.authenticated) {
     res.redirect("/");
   } else {
-    userCollection.findOne({ username: req.session.username }, function (err, user) {
-      const totalMoviesWatched = user.moviesWatched.length;
-      const totalWatchTime = user.moviesWatched.reduce((total, movie) => total + movie.watchTime, 0);
+    userCollection.findOne(
+      { username: req.session.username },
+      function (err, user) {
+        const totalMoviesWatched = user.moviesWatched.length;
+        const totalWatchTime = user.moviesWatched.reduce(
+          (total, movie) => total + movie.watchTime,
+          0
+        );
 
-      res.render('stats', { user: user.username, totalMoviesWatched: totalMoviesWatched, totalWatchTime: totalWatchTime });
-    });
+        res.render("stats", {
+          user: user.username,
+          totalMoviesWatched: totalMoviesWatched,
+          totalWatchTime: totalWatchTime,
+        });
+      }
+    );
   }
 });
 
-
-app.get('/friends', function (req, res) {
+app.get("/friends", function (req, res) {
   if (!req.session.authenticated) {
     res.redirect("/");
   } else {
@@ -482,47 +504,75 @@ app.get('/friends', function (req, res) {
   }
 });
 
-
-app.get('/openai', async (req, res) => {
+app.get("/openai", async (req, res) => {
   try {
-    const prompt = req.query.prompt || ''; // Get the prompt from the query parameter or use an empty string as the default
+    const prompt = req.query.prompt || ""; // Get the prompt from the query parameter or use an empty string as the default
     let response;
-    if (prompt != '') {
+    if (prompt != "") {
       response = await getOpenAIResponse(prompt);
+    } else {
+      response = "";
     }
-    else {
-      response = '';
-    }
-    res.render('openai', { prompt, generatedMessage: response });
+    res.render("openai", { prompt, generatedMessage: response });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send("Internal Server Error");
   }
 });
 
-app.get('/random-movie', async (req, res) => {
+app.get("/random-movie", async (req, res) => {
   const movies = await getMovies();
   const randomMovies = [];
 
   for (let i = 0; i < 5; i++) {
     const randomIndex = Math.floor(Math.random() * movies.length);
     randomMovies.push(movies[randomIndex]);
+    const filter = {}; // Add a filter if you want to update specific documents
+    const update = { $set: { randomMovies: randomMovies } };
+
+    userCollection
+      .updateOne(filter, update)
+      .then((result) => {
+        console.log("Document updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating document:", error);
+      });
     movies.splice(randomIndex, 1); // remove the selected movie from the array
   }
-  
+
   res.json(randomMovies);
 });
 
-app.get('/movie/:id', async (req, res) => {
+// const { ObjectId } = require('mongodb');
+
+app.get("/movie/:id", async (req, res) => {
   const movieId = req.params.id;
-  movies = await getMovies();
 
-  const movie = movies.find(movie => movie._id.toString() === movieId);
+  const filter = { _id: movieId }; // Convert movieId to ObjectId
+  const projection = { randomMovies: 5 };
 
-  res.render('moviedetails', { movie: movie });
+  try {
+    const result = await userCollection.findOne({ username: req.session.username });
+    console.log(result );
+    if (result) {
+      const randomMovies = result.randomMovies;
+      console.log(randomMovies);
+      const movie = randomMovies.find((movie) => movie._id == movieId);
+      // Handle the rest of your logic for rendering the movie details
+      res.render("moviedetails", { movie: movie });
+    } else {
+      console.log("Document not found");
+      return res.status(404).send("Movie not found");
+    }
+  } catch (error) {
+    console.error("Error retrieving document:", error);
+    return res.status(500).send("Internal Server Error");
+  }
 });
 
-app.get('/add-to-interested', async (req, res) => {
+
+app.get("/add-to-interested", async (req, res) => {
   try {
     const userId = req.session.userId;
 
@@ -546,7 +596,7 @@ app.get('/add-to-interested', async (req, res) => {
       Vote_Average: movie["Vote_Average"],
       Original_Language: movie["Original_Language"],
       Genre: movie["Genre"],
-      Poster_Url: movie["Poster_Url"]
+      Poster_Url: movie["Poster_Url"],
     };
 
     await userCollection.updateOne(
@@ -554,14 +604,14 @@ app.get('/add-to-interested', async (req, res) => {
       { $push: { interestingMovies: newMovie } }
     );
 
-    res.redirect('/');
+    res.redirect("/");
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");
   }
 });
 
-app.get('/add-to-not-interested', async (req, res) => {
+app.get("/add-to-not-interested", async (req, res) => {
   try {
     const userId = req.session.userId;
 
@@ -585,7 +635,7 @@ app.get('/add-to-not-interested', async (req, res) => {
       Vote_Average: movie["Vote_Average"],
       Original_Language: movie["Original_Language"],
       Genre: movie["Genre"],
-      Poster_Url: movie["Poster_Url"]
+      Poster_Url: movie["Poster_Url"],
     };
 
     await userCollection.updateOne(
@@ -593,7 +643,7 @@ app.get('/add-to-not-interested', async (req, res) => {
       { $push: { uninterestingMovies: newMovie } }
     );
 
-    res.redirect('/');
+    res.redirect("/");
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");

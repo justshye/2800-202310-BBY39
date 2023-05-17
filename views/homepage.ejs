@@ -15,8 +15,8 @@
       url: '/random-movie',
       method: 'GET',
       success: function(movies) {
-        // Save movies to local storage
-        localStorage.setItem('movies', JSON.stringify(movies));
+        // // Save movies to local storage
+        // localStorage.setItem('movies', JSON.stringify(movies));
 
         // Display movies
         displayMovies(movies);
@@ -24,11 +24,11 @@
     });
   });
 
-  // Check for movies in local storage when page loads
-  const storedMovies = JSON.parse(localStorage.getItem('movies'));
-  if (storedMovies) {
-    displayMovies(storedMovies);
-  }
+  // // Check for movies in local storage when page loads
+  // const storedMovies = JSON.parse(localStorage.getItem('movies'));
+  // if (storedMovies) {
+  //   displayMovies(storedMovies);
+  // }
 });
 
 function displayMovies(movies) {
