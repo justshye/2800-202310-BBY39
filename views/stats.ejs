@@ -1,11 +1,27 @@
 <%- include("templates/header") %>
+    <div class="navbar navbar-light bg-light text-black"
+        style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
+        <h3>
+            <%= user %>'s Profile
+        </h3>
+    </div>
+    <br><br><br>
     <form action="/profile">
-        <button>Back</button>
+        <button style="margin-left: 5%; margin-bottom: 5%;">Back</button>
     </form>
-    <h1>
-        <%= user %>'s Stats
-    </h1>
-    <p>Movies on watchlist: <%= watchlistSize %></p>
-    <p>Total movies watched: <%= moviesWatched %></p>
-    <p>Total watch time: <%= watchHours %>h <%= watchMinutes %>min</p>
-<%- include("templates/footer") %>
+    <div class="container d-flex justify-content-center">
+        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+            <div class="col text-center">
+                <h1>Stats</h1>
+            </div>
+            <h5>Movies on watchlist: <%= watchlistSize %>
+            </h5>
+            <h5>Total movies watched: <%= moviesWatched %>
+            </h5>
+            <h5>Total watch time: <%= watchHours %>h <%= watchMinutes %>min</h5>
+            <h5>Plan to watch: </h5>
+            <h5>Rejected movies: <%= rejectedMovieCount %>
+            </h5>
+        </div>
+    </div>
+    <%- include("templates/bottomnav") %>
