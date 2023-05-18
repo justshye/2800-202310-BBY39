@@ -51,16 +51,24 @@ async function getWatchlist(req, res) {
     console.error("Error retrieving watchlist:", error);
   }
 }
-
+function matches(arr, field, value) {
+  return (
+    arr.filter((obj) => obj[field].toString() === value.toString()).length > 0
+  );
+}
 function curateMovies(allMovies, rejectMovies, watchlist) {
   // Copy the allMovies array
   let curatedMovies = [...allMovies];
 
   // Filter out movies that are in the rejectMovies array
-  curatedMovies = curatedMovies.filter(movie => !rejectMovies.includes(movie._id));
+  curatedMovies = curatedMovies.filter(
+    (movie) => !matches(rejectMovies, "_id", movie._id)
+  );
 
   // Filter out movies that are in the watchlist array
-  curatedMovies = curatedMovies.filter(movie => !watchlist.includes(movie._id));
+  curatedMovies = curatedMovies.filter(
+    (movie) => !matches(watchlist, "_id", movie._id)
+  );
   console.log(curatedMovies.length);
 
   // Now we have a list of movies that are neither in the rejectMovies array nor in the watchlist
@@ -73,8 +81,6 @@ function curateMovies(allMovies, rejectMovies, watchlist) {
 
   return randomMovie;
 }
-
-
 
 async function curatedMovies(req, res) {
   try {
