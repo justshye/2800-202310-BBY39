@@ -28,40 +28,36 @@ async function changeWatchlist(req, res) {
         Original_Language: movie["Original_Language"],
         Genre: movie["Genre"],
         Poster_Url: movie["Poster_Url"],
-        Watched: false,
+        Watched: selectedStatus,
       };
+
+      // Update the watchlist array in the userCollection
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId), "watchlist._id": movie._id },
+      { $set: { "watchlist.$.Watched": newMovie.Watched } }
+    );
+
+    // Update the specific status array in the userCollection based on the selected status
+    await userCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $push: { [selectedStatus]: newMovie } }
+    );
   
       // Update the watchlist array in the userCollection based on the selected status
       switch (selectedStatus) {
-        case "plan-to":
-          await userCollection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $push: { planToWatch: newMovie } }
-          );
+        case "Plan to Watch":
           break;
-        case "watching":
-          await userCollection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $push: { currentlyWatching: newMovie } }
-          );
+        case "Currently Watching":
           break;
-        case "watched":
-          await userCollection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $push: { watched: newMovie } }
-          );
+        case "Completed":
           break;
-        case "dropped":
-          await userCollection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $push: { dropped: newMovie } }
-          );
+        case "Dropped":
           break;
         default:
           throw new Error("Invalid status");
       }
   
-      res.redirect("/");
+      res.redirect("/watchlist");
     } catch (error) {
       console.error(error);
       res.status(500).send("An error occurred");
