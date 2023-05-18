@@ -16,7 +16,7 @@ async function stats(req, res) {
     }
     const watchHours = Math.floor((moviesWatched * 130.9) / 60); //average movie duration is 130.9 minutes
     const watchMinutes = Math.floor((moviesWatched * 130.9) % 60);
-    res.render("stats", { user: username, watchlistSize, moviesWatched, watchHours, watchMinutes });
+    res.render("stats", { user: username, watchlistSize, moviesWatched, watchHours, watchMinutes, rejectedMovieCount: user.rejectedMovies.length });
   }
 }
 
