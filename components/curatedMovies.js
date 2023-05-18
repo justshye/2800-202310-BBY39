@@ -106,7 +106,7 @@ function getLastMovies(watchlist, numMovies) {
 }
 
 function curateMovies(allMovies, rejectMovies, watchlist) {
-  console.log("All Movies: " ,allMovies.length);
+  console.log("All Movies: ", allMovies.length);
   // Filter out movies in rejectMovies and watchlist
   // Copy the allMovies array
   let curatedMovies = allMovies.filter(
@@ -114,7 +114,7 @@ function curateMovies(allMovies, rejectMovies, watchlist) {
       !matches(rejectMovies, "_id", movie._id) &&
       !matches(watchlist, "_id", movie._id)
   );
-  console.log("Without rejected + watchlist: ",curatedMovies.length);
+  console.log("Without rejected + watchlist: ", curatedMovies.length);
 
   // Collect genres from the last 5 movies in the watchlist
   let watchlistGenres = [];
@@ -179,10 +179,26 @@ async function curatedMovies(req, res) {
 
     for (let i = 0; i < 5; i++) {
       let randomIndex = Math.floor(Math.random() * movies.length);
-      if (i > 2) {
-        while (moviesDisplayed.includes(movies[randomIndex]) || genreMatch(movies[randomIndex], lastRejectedGenres)) {
+      // If both rejected and watchlist are empty, then no curation, just random selection
+      if (watchlist.length === 0) {
+        while (moviesDisplayed.includes(movies[randomIndex])) {
           randomIndex = Math.floor(Math.random() * movies.length);
         }
+        moviesDisplayed.push(movies[randomIndex]);
+      } else if (i > 2) {
+        if (rejected.length === 0) {
+          while (moviesDisplayed.includes(movies[randomIndex])) {
+            randomIndex = Math.floor(Math.random() * movies.length);
+          }
+        } else {
+          while (
+            moviesDisplayed.includes(movies[randomIndex]) ||
+            genreMatch(movies[randomIndex], lastRejectedGenres)
+          ) {
+            randomIndex = Math.floor(Math.random() * movies.length);
+          }
+        }
+
         moviesDisplayed.push(movies[randomIndex]);
       } else {
         moviesDisplayed.push(curateMovies(movies, rejected, watchlist));
