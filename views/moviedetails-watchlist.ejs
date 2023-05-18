@@ -1,6 +1,6 @@
 <%- include("templates/header") %> 
 <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-    <a class="nav-link" href="/">
+    <a class="nav-link" href="/watchlist">
         <img src="/arrow.png" width="30" height="30" alt="back icon">
     </a>
     <h3><%= movie.Title %></h3>
@@ -11,7 +11,7 @@
         <h3 class="lead">Original Language: <%=movie.Original_Language %></h3>
         <p class="">
             <b>Genre:</b>
-            <%= movie.Genre %>
+
         </p>
         <h3 class="lead"> Rating: <%=movie.Vote_Average %></h3>
     </div>

@@ -8,9 +8,9 @@ async function movieDetailsWatchlist(req, res) {
     });
     console.log(result);
     if (result) {
-      const randomMovies = result.randomMovies;
-      console.log(randomMovies);
-      const movie = randomMovies.find((movie) => movie._id == movieId);
+      const watchlist = result.watchlist;
+      console.log(watchlist);
+      const movie = watchlist.find((movie) => movie._id == movieId);
       res.render("moviedetails-watchlist", { movie: movie });
     } else {
       console.log("Document not found");
