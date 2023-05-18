@@ -36,25 +36,25 @@ async function changeWatchlist(req, res) {
         case "plan-to":
           await userCollection.updateOne(
             { _id: new ObjectId(userId) },
-            { $push: { "watchlist.planToWatch": newMovie } }
+            { $push: { planToWatch: newMovie } }
           );
           break;
         case "watching":
           await userCollection.updateOne(
             { _id: new ObjectId(userId) },
-            { $push: { "watchlist.currentlyWatching": newMovie } }
+            { $push: { currentlyWatching: newMovie } }
           );
           break;
         case "watched":
           await userCollection.updateOne(
             { _id: new ObjectId(userId) },
-            { $push: { "watchlist.watched": newMovie } }
+            { $push: { watched: newMovie } }
           );
           break;
         case "dropped":
           await userCollection.updateOne(
             { _id: new ObjectId(userId) },
-            { $push: { "watchlist.dropped": newMovie } }
+            { $push: { dropped: newMovie } }
           );
           break;
         default:

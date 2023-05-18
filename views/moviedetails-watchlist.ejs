@@ -30,7 +30,7 @@
     </div>  
     
     <div class="card p-3">
-        <form action="/changeWatchlist" method="POST" style="display: flex; justify-content: space-between; align-items: start;">
+        <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start;">
             <label><h5>Status:</h5></label>
             <select name="status">
               <option value="plan-to">Plan to Watch</option>
