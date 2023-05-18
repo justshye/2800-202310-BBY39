@@ -4,6 +4,7 @@
     </h3>
 
     <button id="random-movie-button">Random Movie</button>
+    <button id="curated-movie-button">Curated Movie</button>
 
     <div id="movie-container" class="pb-5 mx-2">
       <!-- Your movie HTML here -->
@@ -17,6 +18,22 @@
             method: 'GET',
             success: function (movies) {
               // // Save movies to local storage
+              localStorage.clear();
+              localStorage.setItem('movies', JSON.stringify(movies));
+
+              // Display movies
+              displayMovies(movies);
+            }
+          });
+        });
+
+        $('#curated-movie-button').click(function () {
+          $.ajax({
+            url: '/curated-movies',
+            method: 'GET',
+            success: function (movies) {
+              // // Save movies to local storage
+              localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
 
               // Display movies
@@ -37,6 +54,7 @@
         let moviesHtml = '';
         for (let i = 0; i < movies.length; i++) {
           const movie = movies[i];
+          console.log(movie);
           // Splitting the overview into an array of words
           const words = movie.Overview.split(' ');
 
