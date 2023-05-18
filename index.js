@@ -97,6 +97,18 @@ app.get("/watchlist", (req, res) => {
   }
 });
 
+app.get("/watchlist/:username", (req, res) => {
+  if (req.session.authenticated) {
+    const username = req.params.username;
+    res.render("watchlist", {
+      user: username,
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+
+
 app.get("/signup", (req, res) => {
   res.render("signup");
 });

@@ -5,14 +5,12 @@
         </div>
         <div class="col-8">
             <%= user.username %>
-                <br>
-                <i>Last online </i>
-                <br>
-                <button style="margin-bottom: 2%;" type="button" class='btn btn-success promote-button'>View
-                    Watchlist</button>
-                <button type="button" class='btn btn-danger promote-button'>Remove Friend</button>
-                </br>
-
+            <br>
+            <i>Last online </i>
+            <br>
+            <a href="/watchlist/<%= user.username %>" class="btn btn-success promote-button">View Watchlist</a>
+            <button type="button" class="btn btn-danger promote-button">Remove Friend</button>
+            </br>
         </div>
     </div>
 </div>
