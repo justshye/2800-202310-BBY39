@@ -55,10 +55,17 @@ async function signupSubmit(req, res) {
     avatar: "default.png",
   });
 
+  const result = await userCollection
+  .find({ username: username })
+  .project({ username: 1, password: 1, user_type: 1, _id: 1, email: 1 })
+  .toArray();
+
   req.session.authenticated = true;
-  req.session.email = email;
   req.session.cookie.maxAge = expireTime;
-  req.session.username = username;
+  req.session.username = result[0].username;
+  req.session.email = result[0].email;
+  req.session.user_type = result[0].user_type;
+  req.session.userId = result[0]._id;
   req.session.save(() => {
     res.redirect("/");
   });
