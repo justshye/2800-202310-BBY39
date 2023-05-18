@@ -27,7 +27,20 @@
 
     <div class="card p-3">
         <h3 class="lead">Watched: <%=movie.Watched %></h3>
-    </div>    
+    </div>  
+    
+    <div class="card p-3">
+        <form action="/changeWatchlist" method="POST" style="display: flex; justify-content: space-between; align-items: start;">
+            <label><h5>Status:</h5></label>
+            <select name="status">
+              <option value="plan-to">Plan to Watch</option>
+              <option value="watching">Currently Watching</option>
+              <option value="watched">Watched</option>
+              <option value="dropped">Dropped</option>
+            </select>
+            <input type="submit" value="Submit">
+          </form>
+    </div> 
 
         
 
