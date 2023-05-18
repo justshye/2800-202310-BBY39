@@ -9,19 +9,26 @@ async function movieDetails(req, res) {
     const result = await userCollection.findOne({
       username: req.session.username,
     });
-    // console.log(result);
+    console.log(result);
     if (result) {
       const randomMovies = result.randomMovies;
       const curatedMovies = result.curatedMovies;
-      // console.log(randomMovies);
-      const movieRandom = randomMovies.find((movie) => movie._id == movieId);
-      const movieCurated = curatedMovies.find((movie) => movie._id == movieId);
+      let movieCurated;
+      let movieRandom;
+      console.log(randomMovies);
+      if (curatedMovies) {
+        movieCurated = curatedMovies.find((movie) => movie._id == movieId);
+      }
+      if (randomMovies) {
+        movieRandom = randomMovies.find((movie) => movie._id == movieId);
+      }
+
       let movie;
-      if ( movieRandom ) {
+      if (movieRandom) {
         movie = movieRandom;
-      } else if ( movieCurated ) {
+      } else if (movieCurated) {
         movie = movieCurated;
-      } 
+      }
       // console.log(movieCurated);
       res.render("moviedetails", { movie: movie });
     } else {

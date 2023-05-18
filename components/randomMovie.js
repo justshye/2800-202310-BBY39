@@ -38,11 +38,12 @@ async function randomMovie(req, res) {
     if (result) {
       await userCollection.updateOne(filter, update);
       console.log("Document updated successfully");
+      res.json(randomMovies);
     } else {
       console.log("User not found");
     }
 
-    res.json(randomMovies);
+    
   } catch (error) {
     console.error("Error updating document:", error);
     res.status(500).send("Internal Server Error");
