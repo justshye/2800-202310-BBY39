@@ -3,23 +3,20 @@ const { userCollection } = require("../config");
 async function stats(req, res) {
   if (!req.session.authenticated) {
     res.redirect("/");
+    return;
   } else {
-    userCollection.findOne(
-      { username: req.session.username },
-      function (err, user) {
-        const totalMoviesWatched = user.moviesWatched.length;
-        const totalWatchTime = user.moviesWatched.reduce(
-          (total, movie) => total + movie.watchTime,
-          0
-        );
-
-        res.render("stats", {
-          user: user.username,
-          totalMoviesWatched: totalMoviesWatched,
-          totalWatchTime: totalWatchTime,
-        });
+    const username = req.session.username;
+    const user = await userCollection.findOne({ username: username }, { moviesWatched: 1 });
+    const watchlistSize = user.watchlist.length;
+    let moviesWatched = 0;
+    for (const movie of user.watchlist) {
+      if (movie.Watched) {
+        moviesWatched++;
       }
-    );
+    }
+    const watchHours = Math.floor((moviesWatched * 130.9) / 60); //average movie duration is 130.9 minutes
+    const watchMinutes = Math.floor((moviesWatched * 130.9) % 60);
+    res.render("stats", { user: username, watchlistSize, moviesWatched, watchHours, watchMinutes });
   }
 }
 

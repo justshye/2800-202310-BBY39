@@ -9,7 +9,7 @@
 
     <div class="container d-flex justify-content-center">
         <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="col">
+            <div class="col text-center">
                 <img src="avatars/<%= avatar %>" style="width: 256px;" />
             </div>
             <div class="text-center" style="padding-top:2%;">
@@ -35,8 +35,7 @@
                     <button type="submit" class='btn btn-info promote-button'>Friends</button>
                 </form>
                 <form action="/stats" style="padding-bottom: 2%;">
-                    <button type="submit" class='btn btn-info promote-button' data-bs-toggle="modal"
-                        data-bs-target="#notavailable">Stats</button>
+                    <button type="submit" class='btn btn-info promote-button'>Stats</button>
                 </form>
                 <form id="logout-form" action="/logout">
                     <button type="submit" class='btn btn-danger promote-button'>Log Out</button>
