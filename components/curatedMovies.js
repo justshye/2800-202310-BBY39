@@ -156,9 +156,15 @@ async function curatedMovies(req, res) {
     const moviesDisplayed = [];
 
     for (let i = 0; i < 5; i++) {
-      // const randomIndex = Math.floor(Math.random() * movies.length);
-      moviesDisplayed.push(curateMovies(movies, rejected, watchlist));
-      // curatedMovie.splice(randomIndex, 1); // remove the selected movie from the array
+      const randomIndex = Math.floor(Math.random() * movies.length);
+      if (i > 2) {
+        while (moviesDisplayed.includes(movies[randomIndex])) {
+          randomIndex = Math.floor(Math.random() * movies.length);
+        }
+        moviesDisplayed.push(movies[randomIndex]);
+      } else {
+        moviesDisplayed.push(curateMovies(movies, rejected, watchlist));
+      }
     }
 
     const filter = { username: req.session.username };
