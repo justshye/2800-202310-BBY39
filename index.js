@@ -148,7 +148,7 @@ app.get("/display-watchlist", displayWatchlist);
 
 app.get("/movie/:id", movieDetails);
 
-app.get("/add-to-interested", addToWatchlist);
+app.get("/add-to-interested", sessionValidation, addToWatchlist);
 
 app.get("/add-to-not-interested", addToRejectedMovies);
 
