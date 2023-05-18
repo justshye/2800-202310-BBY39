@@ -41,6 +41,25 @@ async function getRejectedMovies(req, res) {
   }
 }
 
+async function getLastRejectedMovieGenre(req, res) {
+  try {
+    const filter = { username: req.session.username };
+    const result = await userCollection.findOne(filter);
+    if (result) {
+      const rejectedMovies = result.rejectedMovies;
+      if (rejectedMovies.length > 0) {
+        const lastRejectedMovie = rejectedMovies[rejectedMovies.length - 1];
+        return getGenres(lastRejectedMovie);
+      }
+      return []; // Return an empty array if there are no rejected movies
+    } else {
+      console.log("User not found");
+    }
+  } catch (error) {
+    console.error("Error retrieving rejected movies list:", error);
+  }
+}
+
 async function getWatchlist(req, res) {
   try {
     const filter = { username: req.session.username };
@@ -87,6 +106,7 @@ function getLastMovies(watchlist, numMovies) {
 }
 
 function curateMovies(allMovies, rejectMovies, watchlist) {
+  console.log("All Movies: " ,allMovies.length);
   // Filter out movies in rejectMovies and watchlist
   // Copy the allMovies array
   let curatedMovies = allMovies.filter(
@@ -94,7 +114,7 @@ function curateMovies(allMovies, rejectMovies, watchlist) {
       !matches(rejectMovies, "_id", movie._id) &&
       !matches(watchlist, "_id", movie._id)
   );
-  console.log(curatedMovies.length);
+  console.log("Without rejected + watchlist: ",curatedMovies.length);
 
   // Collect genres from the last 5 movies in the watchlist
   let watchlistGenres = [];
@@ -107,7 +127,7 @@ function curateMovies(allMovies, rejectMovies, watchlist) {
   for (let movie of lastXMovies) {
     watchlistGenres.push(...getGenres(movie));
   }
-  console.log(watchlistGenres);
+  console.log("Genres accepted: 1st 3 movies", watchlistGenres);
 
   // Further filter the curatedMovies to only include movies that match at least one genre in the watchlistGenres
   curatedMovies = curatedMovies.filter((movie) =>
@@ -136,7 +156,7 @@ function curateMovies(allMovies, rejectMovies, watchlist) {
     }
   });
 
-  console.log(curatedMovies.length);
+  console.log("After all curation: ", curatedMovies.length);
 
   // If you want to select a random movie from the top 1000 most popular movies:
   let randomIndex = Math.floor(Math.random() * curatedMovies.length);
@@ -152,13 +172,15 @@ async function curatedMovies(req, res) {
     const rejected = await getRejectedMovies(req, res);
     const watchlist = await getWatchlist(req, res);
     const movies = await getMovies();
+    const lastRejectedGenres = await getLastRejectedMovieGenre(req, res);
+    console.log("rejected Genres: last 2 movies", lastRejectedGenres);
 
     const moviesDisplayed = [];
 
     for (let i = 0; i < 5; i++) {
-      const randomIndex = Math.floor(Math.random() * movies.length);
+      let randomIndex = Math.floor(Math.random() * movies.length);
       if (i > 2) {
-        while (moviesDisplayed.includes(movies[randomIndex])) {
+        while (moviesDisplayed.includes(movies[randomIndex]) || genreMatch(movies[randomIndex], lastRejectedGenres)) {
           randomIndex = Math.floor(Math.random() * movies.length);
         }
         moviesDisplayed.push(movies[randomIndex]);
