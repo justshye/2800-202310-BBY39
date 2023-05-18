@@ -33,6 +33,27 @@
         }
       });
 
+      function curateMovies(allMovies, rejectMovies, watchlist) {
+        // Copy the allMovies array
+        let curatedMovies = [...allMovies];
+
+        // Filter out movies that are in the rejectMovies array
+        curatedMovies = curatedMovies.filter(movie => !rejectMovies.includes(movie._id));
+
+        // Filter out movies that are in the watchlist array
+        curatedMovies = curatedMovies.filter(movie => !watchlist.includes(movie._id));
+
+        // Now we have a list of movies that are neither in the rejectMovies array nor in the watchlist
+        // Let's sort them by popularity in descending order (assuming popularity is a numerical value)
+        curatedMovies.sort((a, b) => b.Popularity - a.Popularity);
+
+        // If you want to select a random movie from the top 100 most popular movies:
+        let randomIndex = Math.floor(Math.random() * 100);
+        let randomMovie = curatedMovies[randomIndex];
+
+        return randomMovie;
+      }
+
       function displayMovies(movies) {
         let moviesHtml = '';
         for (let i = 0; i < movies.length; i++) {
