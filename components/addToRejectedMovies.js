@@ -1,4 +1,4 @@
-const { movieCollection, userCollection, ObjectId } = require('../config');
+const { movieCollection, userCollection, ObjectId } = require("../config");
 
 async function addToRejectedMovies(req, res) {
   try {

@@ -1,4 +1,4 @@
-const { userCollection } = require('../config');
+const { userCollection } = require("../config");
 
 async function movieDetails(req, res) {
   const movieId = req.params.id;
