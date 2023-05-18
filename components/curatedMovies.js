@@ -61,13 +61,14 @@ function curateMovies(allMovies, rejectMovies, watchlist) {
 
   // Filter out movies that are in the watchlist array
   curatedMovies = curatedMovies.filter(movie => !watchlist.includes(movie._id));
+  console.log(curatedMovies.length);
 
   // Now we have a list of movies that are neither in the rejectMovies array nor in the watchlist
   // Let's sort them by popularity in descending order (assuming popularity is a numerical value)
   curatedMovies.sort((a, b) => b.Popularity - a.Popularity);
 
-  // If you want to select a random movie from the top 100 most popular movies:
-  let randomIndex = Math.floor(Math.random() * 100);
+  // If you want to select a random movie from the top 1000 most popular movies:
+  let randomIndex = Math.floor(Math.random() * 9827);
   let randomMovie = curatedMovies[randomIndex];
 
   return randomMovie;
@@ -81,17 +82,16 @@ async function curatedMovies(req, res) {
     const watchlist = await getWatchlist(req, res);
     const movies = await getMovies();
 
-    const randomMovie = curateMovies(movies, rejected, watchlist);
-    const randomMovies = [];
+    const moviesDisplayed = [];
 
     for (let i = 0; i < 5; i++) {
-      const randomIndex = Math.floor(Math.random() * movies.length);
-      randomMovies.push(movies[randomIndex]);
-      movies.splice(randomIndex, 1); // remove the selected movie from the array
+      // const randomIndex = Math.floor(Math.random() * movies.length);
+      moviesDisplayed.push(curateMovies(movies, rejected, watchlist));
+      // curatedMovie.splice(randomIndex, 1); // remove the selected movie from the array
     }
 
     const filter = { username: req.session.username };
-    const update = { $set: { randomMovies: randomMovies } };
+    const update = { $set: { curatedMovies: moviesDisplayed } };
 
     const result = await userCollection.findOne(filter);
     // console.log(result);
@@ -103,7 +103,7 @@ async function curatedMovies(req, res) {
       console.log("User not found");
     }
 
-    res.json(randomMovies);
+    res.json(moviesDisplayed);
   } catch (error) {
     console.error("Error updating document:", error);
     res.status(500).send("Internal Server Error");

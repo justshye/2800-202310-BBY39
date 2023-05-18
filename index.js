@@ -20,6 +20,7 @@ const { friends } = require("./components/friends.js");
 const { stats } = require("./components/stats.js");
 const { openAI } = require("./components/openai.js");
 const { randomMovie } = require("./components/randomMovie.js");
+const { curatedMovies } = require("./components/curatedMovies.js");
 const { displayWatchlist } = require("./components/displayWatchlist.js");
 const { movieDetails } = require("./components/movieDetails.js");
 const { movieDetailsWatchlist } = require("./components/movieDetailsWatchlist.js");
@@ -144,6 +145,8 @@ app.get("/stats", sessionValidation, stats);
 app.get("/openai", openAI);
 
 app.get("/random-movie", randomMovie);
+
+app.get("/curated-movies", curatedMovies)
 
 app.get("/display-watchlist", displayWatchlist);
 
