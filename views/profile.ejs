@@ -105,6 +105,12 @@
                 .then(data => console.log('Response:', data))
                 .catch(err => console.error('Error:', err));
         });
+
+        // Add event listener to the logout button
+        const logoutForm = document.getElementById('logout-form');
+        logoutForm.addEventListener('submit', () => {
+            localStorage.clear(); // Clear local storage
+        });
     </script>
 
 
