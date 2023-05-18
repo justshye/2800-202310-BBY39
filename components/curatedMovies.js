@@ -214,11 +214,12 @@ async function curatedMovies(req, res) {
     if (result) {
       await userCollection.updateOne(filter, update);
       console.log("Document updated successfully");
+      res.json(moviesDisplayed);
     } else {
       console.log("User not found");
     }
 
-    res.json(moviesDisplayed);
+    
   } catch (error) {
     console.error("Error updating document:", error);
     res.status(500).send("Internal Server Error");
