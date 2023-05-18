@@ -1,4 +1,22 @@
-const { userCollection } = require("../config");
+const { userCollection, movieCollection } = require("../config");
+
+let cachedMovies = null;
+
+// Function to fetch the movies array
+async function getMovies() {
+  // If the movies array is already cached, return it
+  if (cachedMovies) {
+    return cachedMovies;
+  }
+
+  // If the movies array is not cached, fetch it from the movie collection
+  const movies = await movieCollection.find().toArray();
+
+  // Cache the movies array for future use
+  cachedMovies = movies;
+
+  return movies;
+}
 
 async function randomMovie(req, res) {
   try {

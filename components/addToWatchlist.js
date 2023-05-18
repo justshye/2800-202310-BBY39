@@ -16,6 +16,7 @@ async function addToWatchlist(req, res) {
     }
 
     const newMovie = {
+      _id: movie._id, // Add the movie's ID to the newMovie object
       Release_Date: movie["Release_Date"],
       Title: movie["Title"],
       Overview: movie["Overview"],
