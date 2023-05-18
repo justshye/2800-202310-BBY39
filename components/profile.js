@@ -8,9 +8,9 @@ async function profile(req, res) {
     try {
       const user = await userCollection.findOne(
         { username: username },
-        { avatar: 1, moviesWatched: 1 }
+        { avatar: 1, watchlist: 1 }
       );
-      const moviesWatched = user.moviesWatched ? user.moviesWatched.length : 0;
+      const moviesWatched = user.watchlist ? user.watchlist.length : 0;
       const movieMateUnlocked = moviesWatched >= 5;
       res.render("profile", {
         user: username,
