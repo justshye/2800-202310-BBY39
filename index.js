@@ -22,6 +22,7 @@ const { openAI } = require("./components/openai.js");
 const { randomMovie } = require("./components/randomMovie.js");
 const { displayWatchlist } = require("./components/displayWatchlist.js");
 const { movieDetails } = require("./components/movieDetails.js");
+const { movieDetailsWatchlist } = require("./components/movieDetailsWatchlist.js");
 const { addToWatchlist } = require("./components/addToWatchlist.js");
 const { addToRejectedMovies } = require("./components/addToRejectedMovies.js");
 
@@ -147,6 +148,8 @@ app.get("/random-movie", randomMovie);
 app.get("/display-watchlist", displayWatchlist);
 
 app.get("/movie/:id", movieDetails);
+
+app.get("/movie/watchlist/:id", movieDetailsWatchlist);
 
 app.get("/add-to-interested", sessionValidation, addToWatchlist);
 

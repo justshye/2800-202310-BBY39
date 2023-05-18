@@ -24,7 +24,7 @@ async function displayWatchlist(req, res) {
   try {
     const filter = { username: req.session.username };
     const result = await userCollection.findOne(filter);
-
+    console.log(result);
     if (result) {
       const watchlist = result.watchlist;
       res.json(watchlist);
