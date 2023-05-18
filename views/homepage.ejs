@@ -1,52 +1,53 @@
 <%- include("templates/header") %>
-<% if (authenticated) { %>
-  <h3 class="lead text-center">Movie recommendations for <%= (user) %> </h3>
+  <% if (authenticated) { %>
+    <h3 class="lead text-center">Movie recommendations for <%= (user) %>
+    </h3>
 
-  <button id="random-movie-button">Random Movie</button>
-  
-  <div id="movie-container" class="pb-5 mx-2">
-    <!-- Your movie HTML here -->
-  </div>
-  
-  <script>
-    $(document).ready(function() {
-  $('#random-movie-button').click(function() {
-    $.ajax({
-      url: '/random-movie',
-      method: 'GET',
-      success: function(movies) {
-        // // Save movies to local storage
-        localStorage.setItem('movies', JSON.stringify(movies));
+    <button id="random-movie-button">Random Movie</button>
 
-        // Display movies
-        displayMovies(movies);
-      }
-    });
-  });
+    <div id="movie-container" class="pb-5 mx-2">
+      <!-- Your movie HTML here -->
+    </div>
 
-  // Check for movies in local storage when page loads
-  const storedMovies = JSON.parse(localStorage.getItem('movies'));
-  if (storedMovies) {
-    displayMovies(storedMovies);
-    
-  }
-});
+    <script>
+      $(document).ready(function () {
+        $('#random-movie-button').click(function () {
+          $.ajax({
+            url: '/random-movie',
+            method: 'GET',
+            success: function (movies) {
+              // // Save movies to local storage
+              localStorage.setItem('movies', JSON.stringify(movies));
 
-function displayMovies(movies) {
-  let moviesHtml = '';
-  for (let i = 0; i < movies.length; i++) {
-    const movie = movies[i];
-    // Splitting the overview into an array of words
-    const words = movie.Overview.split(' ');
+              // Display movies
+              displayMovies(movies);
+            }
+          });
+        });
 
-    // Limiting the number of words to 20
-    const limitedWords = words.slice(0, 20);
-    const limitedOverview = limitedWords.join(' ');
+        // Check for movies in local storage when page loads
+        const storedMovies = JSON.parse(localStorage.getItem('movies'));
+        if (storedMovies) {
+          displayMovies(storedMovies);
 
-    // Adding ellipsis if the original overview has more than 20 words
-    const ellipsis = words.length > 20 ? '...' : '';
+        }
+      });
 
-    moviesHtml += `
+      function displayMovies(movies) {
+        let moviesHtml = '';
+        for (let i = 0; i < movies.length; i++) {
+          const movie = movies[i];
+          // Splitting the overview into an array of words
+          const words = movie.Overview.split(' ');
+
+          // Limiting the number of words to 20
+          const limitedWords = words.slice(0, 20);
+          const limitedOverview = limitedWords.join(' ');
+
+          // Adding ellipsis if the original overview has more than 20 words
+          const ellipsis = words.length > 20 ? '...' : '';
+
+          moviesHtml += `
       <a href="/movie/${movie._id}">
         <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
           <div class="row">
@@ -61,12 +62,12 @@ function displayMovies(movies) {
         </div>
       </a>
     `;
-  }
-  $('#movie-container').html(moviesHtml);
-}
+        }
+        $('#movie-container').html(moviesHtml);
+      }
 
-  </script>
-  <%- include("templates/bottomnav") %>
+    </script>
+    <%- include("templates/bottomnav") %>
 
 
 
@@ -123,4 +124,8 @@ function displayMovies(movies) {
             </div>
           </div>
         </div>
+        <script>
+          // Clear local storage when entering the "else" clause
+          localStorage.clear();
+        </script>
         <% } %>
