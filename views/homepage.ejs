@@ -87,6 +87,8 @@
             success: function (data) {
               movies = data;  // update the movies array
               displayMovies(movies);
+              // localStorage.clear();
+              // localStorage.setItem('movies', JSON.stringify(movies));
             }
           });
         }, 250);  // delay of 250ms
@@ -124,22 +126,24 @@
           const ellipsis = words.length > 20 ? '...' : '';
 
           moviesHtml += `
-      <a href="/movie/${movie._id}">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-          <div class="row">
-            <div class="col-4 d-flex justify-content-center">
-              <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
-            </div>
-            <div class="col-8">
-              <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
-              ${limitedOverview}&nbsp;${ellipsis}
+          <a href="/movie/${movie._id}" class="movie-link">
+          <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+            <div class="row">
+              <div class="col-4 d-flex justify-content-center">
+                <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+              </div>
+              <div class="col-8">
+                <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
+                ${limitedOverview}&nbsp;${ellipsis}
+              </div>
             </div>
           </div>
-        </div>
-      </a>
-    `;
+        </a>
+      `;
         }
         $('#movie-container').html(moviesHtml);
+        // Call addClickEvents after the movie links are added to the page
+
       }
 
     </script>
