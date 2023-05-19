@@ -3,6 +3,9 @@
     <h3 class="lead text-center">Movie recommendations for <%= (user) %>
     </h3>
 
+    <!-- Add a new search bar here -->
+    <input type="text" id="search-bar" placeholder="Search for a movie" class="form-control">
+
     <button id="random-movie-button">Random Movie</button>
     <button id="curated-movie-button">Curated Movie</button>
 
@@ -10,19 +13,22 @@
       <!-- Your movie HTML here -->
     </div>
 
+    <!-- Include Fuse.js from a CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
+
     <script>
       $(document).ready(function () {
+        let movies = [];
+
         $('#random-movie-button').click(function () {
           $.ajax({
             url: '/random-movie',
             method: 'GET',
-            success: function (movies) {
-              // // Save movies to local storage
+            success: function (data) {
+              movies = data;
+              displayMovies(movies);
               localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
-
-              // Display movies
-              displayMovies(movies);
             }
           });
         });
@@ -31,23 +37,36 @@
           $.ajax({
             url: '/curated-movies',
             method: 'GET',
-            success: function (movies) {
-              // // Save movies to local storage
+            success: function (data) {
+              movies = data;
+              displayMovies(movies);
               localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
-
-              // Display movies
-              displayMovies(movies);
             }
           });
         });
 
-        // Check for movies in local storage when page loads
         const storedMovies = JSON.parse(localStorage.getItem('movies'));
         if (storedMovies) {
-          displayMovies(storedMovies);
-
+          movies = storedMovies;
+          displayMovies(movies);
         }
+
+        // Fuzzy search with Fuse.js whenever the user types in the search bar
+        // Fuzzy search with Fuse.js whenever the user types in the search bar
+        $('#search-bar').on('input', function () {
+          const searchString = $(this).val();
+
+          if (searchString) {
+            // if search string is not empty
+            const fuse = new Fuse(movies, { keys: ['Title'] });
+            const results = fuse.search(searchString);
+            displayMovies(results.map(result => result.item));
+          } else {
+            // if search string is empty
+            displayMovies(movies);
+          }
+        });
       });
 
       function displayMovies(movies) {
