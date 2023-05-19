@@ -30,4 +30,19 @@
 </div>
     
     
-<%- include("templates/tindernavbar") %>
+<script>
+    function showAlert() {
+      alert("MovieMate Profile Picture unlocked!");
+    }
+  </script>
+  
+  <nav class="navbar navbar-light bg-light" style="overflow: hidden; position: fixed; justify-content: space-evenly; bottom: 0; width: 100%;">
+    <a class="navbar-link" href="/add-to-not-interested?movieId=<%= movie._id %>">
+      <img src="/remove.png" width="45" height="45" alt="x icon">
+    </a>
+    <a class="nav-link" href="/add-to-interested?movieId=<%= movie._id %>" onclick="showAlert()">
+      <img src="/check.png" width="45" height="45" alt="checkmark icon">
+    </a>
+  </nav>
+  </body>
+  </html>
