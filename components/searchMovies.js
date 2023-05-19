@@ -21,13 +21,14 @@ async function getMovies() {
 
 async function searchMovies(req, res) {
     try {
-        const movies = await getMovies(); // your function to get all movies
-        const fuse = new Fuse(movies, { keys: ['Title'] });
-        const results = fuse.search(req.body.searchString);
-        res.json(results.map(result => result.item));
-      } catch (error) {
-        console.error("Error searching movies:", error);
-        res.status(500).send("Failed to search movies");
+      const movies = await getMovies(); // your function to get all movies
+      const fuse = new Fuse(movies, { keys: ['Title'] });
+      const results = fuse.search(req.body.searchString);
+      const topResults = results.slice(0, 5).map(result => result.item);  // only take the top 5 results
+      res.json(topResults);
+    } catch (error) {
+      console.error("Error searching movies:", error);
+      res.status(500).send("Failed to search movies");
     }
   }
   

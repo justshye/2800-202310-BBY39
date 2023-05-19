@@ -60,14 +60,19 @@
         function debounce(func, wait) {
           let timeout;
 
-          return function executedFunction(...args) {
-            const later = () => {
-              clearTimeout(timeout);
-              func(...args);
-            };
+          return {
+            debouncedFunction: function executedFunction(...args) {
+              const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+              };
 
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+              clearTimeout(timeout);
+              timeout = setTimeout(later, wait);
+            },
+            cancel: function cancelDebouncedFunction() {
+              clearTimeout(timeout);
+            }
           };
         };
 
@@ -92,8 +97,9 @@
 
           if (searchString) {
             // if search string is not empty, post it to the server
-            debouncedSearch(searchString);
+            debouncedSearch.debouncedFunction(searchString);
           } else {
+            debouncedSearch.cancel();  // cancel any pending debounced search
             // if search string is empty, display the original list of movies
             movies = originalMovies;  // restore the movies array
             displayMovies(movies);
