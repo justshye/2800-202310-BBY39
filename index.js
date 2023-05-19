@@ -26,6 +26,7 @@ const { movieDetails } = require("./components/movieDetails.js");
 const { movieDetailsWatchlist } = require("./components/movieDetailsWatchlist.js");
 const { addToWatchlist } = require("./components/addToWatchlist.js");
 const { addToRejectedMovies } = require("./components/addToRejectedMovies.js");
+const { changeWatchlist } = require("./components/changeWatchlist.js")
 
 app.use(
   session({
@@ -149,6 +150,8 @@ app.get("/random-movie", randomMovie);
 app.get("/curated-movies", curatedMovies)
 
 app.get("/display-watchlist", displayWatchlist);
+
+app.post("/change-watchlist", changeWatchlist);
 
 app.get("/movie/:id", movieDetails);
 

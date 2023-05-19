@@ -26,7 +26,7 @@ async function addToWatchlist(req, res) {
       Original_Language: movie["Original_Language"],
       Genre: movie["Genre"],
       Poster_Url: movie["Poster_Url"],
-      Watched: false,
+      Watched: "Plan to Watch",
     };
 
     await userCollection.updateOne(
