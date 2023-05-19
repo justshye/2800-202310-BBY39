@@ -25,11 +25,24 @@ async function searchMovies(req, res) {
       const fuse = new Fuse(movies, { keys: ['Title'] });
       const results = fuse.search(req.body.searchString);
       const topResults = results.slice(0, 5).map(result => result.item);  // only take the top 5 results
-      res.json(topResults);
+
+      const filter = { username: req.session.username };
+      const update = { $set: { searchedMovies: topResults } };
+  
+      const result = await userCollection.findOne(filter);
+      // console.log(result);
+  
+      if (result) {
+        await userCollection.updateOne(filter, update);
+        console.log("Document updated successfully");
+        res.json(topResults);
+      } else {
+        console.log("User not found");
+      }
     } catch (error) {
-      console.error("Error searching movies:", error);
-      res.status(500).send("Failed to search movies");
-    }
+        console.error("Error updating document:", error);
+        res.status(500).send("Internal Server Error");
+      }
   }
   
 
