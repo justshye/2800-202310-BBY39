@@ -1,3 +1,4 @@
+const e = require("express");
 const { userCollection } = require("../config");
 
 async function movieDetails(req, res) {
@@ -13,8 +14,10 @@ async function movieDetails(req, res) {
     if (result) {
       const randomMovies = result.randomMovies;
       const curatedMovies = result.curatedMovies;
+      const searchedMovies = result.searchedMovies;
       let movieCurated;
       let movieRandom;
+      let movieSearched;
       console.log(randomMovies);
       if (curatedMovies) {
         movieCurated = curatedMovies.find((movie) => movie._id == movieId);
@@ -22,13 +25,18 @@ async function movieDetails(req, res) {
       if (randomMovies) {
         movieRandom = randomMovies.find((movie) => movie._id == movieId);
       }
+      if (searchedMovies) {
+        movieSearched = searchedMovies.find((movie) => movie._id == movieId);
+      }
 
       let movie;
       if (movieRandom) {
         movie = movieRandom;
       } else if (movieCurated) {
         movie = movieCurated;
-      }
+      } else if (movieSearched) {
+        movie = movieSearched;
+      } 
       // console.log(movieCurated);
       res.render("moviedetails", { movie: movie });
     } else {

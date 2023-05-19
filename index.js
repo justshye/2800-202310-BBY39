@@ -21,6 +21,7 @@ const { stats } = require("./components/stats.js");
 const { openAI } = require("./components/openai.js");
 const { randomMovie } = require("./components/randomMovie.js");
 const { curatedMovies } = require("./components/curatedMovies.js");
+const { searchMovies } = require("./components/searchMovies.js");
 const { displayWatchlist } = require("./components/displayWatchlist.js");
 const { movieDetails } = require("./components/movieDetails.js");
 const { movieDetailsWatchlist } = require("./components/movieDetailsWatchlist.js");
@@ -148,6 +149,8 @@ app.get("/openai", openAI);
 app.get("/random-movie", randomMovie);
 
 app.get("/curated-movies", curatedMovies)
+
+app.post("/search-home", searchMovies)
 
 app.get("/display-watchlist", displayWatchlist);
 
