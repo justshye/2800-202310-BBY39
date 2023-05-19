@@ -37,8 +37,20 @@ async function movieDetails(req, res) {
       } else if (movieSearched) {
         movie = movieSearched;
       } 
-      // console.log(movieCurated);
-      res.render("moviedetails", { movie: movie });
+
+      let showAlert = false; // Flag to determine if the alert should be shown
+
+      // Check if the watchlist has already reached the limit of 4 movies
+      if (
+        result.watchlist &&
+        result.watchlist.length >= 4 &&
+        !result.watchlist.find((m) => m._id == movieId)
+      ) {
+        // Set the showAlert flag to true
+        showAlert = true;
+      }
+
+      res.render("moviedetails", { movie: movie, showAlert: showAlert });
     } else {
       console.log("Document not found");
       return res.status(404).send("Movie not found");
