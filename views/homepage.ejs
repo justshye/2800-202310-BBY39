@@ -19,6 +19,7 @@
     <script>
       $(document).ready(function () {
         let movies = [];
+        let originalMovies = [];
 
         $('#random-movie-button').click(function () {
           $.ajax({
@@ -26,6 +27,7 @@
             method: 'GET',
             success: function (data) {
               movies = data;
+              originalMovies = data;  // update the originalMovies array
               displayMovies(movies);
               localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
@@ -39,6 +41,8 @@
             method: 'GET',
             success: function (data) {
               movies = data;
+              originalMovies = data;  // update the originalMovies array
+              console.log(movies);
               displayMovies(movies);
               localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
@@ -49,24 +53,53 @@
         const storedMovies = JSON.parse(localStorage.getItem('movies'));
         if (storedMovies) {
           movies = storedMovies;
+          originalMovies = storedMovies;  // update the originalMovies array
           displayMovies(movies);
         }
 
+        function debounce(func, wait) {
+          let timeout;
+
+          return function executedFunction(...args) {
+            const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+            };
+
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+          };
+        };
+
+
         // Fuzzy search with Fuse.js whenever the user types in the search bar
         // Fuzzy search with Fuse.js whenever the user types in the search bar
+        const debouncedSearch = debounce(function (searchString) {
+          $.ajax({
+            url: '/search-home',
+            method: 'POST',
+            data: { searchString },
+            success: function (data) {
+              movies = data;  // update the movies array
+              displayMovies(movies);
+            }
+          });
+        }, 250);  // delay of 250ms
+
+
         $('#search-bar').on('input', function () {
           const searchString = $(this).val();
 
           if (searchString) {
-            // if search string is not empty
-            const fuse = new Fuse(movies, { keys: ['Title'] });
-            const results = fuse.search(searchString);
-            displayMovies(results.map(result => result.item));
+            // if search string is not empty, post it to the server
+            debouncedSearch(searchString);
           } else {
-            // if search string is empty
+            // if search string is empty, display the original list of movies
+            movies = originalMovies;  // restore the movies array
             displayMovies(movies);
           }
         });
+
       });
 
       function displayMovies(movies) {
