@@ -1,62 +1,156 @@
 <%- include("templates/header") %>
-
   <% if (authenticated) { %>
-    <div class="container text-center">
-      <div class="row">
-        <h3 class="lead">Movie recommendations for <%= (user) %> 
+    <h3 class="lead text-center">Movie recommendations for <%= (user) %>
+    </h3>
 
-        </h3>
-      </div>
+    <!-- Add a new search bar here -->
+    <input type="text" id="search-bar" placeholder="Search for a movie" class="form-control">
+
+    <button id="random-movie-button">Random Movie</button>
+    <button id="curated-movie-button">Curated Movie</button>
+
+    <div id="movie-container" class="pb-5 mx-2">
+      <!-- Your movie HTML here -->
     </div>
-</br>
-    <div class="container"></div>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+
+    <!-- Include Fuse.js from a CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        let movies = [];
+        let originalMovies = [];
+
+        $('#random-movie-button').click(function () {
+          $.ajax({
+            url: '/random-movie',
+            method: 'GET',
+            success: function (data) {
+              movies = data;
+              originalMovies = data;  // update the originalMovies array
+              displayMovies(movies);
+              localStorage.clear();
+              localStorage.setItem('movies', JSON.stringify(movies));
+            }
+          });
+        });
+
+        $('#curated-movie-button').click(function () {
+          $.ajax({
+            url: '/curated-movies',
+            method: 'GET',
+            success: function (data) {
+              movies = data;
+              originalMovies = data;  // update the originalMovies array
+              console.log(movies);
+              displayMovies(movies);
+              localStorage.clear();
+              localStorage.setItem('movies', JSON.stringify(movies));
+            }
+          });
+        });
+
+        const storedMovies = JSON.parse(localStorage.getItem('movies'));
+        if (storedMovies) {
+          movies = storedMovies;
+          originalMovies = storedMovies;  // update the originalMovies array
+          displayMovies(movies);
+        }
+
+        function debounce(func, wait) {
+          let timeout;
+
+          return {
+            debouncedFunction: function executedFunction(...args) {
+              const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+              };
+
+              clearTimeout(timeout);
+              timeout = setTimeout(later, wait);
+            },
+            cancel: function cancelDebouncedFunction() {
+              clearTimeout(timeout);
+            }
+          };
+        };
+
+
+        // Fuzzy search with Fuse.js whenever the user types in the search bar
+        // Fuzzy search with Fuse.js whenever the user types in the search bar
+        const debouncedSearch = debounce(function (searchString) {
+          $.ajax({
+            url: '/search-home',
+            method: 'POST',
+            data: { searchString },
+            success: function (data) {
+              movies = data;  // update the movies array
+              displayMovies(movies);
+              // localStorage.clear();
+              // localStorage.setItem('movies', JSON.stringify(movies));
+            }
+          });
+        }, 250);  // delay of 250ms
+
+
+        $('#search-bar').on('input', function () {
+          const searchString = $(this).val();
+
+          if (searchString) {
+            // if search string is not empty, post it to the server
+            debouncedSearch.debouncedFunction(searchString);
+          } else {
+            debouncedSearch.cancel();  // cancel any pending debounced search
+            // if search string is empty, display the original list of movies
+            movies = originalMovies;  // restore the movies array
+            displayMovies(movies);
+          }
+        });
+
+      });
+
+      function displayMovies(movies) {
+        let moviesHtml = '';
+        for (let i = 0; i < movies.length; i++) {
+          const movie = movies[i];
+          console.log(movie);
+          // Splitting the overview into an array of words
+          const words = movie.Overview.split(' ');
+
+          // Limiting the number of words to 20
+          const limitedWords = words.slice(0, 20);
+          const limitedOverview = limitedWords.join(' ');
+
+          // Adding ellipsis if the original overview has more than 20 words
+          const ellipsis = words.length > 20 ? '...' : '';
+
+          moviesHtml += `
+          <a href="/movie/${movie._id}" class="movie-link">
+          <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
             <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Mario_Movie.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Mario Movie</b>
-                    </br><i>Comedy</i>
-                    </p>
-                    short movie description
-                </div>
+              <div class="col-4 d-flex justify-content-center">
+                <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
+              </div>
+              <div class="col-8">
+                <p style="font-size: medium;"><b>${movie.Title}</b></br><i>${movie.Genre}</i></p>
+                ${limitedOverview}&nbsp;${ellipsis}
+              </div>
             </div>
-        </div>
-    </a>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Guardians3.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Guardians of the Galaxy</b>
-                    </br><i>Comedy, Action</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
-    <a href="/moviedetails" style="text-decoration: none;">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="/Suzume.jpg" style="max-height: 100px; max-width: auto;">
-                </div>
-                <div class="col-8">
-                    <p style="font-size: medium;"><b>Suzume</b>
-                    </br><i>Anime, Adventure</i>
-                    </p>
-                    short movie description
-                </div>
-            </div>
-        </div>
-    </a>
-</div>
+          </div>
+        </a>
+      `;
+        }
+        $('#movie-container').html(moviesHtml);
+        // Call addClickEvents after the movie links are added to the page
+
+      }
+
+    </script>
     <%- include("templates/bottomnav") %>
+
+
+
       <% } else { %>
         <section class="py-5 text-center container">
           <div class="row py-lg-5">
@@ -110,4 +204,8 @@
             </div>
           </div>
         </div>
+        <script>
+          // Clear local storage when entering the "else" clause
+          localStorage.clear();
+        </script>
         <% } %>

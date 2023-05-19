@@ -1,0 +1,50 @@
+<%- include("templates/header") %> 
+<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
+    <a class="nav-link" href="/watchlist">
+        <img src="/arrow.png" width="30" height="30" alt="back icon">
+    </a>
+    <h3><%= movie.Title %></h3>
+</div>
+<div class="container" style="margin-top: 100px;">
+    <div class="card p-3">
+        <img class="" src ="<%= movie.Poster_Url %>" width="100" height="100" alt="movie poster">
+        <h3 class="lead">Original Language: <%=movie.Original_Language %></h3>
+        <p class="">
+            <b>Genre:</b>
+
+        </p>
+        <h3 class="lead"> Rating: <%=movie.Vote_Average %></h3>
+    </div>
+
+    <div class="card p-3">
+        <h3 class="display-6">Description:</h3>
+        <p class=""><%= movie.Overview %></p>
+    </div>
+    
+    <div class="card p-3">
+        <h3 class="lead">Release Date: <%=movie.Release_Date %></h3>
+    </div>    
+
+    <div class="card p-3">
+        <h3 class="lead">Watched: <%=movie.Watched %></h3>
+    </div>  
+    
+    <div class="card p-3">
+        <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start;">
+            <label><h5>Status:</h5></label>
+            <select name="status">
+              <option value="Plan to Watch">Plan to Watch</option>
+              <option value="Currently Watching">Currently Watching</option>
+              <option value="Completed">Completed</option>
+              <option value="Dropped">Dropped</option>
+            </select>
+            <input type="submit" value="Submit">
+          </form>
+    </div> 
+
+        
+
+</div>
+    
+    
+<%- include("templates/bottomnav") %>
