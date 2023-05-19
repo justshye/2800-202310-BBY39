@@ -36,12 +36,6 @@ async function changeWatchlist(req, res) {
       { _id: new ObjectId(userId), "watchlist._id": movie._id },
       { $set: { "watchlist.$.Watched": newMovie.Watched } }
     );
-
-    // Update the specific status array in the userCollection based on the selected status
-    await userCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $push: { [selectedStatus]: newMovie } }
-    );
   
       // Update the watchlist array in the userCollection based on the selected status
       switch (selectedStatus) {

@@ -97,6 +97,41 @@ app.get("/watchlist", (req, res) => {
   } else {
     res.redirect("/");
   }
+});app.get("/watchlist-watched", (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist-watched", {
+      user: req.session.username,
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+app.get("/watchlist-planToWatch", (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist-planToWatch", {
+      user: req.session.username,
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+app.get("/watchlist-currentlyWatching", (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist-currentlyWatching", {
+      user: req.session.username,
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+app.get("/watchlist-dropped", (req, res) => {
+  if (req.session.authenticated) {
+    res.render("watchlist-dropped", {
+      user: req.session.username,
+    });
+  } else {
+    res.redirect("/");
+  }
 });
 
 app.get("/signup", (req, res) => {
