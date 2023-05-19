@@ -158,14 +158,15 @@
     window.location.href = '/watchlist';
   });
 
-    function displayMovies(movies) {
-      let moviesHtml = '';
-      for (let i = 0; i < movies.length; i++) {
-        const movie = movies[i];
-        const words = movie.Overview.split(' ');
-        const limitedWords = words.slice(0, 20);
-        const limitedOverview = limitedWords.join(' ');
-        const ellipsis = words.length > 20 ? '...' : '';
+  function displayMovies(movies) {
+  const filteredMovies = movies.filter(movie => movie.Watched === 'Completed');
+  let moviesHtml = '';
+  for (let i = 0; i < filteredMovies.length; i++) {
+    const movie = filteredMovies[i];
+    const words = movie.Overview.split(' ');
+    const limitedWords = words.slice(0, 20);
+    const limitedOverview = limitedWords.join(' ');
+    const ellipsis = words.length > 20 ? '...' : '';
 
         moviesHtml += `
         <a href="/movie/watchlist/${movie._id}">
