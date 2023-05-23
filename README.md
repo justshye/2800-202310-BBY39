@@ -14,21 +14,103 @@ Our team, MovieMate, is developing a movie curation web application to help movi
 **Listing of File Contents**
 
 Here are the main files and directories in the repository:
-
-- **components/**
-- **public/**
-- **views/**
-- **.gitignore**
-- **README.md**
-- **config.js**
-- **databaseConnection.js**
-- **datasetInformationInsertion.js**
-- **index.js**
-- **navbar.html**
-- **openai.txt**
-- **package.json**
-- **procfile**
-- **utils.js**
+```
+root
+│   .gitignore
+│   config.js
+│   databaseConnection.js
+│   datasetInformationInsertion.js
+│   index.js
+│   navbar.html
+│   openai.txt
+│   package.json
+│   procfile
+│   README.md
+│   utils.js
+│
+├───components
+│       addToRejectedMovies.js
+│       addToWatchlist.js
+│       changeWatchlist.js
+│       curatedMovies.js
+│       displayWatchlist.js
+│       friends.js
+│       loginSubmit.js
+│       movieDetails.js
+│       movieDetailsWatchlist.js
+│       openai.js
+│       profile.js
+│       randomMovie.js
+│       resetChangedPasswordToken.js
+│       resetPassword.js
+│       resetPasswordToken.js
+│       searchMovies.js
+│       signupSubmit.js
+│       stats.js
+│       userOptions.js
+│
+├───public
+│   │   arrow.png
+│   │   check.png
+│   │   Guardians3.jpg
+│   │   home.png
+│   │   homepage-wireframe.png
+│   │   homepage-wireframeHD.png
+│   │   Mario_Movie.jpg
+│   │   moviepreview-wireframe.png
+│   │   moviepreview-wireframeHD.png
+│   │   profile-user.png
+│   │   profilepage-wireframe.png
+│   │   profilepage-wireframeHD.png
+│   │   remove.png
+│   │   search.png
+│   │   Suzume.jpg
+│   │   to-do-list.png
+│   │
+│   └───avatars
+│           default.png
+│           detective pikachu.png
+│           lucifer.png
+│           moviemate.png
+│           sonic.png
+│           wednesday.png
+│           will smith.png
+│
+└───views
+    │   404.ejs
+    │   friends.ejs
+    │   homepage.ejs
+    │   link-expired.ejs
+    │   login-submit.ejs
+    │   login.ejs
+    │   moviedetails-watchlist.ejs
+    │   moviedetails.ejs
+    │   openai.ejs
+    │   password-changed.ejs
+    │   post-recover-password.ejs
+    │   profile.ejs
+    │   recover-password.ejs
+    │   reset-password.ejs
+    │   signup-submit.ejs
+    │   signup.ejs
+    │   stats.ejs
+    │   watchlist-currentlyWatching.ejs
+    │   watchlist-dropped.ejs
+    │   watchlist-planToWatch.ejs
+    │   watchlist-popup.ejs
+    │   watchlist-watched.ejs
+    │   watchlist.ejs
+    │
+    └───templates
+            back-to-login.ejs
+            back-to-resetPassword.ejs
+            back-to-signup.ejs
+            bottomnav.ejs
+            footer.ejs
+            header.ejs
+            tindernavbar.ejs
+            user.ejs
+```            
 
 For a full tree structure of the repository, you can use the **tree** command on your terminal if you have cloned the repository locally.
 
