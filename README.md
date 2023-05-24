@@ -168,7 +168,7 @@ Our application used code from the following sources:
 2. Comp 2537 assignments(from all our team members)/lectures  
 3. Open ai api: https://platform.openai.com/docs/introduction
 4. Open ai tutorial: https://youtu.be/LX_DXLlaymg
-5. nodemailer: https://nodemailer.com/about/ 
+5. Nodemailer: https://nodemailer.com/about/ 
 6. Bootstrap: https://getbootstrap.com/docs/5.3/getting-started/introduction/ 
 
 ## **How We Used AI**
