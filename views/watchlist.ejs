@@ -7,18 +7,21 @@
     </div>
   </div>
   <div class="container">
-    <input type="text" id="search-bar" class="form-control" placeholder="Search watchlist...">
-  </div>
-
-  <div id="filter-button">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel"
-      viewBox="0 0 16 16">
-      <path
-        d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
-    </svg>
-    <div id="filter-button-content"></div>
+    <div class="row">
+      <div class="col-10">
+        <input type="text" id="search-bar" class="form-control" placeholder="Search watchlist...">
+      </div>
+      <div class="col-2 d-flex justify-content-center align-items-center" id="filter-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel"
+          viewBox="0 0 16 16">
+          <path
+            d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z" />
+        </svg>
+      </div>
+    </div>
   </div>
   </br>
+  <div id="filter-button-content"></div>
   <div style="justify-content: center; display: flex;">
     <button id="btnAll">All Movies</button>
     <button id="btnPlanToWatch">Plan to Watch</button>
@@ -26,7 +29,7 @@
     <button id="btnWatched">Completed</button>
     <button id="btnDropped">Dropped</button>
   </div>
-</br>
+  </br>
   <div id="movie-container" class="pb-5 mx-2">
     <!-- Your movie HTML here -->
   </div>
@@ -82,33 +85,7 @@
       $("#filter-button").on("click", function (event) {
         if ($(event.target).closest("#filter-button-content").length === 0) {
           if (!active) {
-            $("#filter-button-content").html(`
-        <ul class="list-group">
-          <h2>Filter By:</h2>
-          <li class="list-group-item">
-            Genres:
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Action" id="genre-Action">
-              <label class="form-check-label" for="genre-Action">
-                Action
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Comedy" id="genre-Comedy">
-              <label class="form-check-label" for="genre-Comedy">
-                Comedy
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Drama" id="genre-Drama">
-              <label class="form-check-label" for="genre-Drama">
-                Drama
-              </label>
-            </div>
-            <!-- add more checkboxes as needed -->
-          </li>
-        </ul>
-      `);
+            $("#filter-button-content").html(`<%- include("templates/filter-checkboxes") %>`);
             active = true;
 
             // Detect changes in checkboxes
@@ -130,6 +107,7 @@
           } else {
             $("#filter-button-content").html(`<div></div>`);
             active = false;
+            location.reload();
           }
         }
       });
@@ -138,25 +116,25 @@
       fetchAndDisplayWatchlist();
     });
 
-  // Event listeners for status buttons
-  $('#btnPlanToWatch').click(function () {
-    window.location.href = '/watchlist-planToWatch';
-  });
+    // Event listeners for status buttons
+    $('#btnPlanToWatch').click(function () {
+      window.location.href = '/watchlist-planToWatch';
+    });
 
-  $('#btnCurrentlyWatching').click(function () {
-    window.location.href = '/watchlist-currentlyWatching';
-  });
+    $('#btnCurrentlyWatching').click(function () {
+      window.location.href = '/watchlist-currentlyWatching';
+    });
 
-  $('#btnWatched').click(function () {
-    window.location.href = '/watchlist-watched';
-  });
+    $('#btnWatched').click(function () {
+      window.location.href = '/watchlist-watched';
+    });
 
-  $('#btnDropped').click(function () {
-    window.location.href = '/watchlist-dropped';
-  });
-  $('#btnAll').click(function () {
-    window.location.href = '/watchlist';
-  });
+    $('#btnDropped').click(function () {
+      window.location.href = '/watchlist-dropped';
+    });
+    $('#btnAll').click(function () {
+      window.location.href = '/watchlist';
+    });
 
     function displayMovies(movies) {
       let moviesHtml = '';
