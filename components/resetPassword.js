@@ -51,7 +51,7 @@ The MovieMate Support Team</p>`;
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: `"MovieMate 👻" <${email_auto}>`, // sender address
+    from: `"MovieMate" <${email_auto}>`, // sender address 
     to: email, // list of receivers
     subject: "Password Reset", // Subject line
     text: textBody, // plain text body
