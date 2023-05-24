@@ -51,7 +51,7 @@ The MovieMate Support Team</p>`;
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: `"MovieMate 👻" <${email_auto}>`, // sender address
+    from: `"MovieMate" <${email_auto}>`, // sender address 
     to: email, // list of receivers
     subject: "Password Reset", // Subject line
     text: textBody, // plain text body
@@ -74,10 +74,9 @@ async function resetPassword(req, res) {
     // 2. Check if the email exists in the database
     const user = await userCollection.findOne({ email });
     console.log(email);
-    console.log(user.username);
     if (!user) {
-      res.status(404).send("Email not found.");
-      return;
+      // Render a different page when email doesn't exist
+      return res.render("email-not-found", { login: "/login" });
     }
 
     // 3. Generate a unique password reset token (you can use a library like uuid or crypto)
@@ -89,19 +88,16 @@ async function resetPassword(req, res) {
       { $set: { resetToken: resetToken } }
     );
     // 4. Store the reset token securely in the user's document in the database and send the email
-    sendEmail(email, resetToken, user.username);
+    sendEmail(email, resetToken, user && user.username); // Pass user.username only if user exists
 
     // 5. Handle successful email sending
-    // res.status(200).send("Password reset link has been sent to your email.");
     res.render("post-recover-password", { login: "/login" });
   } catch (error) {
     // 6. Handle error
     console.error("Error sending password reset email:", error);
-    res
-      .status(500)
-      .send("An error occurred while sending the password reset email.");
-    res.render("post-recover-password");
+    res.status(500).send("An error occurred while sending the password reset email.");
   }
 }
+
 
 module.exports = { resetPassword };
