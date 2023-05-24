@@ -29,7 +29,7 @@
     <button id="btnWatched">Completed</button>
     <button id="btnDropped">Dropped</button>
   </div>
-</br>
+  </br>
   <div id="movie-container" class="pb-5 mx-2">
     <!-- Your movie HTML here -->
   </div>
@@ -85,33 +85,7 @@
       $("#filter-button").on("click", function (event) {
         if ($(event.target).closest("#filter-button-content").length === 0) {
           if (!active) {
-            $("#filter-button-content").html(`
-        <ul class="list-group">
-          <h2>Filter By:</h2>
-          <li class="list-group-item">
-            Genres:
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Action" id="genre-Action">
-              <label class="form-check-label" for="genre-Action">
-                Action
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Comedy" id="genre-Comedy">
-              <label class="form-check-label" for="genre-Comedy">
-                Comedy
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="Drama" id="genre-Drama">
-              <label class="form-check-label" for="genre-Drama">
-                Drama
-              </label>
-            </div>
-            <!-- add more checkboxes as needed -->
-          </li>
-        </ul>
-      `);
+            $("#filter-button-content").html(`<%- include("templates/filter-checkboxes") %>`);
             active = true;
 
             // Detect changes in checkboxes
@@ -133,6 +107,7 @@
           } else {
             $("#filter-button-content").html(`<div></div>`);
             active = false;
+            location.reload();
           }
         }
       });
