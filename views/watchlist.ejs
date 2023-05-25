@@ -201,15 +201,28 @@
 
     // Set the toast message
     const toastMessage = localStorage.getItem('toastMessage');
-    if (toastMessage) {
-      document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
-      var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
-      toast.show();
-      localStorage.removeItem('toastMessage'); // Remove the toast message from localStorage
-    }
+if (toastMessage) {
+  const toastBody = document.querySelector('#toastNotification .toast-body');
+  toastBody.textContent = toastMessage;
+  toastBody.classList.add('toast-message'); // Add the toast-message class
+  var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
+  toast.show();
+  localStorage.removeItem('toastMessage'); // Remove the toast message from localStorage
+}
+
   </script>
 
 <style>
+  #toastNotification {
+     max-width: 150px;
+     font-size: 14px;
+   }
+   .toast-body {
+     max-width: 200px; /* Adjust the width as per your requirement */
+     word-break: break-word;
+     font-size: 10px;
+   }
+
   .btn-responsive {
   font-size: 16px; /* Default font size */
   background-color: #bbbbbb;
