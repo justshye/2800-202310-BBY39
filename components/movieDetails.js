@@ -1,46 +1,40 @@
 const e = require("express");
 const { userCollection } = require("../config");
 
+async function findUserByUsername(username) {
+  return await userCollection.findOne({ username: username });
+}
+
+function findMovieByIdInArray(movieArray, movieId) {
+  return movieArray.find((movie) => movie._id == movieId);
+}
+
+function getWatchlistLength(watchlist) {
+  return watchlist.length;
+}
+
 async function movieDetails(req, res) {
   const movieId = req.params.id;
   const filter = { _id: movieId };
   const projection = { randomMovies: 5 };
 
   try {
-    const result = await userCollection.findOne({
-      username: req.session.username,
-    });
+    const result = await findUserByUsername(req.session.username);
     console.log(result);
     if (result) {
-      const randomMovies = result.randomMovies;
-      const curatedMovies = result.curatedMovies;
-      const searchedMovies = result.searchedMovies;
-      let movieCurated;
-      let movieRandom;
-      let movieSearched;
-      const watchlist = result.watchlist;
-      console.log(randomMovies);
-      if (curatedMovies) {
-        movieCurated = curatedMovies.find((movie) => movie._id == movieId);
-      }
-      if (randomMovies) {
-        movieRandom = randomMovies.find((movie) => movie._id == movieId);
-      }
-      if (searchedMovies) {
-        movieSearched = searchedMovies.find((movie) => movie._id == movieId);
-      }
+      const { randomMovies, curatedMovies, searchedMovies, watchlist } = result;
+
+      const movieCurated = findMovieByIdInArray(curatedMovies, movieId);
+      const movieRandom = findMovieByIdInArray(randomMovies, movieId);
+      const movieSearched = findMovieByIdInArray(searchedMovies, movieId);
 
       let movie;
-      if (movieRandom) {
-        movie = movieRandom;
-      } else if (movieCurated) {
-        movie = movieCurated;
-      } else if (movieSearched) {
-        movie = movieSearched;
-      }
 
-      const watchlistLength = watchlist.length; // Flag to determine if the alert should be shown
-      console.log(watchlist.length);
+      if (movieRandom) movie = movieRandom;
+      else if (movieCurated) movie = movieCurated;
+      else if (movieSearched) movie = movieSearched;
+
+      const watchlistLength = getWatchlistLength(watchlist);
 
       res.render("moviedetails", { movie: movie, watchlistLength: watchlistLength });
     } else {
