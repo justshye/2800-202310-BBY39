@@ -49,6 +49,8 @@
       }
 
       const data = await response.json();
+      const promises = [];
+
       if (data.alreadyInWatchlist) {
         // Store the toast message
         localStorage.setItem('toastMessage', 'Already in watchlist');
@@ -57,7 +59,10 @@
         localStorage.setItem('toastMessage', 'Added to watchlist');
       }
 
-      // Redirect to main page
+      egg();
+
+
+      // Redirect to the main page
       window.location.href = '/';
     }
 
@@ -70,6 +75,8 @@
       }
 
       const data = await response.json();
+
+
       if (data.alreadyInRejectedlist) {
         // Store the toast message
         localStorage.setItem('toastMessage', 'Already rejected');
@@ -78,16 +85,22 @@
         localStorage.setItem('toastMessage', 'Added to rejected');
       }
 
-      // Redirect to main page
+      // Redirect to the main page
       window.location.href = '/';
     }
 
-    function egg() {
+    async function egg() {
       console.log("egg");
       if (<%= watchlistLength %> == 4) {
-        alert("MovieMate Profile Picture unlocked!");
+        // Store the toast messages
+        localStorage.setItem('toastMessageEgg', 'MovieMate Profile Picture unlocked!');
+        // Redirect to the main page
+        // window.location.href = '/';
       }
     }
+
+
+
 
   </script>
 
@@ -100,7 +113,7 @@
     <a class="navbar-link" href="javascript:void(0);" onclick="addToRejected()">
       <img src="/remove.png" width="45" height="45" alt="x icon">
     </a>
-    <a class="nav-link" href="javascript:void(0);" onclick="egg(); addToWatchlist();">
+    <a class="nav-link" href="javascript:void(0);" onclick="addToWatchlist();">
       <img src="/check.png" width="45" height="45" alt="checkmark icon">
     </a>
   </nav>

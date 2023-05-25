@@ -15,17 +15,32 @@
 
 
     <!-- Toasts -->
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; right: 0; top: 0;">
-      <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">Notification</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          <!-- Notification message will go here -->
-        </div>
-      </div>
+<!-- Toasts -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 11; right: 0; top: 0;">
+  <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
+    <div class="toast-body">
+      <!-- Notification message will go here -->
+    </div>
+  </div>
+</div>
+
+<div class="position-fixed top-0 end-0 p-3 mt-5" style="z-index: 10; right: 0; margin-top: 90px!important;">
+  <!-- Notice the added mt-5 (margin-top: 3rem; )-->
+  <div id="toastNotificationEgg" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <!-- Notification message will go here -->
+    </div>
+  </div>
+</div>
+
 
     <!-- Include Fuse.js from a CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
@@ -162,10 +177,64 @@
 
       }
 
+      //   // Retrieve the toast messages from local storage
+      //   var toastMessage1 = localStorage.getItem('toastMessage1');
+      //   var toastMessage2 = localStorage.getItem('toastMessage2');
+
+      //   // If there are messages, show them
+      //   if (toastMessage1) {
+      //     // Show the toast
+      //     showToast(toastMessage1);
+      //     // Remove the message from local storage
+      //     localStorage.removeItem('toastMessage1');
+      //   }
+
+      //   if (toastMessage2) {
+      //     // Show the toast
+      //     showToast(toastMessage2);
+      //     // Remove the message from local storage
+      //     localStorage.removeItem('toastMessage2');
+      //   }
+
+      //   function showToast(message) {
+      //     const toastMessage = localStorage.getItem('toastMessage');
+
+      //     if (toastMessage) {
+      //       // Set the toast message
+      //       document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
+
+      //       // Show the toast
+      //       var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
+      //       toast.show();
+
+      //       // Remove the toast message from local storage
+      //       localStorage.removeItem('toastMessage');
+      //   }
+
+      // }
+
+
       window.onload = function () {
         const toastMessage = localStorage.getItem('toastMessage');
+        const toastMessageEgg = localStorage.getItem('toastMessageEgg');
 
-        if (toastMessage) {
+        console.log(toastMessage, toastMessageEgg);
+
+        if (toastMessage != null && toastMessageEgg != null) {
+          // Set the toast message
+          document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
+          document.querySelector('#toastNotificationEgg .toast-body').textContent = toastMessageEgg;
+
+          // Show the toast
+          var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
+          var toastEgg = new bootstrap.Toast(document.querySelector('#toastNotificationEgg'), { delay: 1000 });
+          toast.show();
+          toastEgg.show();
+
+          // Remove the toast message from local storage
+          localStorage.removeItem('toastMessage');
+          localStorage.removeItem('toastMessageEgg');
+        } else if (toastMessage != null){
           // Set the toast message
           document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
 
@@ -177,6 +246,7 @@
           localStorage.removeItem('toastMessage');
         }
       }
+
 
     </script>
     <%- include("templates/bottomnav") %>
