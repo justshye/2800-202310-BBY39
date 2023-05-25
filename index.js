@@ -99,6 +99,31 @@ async function isMovieInWatchlist(req, res, next) {
   next();
 }
 
+async function isMovieInRejectedList(req, res, next) {
+  const movieId = req.query.movieId;
+  const userId = req.session.userId;
+  console.log(userId)
+
+  const user = await userCollection.findOne({ username: req.session.username });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Check if movie is already in rejectlist
+  const movieInRejectlist = user.rejectedMovies.some(rejectedMovie => rejectedMovie._id.toString() === movieId);
+
+  console.log(movieInRejectlist)
+  if (movieInRejectlist) {
+    // the movie is in the rejectlist
+    req.movieInRejectlist = true;
+  } else {
+    // the movie is not in the rejectlist
+    req.movieInRejectlist = false;
+  }
+  
+  next();
+}
+
 
 app.get("/", async (req, res) => {
   try {
@@ -213,6 +238,24 @@ app.get("/movie/watchlist/:id", movieDetailsWatchlist);
 app.post("/add-to-interested", sessionValidation, isMovieInWatchlist, addToWatchlist);
 
 app.post("/add-to-not-interested", isMovieInWatchlist, addToRejectedMovies);
+
+app.get('/check-watchlist', isMovieInWatchlist, (req, res) => {
+  // Now the req.movieInWatchlist has been set by the middleware
+  const isMovieInWatchlist = req.movieInWatchlist;
+
+  res.json({ isMovieInWatchlist });
+});
+
+app.get('/check-rejected', isMovieInRejectedList, (req, res) => {
+  const isMovieInRejectedList = req.movieInRejectlist;
+  console.log(isMovieInRejectedList)
+  res.json({ isMovieInRejectedList });
+});
+
+
+
+
+
 
 app.get("*", (req, res) => {
   res.status(404);

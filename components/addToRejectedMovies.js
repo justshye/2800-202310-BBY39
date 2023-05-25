@@ -19,10 +19,10 @@ async function addToRejectedMovies(req, res) {
     const user = await userCollection.findOne({ _id: new ObjectId(userId) });
 
     // Check if movie is already in watchlist
-    const alreadyInWatchlist = user.watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
+    const alreadyInRejectedlist = user.rejectedMovies.some(rejectedMovie => rejectedMovie._id.toString() === movieId);
 
-    if (alreadyInWatchlist) {
-      res.json({ alreadyInWatchlist: true });
+    if (alreadyInRejectedlist) {
+      res.json({ alreadyInRejectedlist: true });
       return;
     }
 
