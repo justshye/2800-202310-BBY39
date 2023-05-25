@@ -1,4 +1,4 @@
-const { bcrypt, expireTime, Joi, userCollection } = require("../config");
+const { bcrypt, expireTime, Joi, userCollection } = require("../setup/config.js");
 
 async function validateInput(username, password) {
   const schema = Joi.object({

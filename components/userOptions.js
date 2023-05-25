@@ -1,4 +1,4 @@
-const { userCollection } = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function userOptions(req, res) {
   const { avatar } = req.body;

@@ -1,4 +1,4 @@
-const { configuration, OpenAIApi } = require("../config");
+const { configuration, OpenAIApi } = require("../setup/config.js");
 const openai = new OpenAIApi(configuration);
 
 async function getOpenAIResponse(prompt) {

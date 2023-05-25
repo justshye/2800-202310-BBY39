@@ -1,24 +1,4 @@
-const {
-  app,
-  bcrypt,
-  configuration,
-  email_auto,
-  email_password,
-  expireTime,
-  express,
-  Joi,
-  mongoStore,
-  movieCollection,
-  node_env,
-  node_session_secret,
-  nodemailer,
-  OpenAIApi,
-  port,
-  saltRounds,
-  session,
-  userCollection,
-  uuidv4,
-} = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function displayWatchlist(req, res) {
   try {
