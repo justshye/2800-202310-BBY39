@@ -14,20 +14,41 @@
             <div class="col text-center">
                 <h1>Stats</h1>
             </div>
-            <h5 style="text-align: left;">Movies on watchlist: <span style="float: right;"><%= watchlistSize %></span></h5>
-            <h5 style="text-align: left;">Total movies watched: <span style="float: right;"><%= moviesWatched %></span></h5>
-            <h5 style="text-align: left;">Total watch time: <span style="float: right;"><%= watchHours %>h <%= watchMinutes %>min</span></h5>
-            <h5 style="text-align: left;">Plan to watch: <span style="float: right;"><%= moviesPlanned %></span></h5>
-            <h5 style="text-align: left;">Movies currently watching: <span style="float: right;"><%= moviesWatching %></span></h5>
-            <h5 style="text-align: left;">Movies dropped: <span style="float: right;"><%= moviesDropped %></span></h5>
-            <h5 style="text-align: left;">Rejected movies: <span style="float: right;"><%= rejectedMovieCount %></span></h5>
+            <h5 style="text-align: left;">Movies on watchlist <span style="float: right;"><%= watchlistSize %></span></h5>
+            <h5 style="text-align: left;">Watching <span style="float: right;"><%= moviesWatching %></span></h5>
+            <h5 style="text-align: left;">Completed <span style="float: right;"><%= moviesWatched %></span></h5>
+            <h5 style="text-align: left;">Watch time <span style="float: right;"><%= watchHours %>h <%= watchMinutes %>min</span></h5>
+            <h5 style="text-align: left;">Plan to watch <span style="float: right;"><%= moviesPlanned %></span></h5>
+            <h5 style="text-align: left;">Dropped <span style="float: right;"><%= moviesDropped %></span></h5>
+            <h5 style="text-align: left;">Rejected <span style="float: right;"><%= rejectedMovieCount %></span></h5>
             
-            <div class="progress-bar-container" style="width: 100%; height: 20px; margin-top: 20px; background-color: #eee; border-radius: 10px; overflow: hidden;">
+            <div class="progress-bar-container" style="width: 100%; height: 20px; margin-top: 20px; margin-bottom: 10px; background-color: #eee; border-radius: 10px; overflow: hidden;">
                 <div class="progress-bar" style="width: <%= (moviesWatching / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c4bc66;"></div>
                 <div class="progress-bar" style="width: <%= (moviesWatched / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #668fc4;"></div>
                 <div class="progress-bar" style="width: <%= (moviesDropped / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c46666;"></div>
                 <div class="progress-bar" style="width: <%= (moviesPlanned / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left;"></div>
             </div>
+
+            <div class="legend">
+                <div style="display: flex; align-items: center;">
+                    <span style="color: #c4bc66; margin-right: 5px;">●</span>
+                    <p style="margin: 0;">Watching</p>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="color: #668fc4; margin-right: 5px;">●</span>
+                    <p style="margin: 0;">Completed</p>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="color: #c46666; margin-right: 5px;">●</span>
+                    <p style="margin: 0;">Dropped</p>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span style="color: #eee; margin-right: 5px;">●</span>
+                    <p style="margin: 0;">Plan to watch</p>
+                </div>
+            </div>
+            
+            
         </div>
     </div>
 <%- include("templates/bottomnav") %>
