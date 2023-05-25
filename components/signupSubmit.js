@@ -66,9 +66,7 @@ async function signupSubmit(req, res) {
   const validationResult = await validateUserDetails(username, email, password);
 
   if (validationResult.error) {
-    res.render("signup-submit", {
-      validationMessage: validationResult.error.message,
-    });
+    res.render("signup-submit", {validationMessage: validationResult.error.message,});
     return;
   }
 
@@ -79,9 +77,7 @@ async function signupSubmit(req, res) {
       ? "Username is already taken!"
       : "Email is already in use!";
 
-    res.render("signup-submit", {
-      validationMessage,
-    });
+    res.render("signup-submit", {validationMessage,});
     return;
   }
 
