@@ -3,6 +3,7 @@ const {
   express,
   mongoStore,
   movieCollection,
+  userCollection,
   node_session_secret,
   port,
   session,
@@ -74,10 +75,59 @@ async function getMovies() {
   return movies;
 }
 
+async function isMovieInWatchlist(req, res, next) {
+  const movieId = req.query.movieId;
+  const userId = req.session.userId;
+  console.log(userId)
+
+  const user = await userCollection.findOne({ username: req.session.username });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Check if movie is already in watchlist
+  const movieInWatchlist = user.watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
+
+  if (movieInWatchlist) {
+    // the movie is in the watchlist
+    req.movieInWatchlist = true;
+  } else {
+    // the movie is not in the watchlist
+    req.movieInWatchlist = false;
+  }
+  
+  next();
+}
+
+async function isMovieInRejectedList(req, res, next) {
+  const movieId = req.query.movieId;
+  const userId = req.session.userId;
+  console.log(userId)
+
+  const user = await userCollection.findOne({ username: req.session.username });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Check if movie is already in rejectlist
+  const movieInRejectlist = user.rejectedMovies.some(rejectedMovie => rejectedMovie._id.toString() === movieId);
+
+  console.log(movieInRejectlist)
+  if (movieInRejectlist) {
+    // the movie is in the rejectlist
+    req.movieInRejectlist = true;
+  } else {
+    // the movie is not in the rejectlist
+    req.movieInRejectlist = false;
+  }
+  
+  next();
+}
+
+
 app.get("/", async (req, res) => {
   try {
     const movies = await getMovies();
-    // console.log(movies);
     res.render("homepage", {
       user: req.session.username,
       authenticated: req.session.authenticated,
@@ -157,7 +207,6 @@ app.post("/loginSubmit", loginSubmit);
 app.post("/signupSubmit", signupSubmit);
 
 app.get("/logout", (req, res) => {
-  // localStorage.clear();
   req.session.destroy();
   res.redirect("/");
 });
@@ -167,15 +216,6 @@ app.post("/user-options", sessionValidation, userOptions);
 app.get("/profile", profile);
 
 app.get("/friends", sessionValidation, friends);
-
-// app.get("/friends", function (req, res) {
-//   if (!req.session.authenticated) {
-//     res.redirect("/");
-//   } else {
-//     // render the profile template
-//     res.render("friends", { user: req.session.username });
-//   }
-// });
 
 app.get("/stats", sessionValidation, stats);
 
@@ -195,9 +235,27 @@ app.get("/movie/:id", movieDetails);
 
 app.get("/movie/watchlist/:id", movieDetailsWatchlist);
 
-app.get("/add-to-interested", sessionValidation, addToWatchlist);
+app.post("/add-to-interested", sessionValidation, isMovieInWatchlist, addToWatchlist);
 
-app.get("/add-to-not-interested", addToRejectedMovies);
+app.post("/add-to-not-interested", isMovieInWatchlist, addToRejectedMovies);
+
+app.get('/check-watchlist', isMovieInWatchlist, (req, res) => {
+  // Now the req.movieInWatchlist has been set by the middleware
+  const isMovieInWatchlist = req.movieInWatchlist;
+
+  res.json({ isMovieInWatchlist });
+});
+
+app.get('/check-rejected', isMovieInRejectedList, (req, res) => {
+  const isMovieInRejectedList = req.movieInRejectlist;
+  console.log(isMovieInRejectedList)
+  res.json({ isMovieInRejectedList });
+});
+
+
+
+
+
 
 app.get("*", (req, res) => {
   res.status(404);

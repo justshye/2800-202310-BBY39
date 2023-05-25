@@ -15,6 +15,17 @@ async function addToRejectedMovies(req, res) {
       throw new Error("Movie not found");
     }
 
+    // Fetch user
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+    // Check if movie is already in watchlist
+    const alreadyInRejectedlist = user.rejectedMovies.some(rejectedMovie => rejectedMovie._id.toString() === movieId);
+
+    if (alreadyInRejectedlist) {
+      res.json({ alreadyInRejectedlist: true });
+      return;
+    }
+
     const newMovie = {
       _id: movie._id, // Add the movie's ID to the newMovie object
       Release_Date: movie["Release_Date"],
@@ -33,7 +44,7 @@ async function addToRejectedMovies(req, res) {
       { $push: { rejectedMovies: newMovie } }
     );
 
-    res.redirect("/");
+    res.json({ redirect: '/' });
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");

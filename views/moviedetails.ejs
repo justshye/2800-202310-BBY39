@@ -1,11 +1,14 @@
 <%- include("templates/header") %>
-<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content: space-around; top: 0; width: 100%; margin: auto; z-index: 9999;">
-  <a class="nav-link" href="/">
+  <div class="navbar navbar-light bg-light text-black"
+    style="overflow: hidden; position: fixed; justify-content: space-around; top: 0; width: 100%; margin: auto; z-index: 9999;">
+    <a class="nav-link" href="/">
       <img src="/arrow.png" width="30" height="30" alt="back icon">
-  </a>
-  <h3><%= movie.Title %></h3>
-</div>
-<br>
+    </a>
+    <h3>
+      <%= movie.Title %>
+    </h3>
+  </div>
+  <br>
 
   <div class="container" style="margin-top: 100px;">
     <div class="card p-3">
@@ -33,24 +36,148 @@
     </div>
   </div>
 
+
+
+
   <script>
-    function egg() {
+    async function addToWatchlist() {
+      const movieId = '<%= movie._id %>';
+      const response = await fetch(`/add-to-interested?movieId=${movieId}`, { method: 'POST' });
+
+      if (!response.ok) {
+        throw new Error("An error occurred");
+      }
+
+      const data = await response.json();
+      const promises = [];
+
+      if (data.alreadyInWatchlist) {
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Already in watchlist');
+      } else if (data.redirect) {
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Added to watchlist');
+      }
+
+      egg();
+
+
+      // Redirect to the main page
+      window.location.href = '/';
+    }
+
+    async function addToRejected() {
+      const movieId = '<%= movie._id %>';
+      const response = await fetch(`/add-to-not-interested?movieId=${movieId}`, { method: 'POST' });
+
+      if (!response.ok) {
+        throw new Error("An error occurred");
+      }
+
+      const data = await response.json();
+
+
+      if (data.alreadyInRejectedlist) {
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Already rejected');
+      } else if (data.redirect) {
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Added to rejected');
+      }
+
+      // Redirect to the main page
+      window.location.href = '/';
+    }
+
+    async function egg() {
       console.log("egg");
       if (<%= watchlistLength %> == 4) {
-        alert("MovieMate Profile Picture unlocked!");
+        // Store the toast messages
+        localStorage.setItem('toastMessageEgg', 'MovieMate Profile Picture unlocked!');
+        // Redirect to the main page
+        // window.location.href = '/';
       }
     }
+
+
+
+
   </script>
-  
+
   <br><br><br>
 
-  <nav class="navbar navbar-light bg-light" style="overflow: hidden; position: fixed; justify-content: space-evenly; bottom: 0; width: 100%;">
-    <a class="navbar-link" href="/add-to-not-interested?movieId=<%= movie._id %>">
+
+
+  <nav class="navbar navbar-light bg-light"
+    style="overflow: hidden; position: fixed; justify-content: space-evenly; bottom: 0; width: 100%;">
+    <a class="navbar-link" href="javascript:void(0);" onclick="addToRejected()">
       <img src="/remove.png" width="45" height="45" alt="x icon">
     </a>
-    <a class="nav-link" href="/add-to-interested?movieId=<%= movie._id %>" onclick="egg()">
+    <a class="nav-link" href="javascript:void(0);" onclick="addToWatchlist();">
       <img src="/check.png" width="45" height="45" alt="checkmark icon">
     </a>
   </nav>
-</body>
-</html>
+
+  <div id="alreadyInWatchlistModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">In Watchlist</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>The movie is already in your watchlist.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal fade" id="confirmAddModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>The movie has been added to your watchlist.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Confirmation Modal -->
+  <div class="modal fade" id="confirmRejectModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>The movie has been rejected.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Already Rejected Modal -->
+  <div class="modal fade" id="alreadyRejectedModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">In RejectList</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>This movie has already been rejected.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </body>
+
+  </html>
