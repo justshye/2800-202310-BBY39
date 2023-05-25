@@ -40,6 +40,19 @@
     <!-- Your movie HTML here -->
   </div>
 
+      <!-- Toasts -->
+      <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; right: 0; top: 0;">
+        <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+
+            </div>
+        </div>
+    </div>
+
   <!-- Include Fuse.js from a CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
 
@@ -79,7 +92,7 @@
       }
 
       $('#search-bar').on('input', function () {
-        const searchString = $(this).val();
+        const searchString = $(this).val().trim().replace(/\s+/g, ' '); // Replace multiple consecutive white spaces with a single space
         if (searchString) {
           const result = fuse.search(searchString);
           displayMovies(result.map(res => res.item));
@@ -87,7 +100,7 @@
           fetchAndDisplayWatchlist();
         }
       });
-
+      
       $("#filter-button").on("click", function (event) {
         if ($(event.target).closest("#filter-button-content").length === 0) {
           if (!active) {
@@ -184,6 +197,15 @@
       `;
       }
       $('#movie-container').html(moviesHtml);
+    }
+
+    // Set the toast message
+    const toastMessage = localStorage.getItem('toastMessage');
+    if (toastMessage) {
+      document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
+      var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
+      toast.show();
+      localStorage.removeItem('toastMessage'); // Remove the toast message from localStorage
     }
   </script>
 

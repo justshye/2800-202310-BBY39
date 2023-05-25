@@ -51,7 +51,7 @@ async function changeWatchlist(req, res) {
           throw new Error("Invalid status");
       }
   
-      res.redirect("/watchlist");
+      res.json({ message: 'Status updated!' });
     } catch (error) {
       console.error(error);
       res.status(500).send("An error occurred");
