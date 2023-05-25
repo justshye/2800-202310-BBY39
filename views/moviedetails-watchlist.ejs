@@ -40,7 +40,7 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
     </div>  
     
     <div class="card p-3" id="movieText">
-        <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start; position: relative;">
+        <form id="watchlist-form" action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start; position: relative;">
             <label><h5>Status:</h5></label>
             <select name="status">
               <% const watchedStatus = movie.Watched; %>
@@ -120,5 +120,32 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
   }
 }
 </style>
+
+<script>
+  const watchlistForm = document.getElementById('watchlist-form');
+  watchlistForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the form from submitting normally
+
+      const status = watchlistForm.elements.status.value; // Get the selected status value
+
+      fetch(watchlistForm.action, {
+          method: watchlistForm.method,
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+              status: status
+          })
+      })
+          .then(response => response.json())
+          .then(data => {
+              console.log('Response:', status);
+              localStorage.setItem('toastMessage', 'Set as ' + status); // Store the toast message
+              window.location.href = '/watchlist'; // Redirect to the main page
+          })
+          .catch(err => console.error('Error:', err));
+  });
+
+</script>
 
 <%- include("templates/bottomnav") %>
