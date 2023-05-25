@@ -10,13 +10,12 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
-// const url = require('url');
 const saltRounds = 12;
 
 const port = process.env.PORT || 4420;
 const app = express();
 
-const expireTime = 8 * 60 * 60 * 1000; //expires after 8 hours (hours * minutes * seconds * millis)
+const expireTime = 8 * 60 * 60 * 1000;
 
 /* secret information */
 const node_session_secret = process.env.NODE_SESSION_SECRET;
@@ -29,7 +28,6 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const email_auto = process.env.EMAIL_AUTO;
 const email_password = process.env.EMAIL_PASSWORD;
 const node_env = process.env.NODE_ENV;
-/* secret information */
 
 var { database, ObjectId } = include("./databaseConnection.js");
 
