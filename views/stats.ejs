@@ -1,32 +1,62 @@
 <%- include("templates/header") %>
-    <div class="navbar navbar-light bg-light text-black"
-        style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-        <h3>
-            <%= user %>'s Profile
-        </h3>
+    <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; top: 0; width: 100%; margin: 
+auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
+        <div style="flex-shrink: 0;">
+            <a class="nav-link" href="/profile" style="display: flex; align-items: center;">
+                <img src="/arrow.png" width="30" height="30" alt="back icon">
+            </a>
+        </div>
+        <div style="flex-grow: 1; text-align: center; overflow: hidden;">
+            <h3 id="movieTitle" style="white-space: nowrap; overflow: hidden; margin: 0; max-width: 100%;">
+                <%= user %>'s Profile
+            </h3>
+        </div>
+        <div style="flex-shrink: 0; width: 30px;"></div>
     </div>
+
     <br><br><br>
-    <form action="/profile">
-        <button style="margin-left: 5%; margin-bottom: 5%;">Back</button>
-    </form>
+
     <div class="container d-flex justify-content-center">
         <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px; width: 95%;">
             <div class="col text-center">
                 <h1>Stats</h1>
             </div>
-            <h5 style="text-align: left;">Movies on watchlist <span style="float: right;"><%= watchlistSize %></span></h5>
-            <h5 style="text-align: left;">Watching <span style="float: right;"><%= moviesWatching %></span></h5>
-            <h5 style="text-align: left;">Completed <span style="float: right;"><%= moviesWatched %></span></h5>
-            <h5 style="text-align: left;">Watch time <span style="float: right;"><%= watchHours %>h <%= watchMinutes %>min</span></h5>
-            <h5 style="text-align: left;">Plan to watch <span style="float: right;"><%= moviesPlanned %></span></h5>
-            <h5 style="text-align: left;">Dropped <span style="float: right;"><%= moviesDropped %></span></h5>
-            <h5 style="text-align: left;">Rejected <span style="float: right;"><%= rejectedMovieCount %></span></h5>
-            
-            <div class="progress-bar-container" style="width: 100%; height: 20px; margin-top: 20px; margin-bottom: 10px; background-color: #eee; border-radius: 10px; overflow: hidden;">
-                <div class="progress-bar" style="width: <%= (moviesWatching / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c4bc66;"></div>
-                <div class="progress-bar" style="width: <%= (moviesWatched / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #668fc4;"></div>
-                <div class="progress-bar" style="width: <%= (moviesDropped / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c46666;"></div>
-                <div class="progress-bar" style="width: <%= (moviesPlanned / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left;"></div>
+            <h5 style="text-align: left;">Movies on watchlist <span style="float: right;">
+                    <%= watchlistSize %>
+                </span></h5>
+            <h5 style="text-align: left;">Watching <span style="float: right;">
+                    <%= moviesWatching %>
+                </span></h5>
+            <h5 style="text-align: left;">Completed <span style="float: right;">
+                    <%= moviesWatched %>
+                </span></h5>
+            <h5 style="text-align: left;">Watch time <span style="float: right;">
+                    <%= watchHours %>h <%= watchMinutes %>min
+                </span></h5>
+            <h5 style="text-align: left;">Plan to watch <span style="float: right;">
+                    <%= moviesPlanned %>
+                </span></h5>
+            <h5 style="text-align: left;">Dropped <span style="float: right;">
+                    <%= moviesDropped %>
+                </span></h5>
+            <h5 style="text-align: left;">Rejected <span style="float: right;">
+                    <%= rejectedMovieCount %>
+                </span></h5>
+
+            <div class="progress-bar-container"
+                style="width: 100%; height: 20px; margin-top: 20px; margin-bottom: 10px; background-color: #eee; border-radius: 10px; overflow: hidden;">
+                <div class="progress-bar"
+                    style="width: <%= (moviesWatching / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c4bc66;">
+                </div>
+                <div class="progress-bar"
+                    style="width: <%= (moviesWatched / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #668fc4;">
+                </div>
+                <div class="progress-bar"
+                    style="width: <%= (moviesDropped / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c46666;">
+                </div>
+                <div class="progress-bar"
+                    style="width: <%= (moviesPlanned / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left;">
+                </div>
             </div>
 
             <div class="legend">
@@ -47,8 +77,8 @@
                     <p style="margin: 0;">Plan to watch</p>
                 </div>
             </div>
-            
-            
+
+
         </div>
     </div>
-<%- include("templates/bottomnav") %>
+    <%- include("templates/bottomnav") %>
