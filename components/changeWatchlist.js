@@ -1,4 +1,4 @@
-const { movieCollection, userCollection, ObjectId } = require("../config");
+const { movieCollection, userCollection, ObjectId } = require("../setup/config.js");
 
 // Update the status of a movie in the user's watchlist
 async function changeWatchlist(req, res) {

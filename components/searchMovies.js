@@ -1,4 +1,4 @@
-const { userCollection, movieCollection } = require("../config");
+const { userCollection, movieCollection } = require("../setup/config.js");
 const Fuse = require('fuse.js');
 
 let cachedMovies = null;

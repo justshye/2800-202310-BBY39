@@ -1,4 +1,4 @@
-const { userCollection } = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function profile(req, res) {
   if (!req.session.authenticated) res.redirect("/");

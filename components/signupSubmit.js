@@ -4,7 +4,7 @@ const {
   Joi,
   saltRounds,
   userCollection,
-} = require("../config");
+} = require("../setup/config.js");
 
 // Function to validate user details
 async function validateUserDetails(username, email, password) {

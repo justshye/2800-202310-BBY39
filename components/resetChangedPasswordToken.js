@@ -1,4 +1,4 @@
-const { bcrypt, Joi, saltRounds, userCollection } = require("../config");
+const { bcrypt, Joi, saltRounds, userCollection } = require("../setup/config.js");
 
 // Function to validate new password and confirm password
 async function validateNewPassword(newPassword, confirmPassword) {

@@ -1,5 +1,4 @@
-const e = require("express");
-const { userCollection } = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function findUserByUsername(username) {
   return await userCollection.findOne({ username: username });

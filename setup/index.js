@@ -10,25 +10,25 @@ const {
 } = require("./config");
 
 /* Component Imports */
-const { resetPassword } = require("./components/resetPassword");
-const { resetPasswordToken } = require("./components/resetPasswordToken");
-const { resetChangedPasswordToken } = require("./components/resetChangedPasswordToken");
-const { loginSubmit } = require("./components/loginSubmit.js");
-const { signupSubmit } = require("./components/signupSubmit.js");
-const { userOptions } = require("./components/userOptions.js");
-const { profile } = require("./components/profile.js");
-const { friends } = require("./components/friends.js");
-const { stats } = require("./components/stats.js");
-const { openAI } = require("./components/openai.js");
-const { randomMovie } = require("./components/randomMovie.js");
-const { curatedMovies } = require("./components/curatedMovies.js");
-const { searchMovies } = require("./components/searchMovies.js");
-const { displayWatchlist } = require("./components/displayWatchlist.js");
-const { movieDetails } = require("./components/movieDetails.js");
-const { movieDetailsWatchlist } = require("./components/movieDetailsWatchlist.js");
-const { addToWatchlist } = require("./components/addToWatchlist.js");
-const { addToRejectedMovies } = require("./components/addToRejectedMovies.js");
-const { changeWatchlist } = require("./components/changeWatchlist.js")
+const { resetPassword } = require("../components/resetPassword.js");
+const { resetPasswordToken } = require("../components/resetPasswordToken.js");
+const { resetChangedPasswordToken } = require("../components/resetChangedPasswordToken.js");
+const { loginSubmit } = require("../components/loginSubmit.js");
+const { signupSubmit } = require("../components/signupSubmit.js");
+const { userOptions } = require("../components/userOptions.js");
+const { profile } = require("../components/profile.js");
+const { friends } = require("../components/friends.js");
+const { stats } = require("../components/stats.js");
+const { openAI } = require("../components/openai.js");
+const { randomMovie } = require("../components/randomMovie.js");
+const { curatedMovies } = require("../components/curatedMovies.js");
+const { searchMovies } = require("../components/searchMovies.js");
+const { displayWatchlist } = require("../components/displayWatchlist.js");
+const { movieDetails } = require("../components/movieDetails.js");
+const { movieDetailsWatchlist } = require("../components/movieDetailsWatchlist.js");
+const { addToWatchlist } = require("../components/addToWatchlist.js");
+const { addToRejectedMovies } = require("../components/addToRejectedMovies.js");
+const { changeWatchlist } = require("../components/changeWatchlist.js")
 
 app.use(
   session({

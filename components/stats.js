@@ -1,4 +1,4 @@
-const { userCollection } = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function stats(req, res) {
   if (!req.session.authenticated) {

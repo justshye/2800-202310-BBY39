@@ -5,7 +5,7 @@ const {
   nodemailer,
   userCollection,
   uuidv4,
-} = require("../config");
+} = require("../setup/config.js");
 
 function createTransporter(email, password) {
   return nodemailer.createTransport({

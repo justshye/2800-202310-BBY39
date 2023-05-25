@@ -1,4 +1,4 @@
-const { userCollection } = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function friends(req, res) {
   const result = await userCollection
