@@ -1,26 +1,38 @@
 <%- include("templates/header") %> 
-<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; top: 0; width: 100%; margin: auto; z-index: 9999; display: flex; align-items: center;">
+<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; top: 0; width: 100%; margin: 
+auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
   <div style="flex-shrink: 0;">
       <a class="nav-link" href="/watchlist" style="display: flex; align-items: center;">
           <img src="/arrow.png" width="30" height="30" alt="back icon">
       </a>
   </div>
   <div style="flex-grow: 1; text-align: center; overflow: hidden;">
-      <h3 style="white-space: nowrap; overflow: hidden; margin: 0; font-size: calc(18px + (24 - 18) * ((100vw - 320px) / (1920 - 320))); max-width: 100%;"><%= movie.Title %></h3>
+      <h3 id="movieTitle" style="white-space: nowrap; overflow: hidden; margin: 0; max-width: 100%;"><%= movie.Title %></h3>
   </div>
   <div style="flex-shrink: 0; width: 30px;"></div>
 </div>
 
 <div class="container" style="margin-top: 100px;">
-    <div class="card p-3">
-        <img class="" src ="<%= movie.Poster_Url %>" width="100" height="100" alt="movie poster">
-        <h3 class="lead">Original Language: <%=movie.Original_Language %></h3>
-        <p class="">
-            <b>Genre:</b>
-
-        </p>
-        <h3 class="lead"> Rating: <%=movie.Vote_Average %></h3>
+  <div class="card p-3" style="display: flex;">
+    <div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+      <img class="" src="<%= movie.Poster_Url %>" width="100" alt="movie poster">
     </div>
+    <div>
+      <h3 class="lead" id="movieContainer">
+        <span>Original Language:</span>
+        <span><%= movie.Original_Language %></span>
+      </h3>
+      <p class="" id="movieContainer">
+        <span>Genre:</span>
+        <span><%= movie.Genre %></span>
+      </p>
+      <h3 class="lead" id="movieContainer">
+        <span>Rating:</span>
+        <span><%= movie.Vote_Average %></span>
+      </h3>
+    </div>
+  </div>
+  
 
     <div class="card p-3">
         <h3 class="display-6">Description:</h3>
@@ -52,19 +64,61 @@
 
       
       <div class="card p-3">
-        <h3 class="lead">Watched: <%=movie.Watched %></h3>
+        <h3 class="lead"  id="movieContainer">
+          <span>Watched:</span>
+          <span><%=movie.Watched %></span>
+        </h3>
       </div>
+
+      
+      
       
       <div class="card p-3">
-        <h3 class="lead">Release Date: <%=movie.Release_Date %></h3>
+        <h3 class="lead"  id="movieContainer">
+          <span>Release Date:</span> 
+          <span><%=movie.Release_Date %></span>
+        </h3>
     </div>    
 </div>
 
 <style>
-  @media (max-width: 400px) {
+#movieContainer {
+  display: flex; 
+  justify-content: space-between;
+}
+
+@media (max-width: 700px) {
+  #movieTitle {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 525px) {
+  #movieTitle {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 475px) {
+  #movieTitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
   #movieText {
+    font-size: 12px;
+  }
+  #movieTitle {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 350px) {
+  #movieTitle {
     font-size: 12px;
   }
 }
 </style>
+
 <%- include("templates/bottomnav") %>
