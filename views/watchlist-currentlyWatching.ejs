@@ -32,7 +32,7 @@
       </div>
   </div>
   </br>
-  <div style="justify-content: center; display: flex; margin-right: -35px;">
+  <div style="justify-content: center; display: flex;">
     <button id="btnRandomMovie" class="btn btn-responsive">Random Movie</button> <!-- New button for random movie selection -->
   </div>
   </br>
@@ -199,7 +199,11 @@
   
 } 
 
-@media (max-width: 576px) {
+#btnRandomMovie {
+  margin-right: -32px
+}
+
+@media (max-width: 600px) {
   .btn-responsive {
     font-size: 12px; /* Adjusted font size for smaller screens */
     color:black;
@@ -211,6 +215,26 @@
   #btnCurrentlyWatching {
   background-color: #ff8800;
   } 
+  #btnRandomMovie {
+  margin-right: -23px
+}
+}
+
+@media (max-width: 475px) {
+  .btn-responsive {
+    font-size: 10px; /* Adjusted font size for smaller screens */
+    color:black;
+    background-color: #bbbbbb;
+  }
+  .btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+  }
+  #btnCurrentlyWatching {
+  background-color: #ff8800;
+  } 
+  #btnRandomMovie {
+  margin-right: -10px
+}
 }
 
 .btn-responsive:hover {

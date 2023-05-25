@@ -23,7 +23,7 @@
   </br>
   <div id="filter-button-content"></div>
   <div class="d-flex justify-content-center">
-    <div role="group" aria-label="Watchlist Buttons">
+    <div class="btn-group" role="group" aria-label="Watchlist Buttons">
       <button id="btnAll" class="btn flex-fill btn-responsive">All Movies</button>
       <button id="btnPlanToWatch" class="btn flex-fill btn-responsive">Plan to Watch</button>
       <button id="btnCurrentlyWatching" class="btn flex-fill btn-responsive">Currently Watching</button>
@@ -32,7 +32,7 @@
       </div>
   </div>
   </br>
-  <div style="justify-content: center; display: flex; margin-right: -35px;">
+  <div style="justify-content: center; display: flex;">
     <button id="btnRandomMovie" class="btn btn-responsive">Random Movie</button> <!-- New button for random movie selection -->
   </div>
   </br>
@@ -198,7 +198,11 @@
   background-color: #ff8800;
 } 
 
-@media (max-width: 576px) {
+#btnRandomMovie {
+  margin-right: -32px
+}
+
+@media (max-width: 600px) {
   .btn-responsive {
     font-size: 12px; /* Adjusted font size for smaller screens */
     color:black;
@@ -209,12 +213,34 @@
   }
   #btnDropped {
   background-color: #ff8800;
+  }
+  #btnRandomMovie {
+  margin-right: -23px
+} 
+}
+
+@media (max-width: 475px) {
+  .btn-responsive {
+    font-size: 10px; /* Adjusted font size for smaller screens */
+    color:black;
+    background-color: #bbbbbb;
+  }
+  .btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+  }
+  #btnDropped {
+  background-color: #ff8800;
   } 
+  #btnRandomMovie {
+  margin-right: -10px
+}
 }
 
 .btn-responsive:hover {
   background-color: #ff8800 !important; /* Change the color to your desired hover color */
 }
+
+
 </style>
 
   <%- include("templates/bottomnav") %>
