@@ -20,30 +20,29 @@ async function getMovies() {
 }
 
 async function searchMovies(req, res) {
-    try {
-      const movies = await getMovies(); // your function to get all movies
-      const fuse = new Fuse(movies, { keys: ['Title'] });
-      const results = fuse.search(req.body.searchString);
-      const topResults = results.slice(0, 5).map(result => result.item);  // only take the top 5 results
+  try {
+    const movies = await getMovies(); // Get all movies
+    const fuse = new Fuse(movies, { keys: ['Title'] });
+    const searchString = req.body.searchString.trim().replace(/\s+/g, ' '); // Normalize search input
+    const results = fuse.search(searchString);
+    const topResults = results.slice(0, 5).map(result => result.item); // Take the top 5 results
 
-      const filter = { username: req.session.username };
-      const update = { $set: { searchedMovies: topResults } };
-  
-      const result = await userCollection.findOne(filter);
-      // console.log(result);
-  
-      if (result) {
-        await userCollection.updateOne(filter, update);
-        console.log("Document updated successfully");
-        res.json(topResults);
-      } else {
-        console.log("User not found");
-      }
-    } catch (error) {
-        console.error("Error updating document:", error);
-        res.status(500).send("Internal Server Error");
-      }
+    const filter = { username: req.session.username };
+    const update = { $set: { searchedMovies: topResults } };
+
+    const result = await userCollection.findOne(filter);
+
+    if (result) {
+      await userCollection.updateOne(filter, update);
+      console.log("Document updated successfully");
+      res.json(topResults);
+    } else {
+      console.log("User not found");
+    }
+  } catch (error) {
+    console.error("Error updating document:", error);
+    res.status(500).send("Internal Server Error");
   }
-  
+}
 
 module.exports = { searchMovies };

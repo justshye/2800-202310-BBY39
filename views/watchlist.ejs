@@ -73,7 +73,7 @@
       }
 
       $('#search-bar').on('input', function () {
-        const searchString = $(this).val();
+        const searchString = $(this).val().trim().replace(/\s+/g, ' '); // Replace multiple consecutive white spaces with a single space
         if (searchString) {
           const result = fuse.search(searchString);
           displayMovies(result.map(res => res.item));
@@ -81,7 +81,7 @@
           fetchAndDisplayWatchlist();
         }
       });
-
+      
       $("#filter-button").on("click", function (event) {
         if ($(event.target).closest("#filter-button-content").length === 0) {
           if (!active) {
