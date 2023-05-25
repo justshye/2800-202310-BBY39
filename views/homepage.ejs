@@ -13,8 +13,24 @@
       <!-- Your movie HTML here -->
     </div>
 
+
+    <!-- Toasts -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; right: 0; top: 0;">
+      <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <strong class="me-auto">Notification</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          <!-- Notification message will go here -->
+        </div>
+      </div>
+    </div>
+
     <!-- Include Fuse.js from a CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
+
+
 
     <script>
       $(document).ready(function () {
@@ -144,6 +160,22 @@
         $('#movie-container').html(moviesHtml);
         // Call addClickEvents after the movie links are added to the page
 
+      }
+
+      window.onload = function () {
+        const toastMessage = localStorage.getItem('toastMessage');
+
+        if (toastMessage) {
+          // Set the toast message
+          document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
+
+          // Show the toast
+          var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
+          toast.show();
+
+          // Remove the toast message from local storage
+          localStorage.removeItem('toastMessage');
+        }
       }
 
     </script>

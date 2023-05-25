@@ -50,15 +50,15 @@
 
       const data = await response.json();
       if (data.alreadyInWatchlist) {
-        // Display the modal
-        $("#alreadyInWatchlistModal").modal("show");
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Already in watchlist');
       } else if (data.redirect) {
-        // Redirect to the specified location
-        window.location.href = data.redirect;
-      } else {
-        // Refresh the page to reflect the changes
-        location.reload();
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Added to watchlist');
       }
+
+      // Redirect to main page
+      window.location.href = '/';
     }
 
     async function addToRejected() {
@@ -71,29 +71,15 @@
 
       const data = await response.json();
       if (data.alreadyInRejectedlist) {
-        // Display the modal
-        $("#alreadyRejectedModal").modal("show");
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Already rejected');
       } else if (data.redirect) {
-        // Redirect to the specified location
-        window.location.href = data.redirect;
-      } else {
-        // Refresh the page to reflect the changes
-        location.reload();
+        // Store the toast message
+        localStorage.setItem('toastMessage', 'Added to rejected');
       }
-    }
 
-    async function checkAndAddToWatchlist() {
-      const movieId = '<%= movie._id %>';
-      const checkResponse = await fetch(`/check-watchlist?movieId=${movieId}`);
-      const { isMovieInWatchlist } = await checkResponse.json();
-
-      if (isMovieInWatchlist) {
-        // If the movie is already in the watchlist, show the 'already in watchlist' modal
-        $("#alreadyInWatchlistModal").modal("show");
-      } else {
-        // If the movie is not in the watchlist, show the confirmation modal
-        $("#confirmAddModal").modal("show");
-      }
+      // Redirect to main page
+      window.location.href = '/';
     }
 
     function egg() {
@@ -103,22 +89,6 @@
       }
     }
 
-
-    async function checkAndAddToRejected() {
-  const movieId = '<%= movie._id %>';
-  const checkResponse = await fetch(`/check-rejected?movieId=${movieId}`);
-  const { isMovieInRejectedList } = await checkResponse.json();
-
-  console.log(isMovieInRejectedList);
-  if (isMovieInRejectedList) {
-    // If the movie is already in the rejected list, show the 'already rejected' modal
-    $("#alreadyRejectedModal").modal("show");
-  } else {
-    // If the movie is not in the rejected list, show the rejection confirmation modal
-    $("#confirmRejectModal").modal("show");
-  }
-}
-
   </script>
 
   <br><br><br>
@@ -127,18 +97,19 @@
 
   <nav class="navbar navbar-light bg-light"
     style="overflow: hidden; position: fixed; justify-content: space-evenly; bottom: 0; width: 100%;">
-    <a class="navbar-link" href="javascript:void(0);" onclick="checkAndAddToRejected()">
+    <a class="navbar-link" href="javascript:void(0);" onclick="addToRejected()">
       <img src="/remove.png" width="45" height="45" alt="x icon">
     </a>
-    <a class="nav-link" href="javascript:void(0);" onclick="egg(); checkAndAddToWatchlist();">
+    <a class="nav-link" href="javascript:void(0);" onclick="egg(); addToWatchlist();">
       <img src="/check.png" width="45" height="45" alt="checkmark icon">
     </a>
   </nav>
 
-  <div id="alreadyInWatchlistModal" class="modal" tabindex="-1">
+  <div id="alreadyInWatchlistModal" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
+          <h5 class="modal-title">In Watchlist</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -148,58 +119,50 @@
     </div>
   </div>
 
-    <!-- Confirmation Modal -->
-    <div class="modal fade" id="confirmAddModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Confirmation</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Do you want to add this movie to your watchlist?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="addToWatchlist()">Add to Watchlist</button>
-          </div>
+  <!-- Confirmation Modal -->
+  <div class="modal fade" id="confirmAddModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>The movie has been added to your watchlist.</p>
         </div>
       </div>
     </div>
-  
-    <!-- Rejection Confirmation Modal -->
-    <div class="modal fade" id="confirmRejectModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Confirmation</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Do you want to reject this movie?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="addToRejected()">Reject Movie</button>
-          </div>
+  </div>
+
+  <!-- Rejection Confirmation Modal -->
+  <div class="modal fade" id="confirmRejectModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>The movie has been rejected.</p>
         </div>
       </div>
     </div>
-  
-    <!-- Already Rejected Modal -->
-    <div class="modal fade" id="alreadyRejectedModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Movie Rejected</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>This movie has already been rejected.</p>
-          </div>
+  </div>
+
+  <!-- Already Rejected Modal -->
+  <div class="modal fade" id="alreadyRejectedModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">In RejectList</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>This movie has already been rejected.</p>
         </div>
       </div>
     </div>
+  </div>
 
 
   </body>
