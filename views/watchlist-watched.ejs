@@ -30,6 +30,10 @@
     <button id="btnDropped">Dropped</button>
   </div>
   </br>
+  <div style="justify-content: center; display: flex;">
+    <button id="btnRandomMovie">Random Movie</button> <!-- New button for random movie selection -->
+  </div>
+  </br>
   <div id="movie-container" class="pb-5 mx-2">
     <!-- Your movie HTML here -->
   </div>
@@ -135,6 +139,21 @@
   $('#btnAll').click(function () {
     window.location.href = '/watchlist';
   });
+
+  $('#btnRandomMovie').click(function () {
+  // Filter movies from the "Plan to Watch" category
+  const randomSelectedMovie = moviesList.filter(movie => movie.Watched === 'Completed');
+
+  if (randomSelectedMovie.length === 0) {
+    // Handle case when there are no movies in the "Completed" category
+    alert("No movies found in the 'Completed' category.");
+  } else {
+    // Select a random movie from the filtered list
+    const randomIndex = Math.floor(Math.random() * randomSelectedMovie.length);
+    const randomMovie = randomSelectedMovie[randomIndex];
+    window.location.href = `/movie/watchlist/${randomMovie._id}`;
+  }
+});
 
   function displayMovies(movies) {
   const filteredMovies = movies.filter(movie => movie.Watched === 'Completed');
