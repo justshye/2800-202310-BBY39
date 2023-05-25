@@ -1,18 +1,17 @@
 <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-    <div class="row">
-        <div class="col-4 d-flex justify-content-center">
-            <img src="avatars/<%= user.avatar %>" style="height:100px;" />
-        </div>
-        <div class="col-8">
-            <%= user.username %>
-                <br>
-                <i>Last online </i>
-                <br>
-                <button style="margin-bottom: 2%;" type="button" class='btn btn-success promote-button'>View
-                    Watchlist</button>
-                <button type="button" class='btn btn-danger promote-button'>Remove Friend</button>
-                </br>
-
-        </div>
+  <div class="row">
+    <div class="col-4 d-flex justify-content-center">
+      <img src="avatars/<%= user.avatar %>" style="height:100px;" />
     </div>
+    <div class="col-8">
+      <%= user.username %>
+        <br>
+        <i>Last online </i>
+        <br>
+        <button style="margin-bottom: 2%;" type="button" class='btn btn-success promote-button'>View
+          Watchlist</button>
+        <button type="button" class='btn btn-danger promote-button'>Remove Friend</button>
+        </br>
+    </div>
+  </div>
 </div>
