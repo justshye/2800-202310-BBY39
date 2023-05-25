@@ -33,7 +33,7 @@ const { changeWatchlist } = require("./components/changeWatchlist.js")
 app.use(
   session({
     secret: node_session_secret,
-    store: mongoStore, //default is memory, but we want to use mongo
+    store: mongoStore,
     saveUninitialized: false,
     resave: false,
   })
@@ -147,7 +147,9 @@ app.get("/watchlist", (req, res) => {
   } else {
     res.redirect("/");
   }
-});app.get("/watchlist-watched", (req, res) => {
+});
+
+app.get("/watchlist-watched", (req, res) => {
   if (req.session.authenticated) {
     res.render("watchlist-watched", {
       user: req.session.username,
@@ -156,6 +158,7 @@ app.get("/watchlist", (req, res) => {
     res.redirect("/");
   }
 });
+
 app.get("/watchlist-planToWatch", (req, res) => {
   if (req.session.authenticated) {
     res.render("watchlist-planToWatch", {
@@ -165,6 +168,7 @@ app.get("/watchlist-planToWatch", (req, res) => {
     res.redirect("/");
   }
 });
+
 app.get("/watchlist-currentlyWatching", (req, res) => {
   if (req.session.authenticated) {
     res.render("watchlist-currentlyWatching", {
@@ -174,6 +178,7 @@ app.get("/watchlist-currentlyWatching", (req, res) => {
     res.redirect("/");
   }
 });
+
 app.get("/watchlist-dropped", (req, res) => {
   if (req.session.authenticated) {
     res.render("watchlist-dropped", {
@@ -256,6 +261,7 @@ app.get("*", (req, res) => {
   res.status(404);
   res.render("404");
 });
+
 app.listen(port, () => {
   console.log(`Node application listening on port ${port}`);
 });

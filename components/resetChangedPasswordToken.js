@@ -1,9 +1,7 @@
 const { bcrypt, Joi, saltRounds, userCollection } = require("../config");
 
-async function resetChangedPasswordToken(req, res) {
-  const { token } = req.params;
-  const { newPassword, confirmPassword } = req.body;
-
+// Function to validate new password and confirm password
+async function validateNewPassword(newPassword, confirmPassword) {
   const schema = Joi.object({
     newPassword: Joi.string().max(20).required(),
     confirmPassword: Joi.any()
@@ -12,27 +10,49 @@ async function resetChangedPasswordToken(req, res) {
       .messages({ "any.only": "Passwords do not match." }),
   });
 
-  try {
-    await schema.validateAsync({ newPassword, confirmPassword });
+  return await schema.validateAsync({ newPassword, confirmPassword });
+}
 
-    // 1. Retrieve the user from the database using the reset token
-    const user = await userCollection.findOne({ resetToken: token });
+// Function to find user by reset token
+async function findUserByResetToken(token) {
+  return await userCollection.findOne({ resetToken: token });
+}
+
+// Function to hash the new password
+async function hashPassword(password) {
+  return await bcrypt.hash(password, saltRounds);
+}
+
+// Function to update user's password in the database
+async function updateUserPassword(user, hashedPassword) {
+  await userCollection.findOneAndUpdate(
+    { resetToken: user.resetToken },
+    { $set: { password: hashedPassword, resetToken: null } }
+  );
+}
+
+async function resetChangedPasswordToken(req, res) {
+  const { token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
+
+  try {
+    await validateNewPassword(newPassword, confirmPassword);
+
+    // Retrieve the user from the database using the reset token
+    const user = await findUserByResetToken(token);
 
     if (!user) {
       res.status(404).send("Invalid reset token.");
       return;
     }
 
-    // 2. Update the user's password with the new password
-    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    const hashedPassword = await hashPassword(newPassword);
+    await updateUserPassword(user, hashedPassword);
 
-    await userCollection.findOneAndUpdate(
-      { resetToken: token },
-      { $set: { password: hashedPassword, resetToken: null } }
-    );
-
+    // Render password-changed view with success state
     res.render("password-changed", { state: "success", token: token });
   } catch (error) {
+    // Render password-changed view with error state and validation message
     res.render("password-changed", {
       validationMessage: error.details[0].message,
       state: "error",

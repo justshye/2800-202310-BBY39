@@ -1,9 +1,9 @@
-<%- include("templates/header") %> 
-<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; top: 0; width: 100%; margin: 
+<%- include("templates/header") %>
+  <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; top: 0; width: 100%; margin: 
 auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
-  <div style="flex-shrink: 0;">
+    <div style="flex-shrink: 0;">
       <a class="nav-link" href="/watchlist" style="display: flex; align-items: center;">
-          <img src="/arrow.png" width="30" height="30" alt="back icon">
+        <img src="/arrow.png" width="30" height="30" alt="back icon">
       </a>
   </div>
   <div style="flex-grow: 1; text-align: center; overflow: hidden;">
@@ -22,7 +22,7 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
         <span>Original Language:</span>
         <span><%= movie.Original_Language %></span>
       </h3>
-      <p class="" id="movieContainer" style="font-size: 12px;">
+      <p class="" id="movieContainer">
         <span>Genre:</span>
         <span><%= movie.Genre %></span>
       </p>
@@ -35,123 +35,131 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
   
 
     <div class="card p-3">
-        <h3 class="display-6">Description:</h3>
-        <p class=""><%= movie.Overview %></p>
-    </div>  
-    
+      <h3 class="display-6">Description:</h3>
+      <p class="">
+        <%= movie.Overview %>
+      </p>
+    </div>
+
     <div class="card p-3" id="movieText">
-        <form id="watchlist-form" action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start; position: relative;">
-            <label><h5>Status:</h5></label>
-            <select name="status">
-              <% const watchedStatus = movie.Watched; %>
-              <option value="<%= watchedStatus %>"><%= watchedStatus %></option>
-              <% if (watchedStatus !== 'Plan to Watch') { %>
-                <option value="Plan to Watch">Plan to Watch</option>
+      <form id="watchlist-form" action="/change-watchlist?movieId=<%= movie._id %>" method="POST"
+        style="display: flex; justify-content: space-between; align-items: start; position: relative;">
+        <label>
+          <h5>Status:</h5>
+        </label>
+        <select name="status">
+          <% const watchedStatus=movie.Watched; %>
+            <option value="<%= watchedStatus %>">
+              <%= watchedStatus %>
+            </option>
+            <% if (watchedStatus !=='Plan to Watch' ) { %>
+              <option value="Plan to Watch">Plan to Watch</option>
               <% } %>
-              <% if (watchedStatus !== 'Currently Watching') { %>
-                <option value="Currently Watching">Currently Watching</option>
+            <% if (watchedStatus !=='Currently Watching' ) { %>
+              <option value="Currently Watching">Currently Watching</option>
               <% } %>
-              <% if (watchedStatus !== 'Completed') { %>
-                <option value="Completed">Completed</option>
+            <% if (watchedStatus !=='Completed' ) { %>
+              <option value="Completed">Completed</option>
               <% } %>
-              <% if (watchedStatus !== 'Dropped') { %>
-                <option value="Dropped">Dropped</option>
+            <% if (watchedStatus !=='Dropped' ) { %>
+              <option value="Dropped">Dropped</option>
               <% } %>
-            </select>
-            <input type="submit" value="Submit">
-        </form>
-      </div> 
+        </select>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
 
-      
-      <div class="card p-3">
-        <h3 class="lead"  id="movieContainer">
-          <span>Watched:</span>
-          <span><%=movie.Watched %></span>
-        </h3>
-      </div>
+    <div class="card p-3">
+      <h3 class="lead" id="movieContainer">
+        <span>Watched:</span>
+        <span>
+          <%=movie.Watched %>
+        </span>
+      </h3>
+    </div>
 
-      
-      
-      
-      <div class="card p-3">
-        <h3 class="lead"  id="movieContainer">
-          <span>Release Date:</span> 
-          <span><%=movie.Release_Date %></span>
-        </h3>
-    </div>    
-</div>
+    <div class="card p-3">
+      <h3 class="lead" id="movieContainer">
+        <span>Release Date:</span>
+        <span>
+          <%=movie.Release_Date %>
+        </span>
+      </h3>
+    </div>
+  </div>
 
-<style>
+  <style>
+    .toast-message {
+      max-width: 320px;
+      /* Adjust the width as per your requirement */
+      word-break: break-word;
+    }
 
-.toast-message {
-    max-width: 320px; /* Adjust the width as per your requirement */
-    word-break: break-word;
-  }
-  
-#movieContainer {
-  display: flex; 
-  justify-content: space-between;
-}
+    #movieContainer {
+      display: flex;
+      justify-content: space-between;
+    }
 
-@media (max-width: 700px) {
-  #movieTitle {
-    font-size: 18px;
-  }
-}
+    @media (max-width: 700px) {
+      #movieTitle {
+        font-size: 18px;
+      }
+    }
 
-@media (max-width: 525px) {
-  #movieTitle {
-    font-size: 16px;
-  }
-}
+    @media (max-width: 525px) {
+      #movieTitle {
+        font-size: 16px;
+      }
+    }
 
-@media (max-width: 475px) {
-  #movieTitle {
-    font-size: 14px;
-  }
-}
+    @media (max-width: 475px) {
+      #movieTitle {
+        font-size: 14px;
+      }
+    }
 
-@media (max-width: 400px) {
-  #movieText {
-    font-size: 12px;
-  }
-  #movieTitle {
-    font-size: 13px;
-  }
-}
+    @media (max-width: 400px) {
+      #movieText {
+        font-size: 12px;
+      }
 
-@media (max-width: 350px) {
-  #movieTitle {
-    font-size: 12px;
-  }
-}
-</style>
+      #movieTitle {
+        font-size: 13px;
+      }
+    }
 
-<script>
-  const watchlistForm = document.getElementById('watchlist-form');
-  watchlistForm.addEventListener('submit', (event) => {
+    @media (max-width: 350px) {
+      #movieTitle {
+        font-size: 12px;
+      }
+    }
+  </style>
+
+  <script>
+    const watchlistForm = document.getElementById('watchlist-form');
+    watchlistForm.addEventListener('submit', (event) => {
       event.preventDefault(); // Prevent the form from submitting normally
 
       const status = watchlistForm.elements.status.value; // Get the selected status value
 
       fetch(watchlistForm.action, {
-          method: watchlistForm.method,
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-              status: status
-          })
+        method: watchlistForm.method,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          status: status
+        })
       })
-          .then(response => response.json())
-          .then(data => {
-              console.log('Response:', status);
-              localStorage.setItem('toastMessage', 'Set as ' + status); // Store the toast message
-              window.location.href = '/watchlist'; // Redirect to the main page
-          })
-          .catch(err => console.error('Error:', err));
-  });
+        .then(response => response.json())
+        .then(data => {
+          console.log('Response:', status);
+          localStorage.setItem('toastMessage', 'Set as ' + status); // Store the toast message
+          window.location.href = '/watchlist'; // Redirect to the main page
+        })
+        .catch(err => console.error('Error:', err));
+    });
 
-</script>
+  </script>
 
-<%- include("templates/bottomnav") %>
+  <%- include("templates/bottomnav") %>
