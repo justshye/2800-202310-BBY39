@@ -3,6 +3,7 @@ const {
   express,
   mongoStore,
   movieCollection,
+  userCollection,
   node_session_secret,
   port,
   session,
@@ -74,10 +75,34 @@ async function getMovies() {
   return movies;
 }
 
+async function isMovieInWatchlist(req, res, next) {
+  const movieId = req.query.movieId;
+  const userId = req.session.userId;
+  console.log(userId)
+
+  const user = await userCollection.findOne({ username: req.session.username });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Check if movie is already in watchlist
+  const movieInWatchlist = user.watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
+
+  if (movieInWatchlist) {
+    // the movie is in the watchlist
+    req.movieInWatchlist = true;
+  } else {
+    // the movie is not in the watchlist
+    req.movieInWatchlist = false;
+  }
+  
+  next();
+}
+
+
 app.get("/", async (req, res) => {
   try {
     const movies = await getMovies();
-    // console.log(movies);
     res.render("homepage", {
       user: req.session.username,
       authenticated: req.session.authenticated,
@@ -157,7 +182,6 @@ app.post("/loginSubmit", loginSubmit);
 app.post("/signupSubmit", signupSubmit);
 
 app.get("/logout", (req, res) => {
-  // localStorage.clear();
   req.session.destroy();
   res.redirect("/");
 });
@@ -167,15 +191,6 @@ app.post("/user-options", sessionValidation, userOptions);
 app.get("/profile", profile);
 
 app.get("/friends", sessionValidation, friends);
-
-// app.get("/friends", function (req, res) {
-//   if (!req.session.authenticated) {
-//     res.redirect("/");
-//   } else {
-//     // render the profile template
-//     res.render("friends", { user: req.session.username });
-//   }
-// });
 
 app.get("/stats", sessionValidation, stats);
 
@@ -195,9 +210,9 @@ app.get("/movie/:id", movieDetails);
 
 app.get("/movie/watchlist/:id", movieDetailsWatchlist);
 
-app.get("/add-to-interested", sessionValidation, addToWatchlist);
+app.get("/add-to-interested", sessionValidation, isMovieInWatchlist, addToWatchlist);
 
-app.get("/add-to-not-interested", addToRejectedMovies);
+app.get("/add-to-not-interested", isMovieInWatchlist, addToRejectedMovies);
 
 app.get("*", (req, res) => {
   res.status(404);
