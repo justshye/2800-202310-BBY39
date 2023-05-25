@@ -252,11 +252,6 @@ app.get('/check-rejected', isMovieInRejectedList, (req, res) => {
   res.json({ isMovieInRejectedList });
 });
 
-
-
-
-
-
 app.get("*", (req, res) => {
   res.status(404);
   res.render("404");
