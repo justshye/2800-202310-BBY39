@@ -27,7 +27,7 @@
         <p class=""><%= movie.Overview %></p>
     </div>  
     
-    <div class="card p-3">
+    <div class="card p-3" id="movieText">
         <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start; position: relative;">
             <label><h5>Status:</h5></label>
             <select name="status">
@@ -60,4 +60,11 @@
     </div>    
 </div>
 
+<style>
+  @media (max-width: 400px) {
+  #movieText {
+    font-size: 12px;
+  }
+}
+</style>
 <%- include("templates/bottomnav") %>
