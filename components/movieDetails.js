@@ -15,21 +15,21 @@ function getWatchlistLength(watchlist) {
 
 async function movieDetails(req, res) {
   const movieId = req.params.id;
-  const filter = { _id: movieId };
-  const projection = { randomMovies: 5 };
-
   try {
     const result = await findUserByUsername(req.session.username);
     console.log(result);
     if (result) {
+      // Destructure the relevant properties from the user result
       const { randomMovies, curatedMovies, searchedMovies, watchlist } = result;
 
+      // Find the movie by ID in the respective movie arrays
       const movieCurated = findMovieByIdInArray(curatedMovies, movieId);
       const movieRandom = findMovieByIdInArray(randomMovies, movieId);
       const movieSearched = findMovieByIdInArray(searchedMovies, movieId);
 
       let movie;
 
+      // Determine the movie based on its presence in the arrays
       if (movieRandom) movie = movieRandom;
       else if (movieCurated) movie = movieCurated;
       else if (movieSearched) movie = movieSearched;
