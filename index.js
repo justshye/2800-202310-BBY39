@@ -168,15 +168,6 @@ app.get("/profile", profile);
 
 app.get("/friends", sessionValidation, friends);
 
-// app.get("/friends", function (req, res) {
-//   if (!req.session.authenticated) {
-//     res.redirect("/");
-//   } else {
-//     // render the profile template
-//     res.render("friends", { user: req.session.username });
-//   }
-// });
-
 app.get("/stats", sessionValidation, stats);
 
 app.get("/openai", openAI);
