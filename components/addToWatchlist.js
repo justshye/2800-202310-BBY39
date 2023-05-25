@@ -1,5 +1,6 @@
 const { movieCollection, userCollection, ObjectId } = require("../config");
 
+// Add movie to the user's watchlist
 async function addToWatchlist(req, res) {
   try {
     const userId = req.session.userId;
@@ -15,42 +16,68 @@ async function addToWatchlist(req, res) {
       throw new Error("Movie not found");
     }
 
-    // Fetch user
-    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
-
-    // Check if movie is already in watchlist
-    const alreadyInWatchlist = user.watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
+    const user = await findUserById(userId); // Fetch user
+    const alreadyInWatchlist = checkIfMovieInWatchlist(user.watchlist, movieId); // Check if movie is already in watchlist
 
     if (alreadyInWatchlist) {
-      res.json({ alreadyInWatchlist: true });
+      sendResponse(res, { alreadyInWatchlist: true }); // Send response indicating movie is already in watchlist
       return;
     }
 
-    const newMovie = {
-      _id: movie._id, // Add the movie's ID to the newMovie object
-      Release_Date: movie["Release_Date"],
-      Title: movie["Title"],
-      Overview: movie["Overview"],
-      Popularity: movie["Popularity"],
-      Vote_Count: movie["Vote_Count"],
-      Vote_Average: movie["Vote_Average"],
-      Original_Language: movie["Original_Language"],
-      Genre: movie["Genre"],
-      Poster_Url: movie["Poster_Url"],
-      Watched: "Plan to Watch",
-    };
+    const newMovie = createNewMovieObject(movie); // Create a new movie object
+    await updateUserWatchlist(userId, newMovie); // Update the user's watchlist
 
-    await userCollection.updateOne(
-      { _id: new ObjectId(userId) },
-      { $push: { watchlist: newMovie } }
-    );
-
-    res.json({ redirect: '/' });
+    sendResponse(res, { redirect: '/' }); // Send response indicating successful addition to watchlist
   } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred");
+    handleErrorResponse(error, res); // Handle any errors that occur
   }
 }
 
+// Find a user by their ID
+async function findUserById(userId) {
+  const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+  return user;
+}
+
+// Check if the movie is already in the user's watchlist
+function checkIfMovieInWatchlist(watchlist, movieId) {
+  return watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
+}
+
+// Create a new movie object with selected properties
+function createNewMovieObject(movie) {
+  return {
+    _id: movie._id,
+    Release_Date: movie["Release_Date"],
+    Title: movie["Title"],
+    Overview: movie["Overview"],
+    Popularity: movie["Popularity"],
+    Vote_Count: movie["Vote_Count"],
+    Vote_Average: movie["Vote_Average"],
+    Original_Language: movie["Original_Language"],
+    Genre: movie["Genre"],
+    Poster_Url: movie["Poster_Url"],
+    Watched: "Plan to Watch",
+  };
+}
+
+// Update the user's watchlist
+async function updateUserWatchlist(userId, newMovie) {
+  await userCollection.updateOne(
+    { _id: new ObjectId(userId) },
+    { $push: { watchlist: newMovie } }
+  );
+}
+
+// Send a response with JSON data
+function sendResponse(res, data) {
+  res.json(data);
+}
+
+// Handle error responses by logging the error and sending a 500 status
+function handleErrorResponse(error, res) {
+  console.error(error);
+  res.status(500).send("An error occurred");
+}
 
 module.exports = { addToWatchlist };

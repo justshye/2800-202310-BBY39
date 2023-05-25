@@ -1,19 +1,17 @@
 <%- include("templates/header") %>
-    <form action="/profile">
-        <button>Back</button>
-    </form>
-    <div class="navbar navbar-light bg-light text-black"
-        style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-        <h3>
-            Friends
-        </h3>
-    </div>
-    <br><br>
-    <!-- <ul> -->
-        <% let i=0; %>
-        <% for(i=0; i < users.length; i++) { %>
-            <%- include('templates/user', {user: users[i]}) %>
-        <% } %>
-    <!-- </ul> -->
+  <form action="/profile">
+    <button>Back</button>
+  </form>
+  <div class="navbar navbar-light bg-light text-black"
+    style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
+    <h3>
+      Friends
+    </h3>
+  </div>
+  <br><br>
+  <% let i=0; %>
+    <% for(i=0; i < users.length; i++) { %>
+      <%- include('templates/user', {user: users[i]}) %>
+    <% } %>
     <br><br><br>
-    <%- include("templates/bottomnav") %>
+<%- include("templates/bottomnav") %>

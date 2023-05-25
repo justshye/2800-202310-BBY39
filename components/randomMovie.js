@@ -33,7 +33,6 @@ async function randomMovie(req, res) {
     const update = { $set: { randomMovies: randomMovies } };
 
     const result = await userCollection.findOne(filter);
-    // console.log(result);
 
     if (result) {
       await userCollection.updateOne(filter, update);
