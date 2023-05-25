@@ -17,7 +17,6 @@ async function movieDetails(req, res) {
   const movieId = req.params.id;
   try {
     const result = await findUserByUsername(req.session.username);
-    console.log(result);
     if (result) {
       // Destructure the relevant properties from the user result
       const { randomMovies, curatedMovies, searchedMovies, watchlist } = result;
@@ -28,8 +27,6 @@ async function movieDetails(req, res) {
       const movieSearched = findMovieByIdInArray(searchedMovies, movieId);
 
       let movie;
-
-      // Determine the movie based on its presence in the arrays
       if (movieRandom) movie = movieRandom;
       else if (movieCurated) movie = movieCurated;
       else if (movieSearched) movie = movieSearched;
