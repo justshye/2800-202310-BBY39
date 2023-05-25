@@ -10,18 +10,15 @@
         <button style="margin-left: 5%; margin-bottom: 5%;">Back</button>
     </form>
     <div class="container d-flex justify-content-center">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px; width: 95%;">
             <div class="col text-center">
                 <h1>Stats</h1>
             </div>
-            <h5>Movies on watchlist: <%= watchlistSize %>
-            </h5>
-            <h5>Total movies watched: <%= moviesWatched %>
-            </h5>
-            <h5>Total watch time: <%= watchHours %>h <%= watchMinutes %>min</h5>
-            <h5>Plan to watch: <%= moviesPlanned %></h5>
-            <h5>Rejected movies: <%= rejectedMovieCount %>
-            </h5>
+            <h5 style="text-align: left;">Movies on watchlist: <span style="float: right;"><%= watchlistSize %></span></h5>
+            <h5 style="text-align: left;">Total movies watched: <span style="float: right;"><%= moviesWatched %></span></h5>
+            <h5 style="text-align: left;">Total watch time: <span style="float: right;"><%= watchHours %>h <%= watchMinutes %>min</span></h5>
+            <h5 style="text-align: left;">Plan to watch: <span style="float: right;"><%= moviesPlanned %></span></h5>
+            <h5 style="text-align: left;">Rejected movies: <span style="float: right;"><%= rejectedMovieCount %></span></h5>
         </div>
     </div>
-    <%- include("templates/bottomnav") %>
+<%- include("templates/bottomnav") %>
