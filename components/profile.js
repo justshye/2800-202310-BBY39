@@ -1,9 +1,8 @@
 const { userCollection } = require("../config");
 
 async function profile(req, res) {
-  if (!req.session.authenticated) {
-    res.redirect("/");
-  } else {
+  if (!req.session.authenticated) res.redirect("/");
+  else {
     const username = req.session.username;
     try {
       const user = await userCollection.findOne(
@@ -21,7 +20,7 @@ async function profile(req, res) {
       });
     } catch (err) {
       console.error(err);
-      const movieMateUnlocked = false; // Set movieMateUnlocked to false
+      const movieMateUnlocked = false;
       res.render("profile", {
         user: username,
         email: req.session.email,
