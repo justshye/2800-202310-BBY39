@@ -22,16 +22,19 @@
 </div>
 </br>
 <div id="filter-button-content"></div>
-<div style="justify-content: center; display: flex;">
-  <button id="btnAll">All Movies</button>
-  <button id="btnPlanToWatch">Plan to Watch</button>
-  <button id="btnCurrentlyWatching">Currently Watching</button>
-  <button id="btnWatched">Completed</button>
-  <button id="btnDropped">Dropped</button>
+<div class="d-flex justify-content-center">
+  <div role="group" aria-label="Watchlist Buttons">
+    <button id="btnAll" class="btn flex-fill btn-responsive">All Movies</button>
+    <button id="btnPlanToWatch" class="btn flex-fill btn-responsive">Plan to Watch</button>
+    <button id="btnCurrentlyWatching" class="btn flex-fill btn-responsive">Currently Watching</button>
+    <button id="btnWatched" class="btn flex-fill btn-responsive">Completed</button>
+    <button id="btnDropped" class="btn flex-fill btn-responsive">Dropped</button>
+    </div>
 </div>
+
 </br>
-<div style="justify-content: center; display: flex;">
-  <button id="btnRandomMovie">Random Movie</button> <!-- New button for random movie selection -->
+<div style="justify-content: center; display: flex; margin-right: -35px;">
+  <button id="btnRandomMovie" class="btn btn-responsive">Random Movie</button> <!-- New button for random movie selection -->
 </div>
 </br>
 <div id="movie-container" class="pb-5 mx-2">
@@ -186,4 +189,35 @@
     $('#movie-container').html(moviesHtml);
   }
 </script>
+
+<style>
+.btn-responsive {
+  font-size: 16px; /* Default font size */
+  color:black;
+  background-color: #bbbbbb;
+}
+
+#btnPlanToWatch {
+  background-color: #ff8800;
+} 
+
+@media (max-width: 576px) {
+  .btn-responsive {
+    font-size: 12px; /* Adjusted font size for smaller screens */
+    color:black;
+    background-color: #bbbbbb;
+  }
+  .btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+  }
+  #btnPlanToWatch {
+  background-color: #ff8800;
+  } 
+}
+
+.btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+}
+</style>
+
 <%- include("templates/bottomnav") %>

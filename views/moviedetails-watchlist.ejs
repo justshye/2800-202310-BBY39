@@ -25,18 +25,10 @@
     <div class="card p-3">
         <h3 class="display-6">Description:</h3>
         <p class=""><%= movie.Overview %></p>
-    </div>
-    
-    <div class="card p-3">
-        <h3 class="lead">Release Date: <%=movie.Release_Date %></h3>
-    </div>    
-
-    <div class="card p-3">
-        <h3 class="lead">Watched: <%=movie.Watched %></h3>
     </div>  
     
     <div class="card p-3">
-        <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start;">
+        <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start; position: relative;">
             <label><h5>Status:</h5></label>
             <select name="status">
               <% const watchedStatus = movie.Watched; %>
@@ -56,11 +48,16 @@
             </select>
             <input type="submit" value="Submit">
         </form>
-    </div>
+      </div> 
 
-        
-
+      
+      <div class="card p-3">
+        <h3 class="lead">Watched: <%=movie.Watched %></h3>
+      </div>
+      
+      <div class="card p-3">
+        <h3 class="lead">Release Date: <%=movie.Release_Date %></h3>
+    </div>    
 </div>
-    
-    
+
 <%- include("templates/bottomnav") %>
