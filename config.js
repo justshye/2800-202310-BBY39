@@ -16,7 +16,7 @@ const saltRounds = 12;
 const port = process.env.PORT || 4420;
 const app = express();
 
-const expireTime = 1 * 60 * 60 * 1000; //expires after 1 hour (hours * minutes * seconds * millis)
+const expireTime = 8 * 60 * 60 * 1000; //expires after 8 hours (hours * minutes * seconds * millis)
 
 /* secret information */
 const node_session_secret = process.env.NODE_SESSION_SECRET;
