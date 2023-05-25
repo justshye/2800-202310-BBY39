@@ -33,14 +33,24 @@
         <form action="/change-watchlist?movieId=<%= movie._id %>" method="POST" style="display: flex; justify-content: space-between; align-items: start;">
             <label><h5>Status:</h5></label>
             <select name="status">
-              <option value="Plan to Watch">Plan to Watch</option>
-              <option value="Currently Watching">Currently Watching</option>
-              <option value="Completed">Completed</option>
-              <option value="Dropped">Dropped</option>
+              <% const watchedStatus = movie.Watched; %>
+              <option value="<%= watchedStatus %>"><%= watchedStatus %></option>
+              <% if (watchedStatus !== 'Plan to Watch') { %>
+                <option value="Plan to Watch">Plan to Watch</option>
+              <% } %>
+              <% if (watchedStatus !== 'Currently Watching') { %>
+                <option value="Currently Watching">Currently Watching</option>
+              <% } %>
+              <% if (watchedStatus !== 'Completed') { %>
+                <option value="Completed">Completed</option>
+              <% } %>
+              <% if (watchedStatus !== 'Dropped') { %>
+                <option value="Dropped">Dropped</option>
+              <% } %>
             </select>
             <input type="submit" value="Submit">
-          </form>
-    </div> 
+        </form>
+    </div>
 
         
 
