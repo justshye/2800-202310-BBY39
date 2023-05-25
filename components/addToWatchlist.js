@@ -15,6 +15,17 @@ async function addToWatchlist(req, res) {
       throw new Error("Movie not found");
     }
 
+    // Fetch user
+    const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+
+    // Check if movie is already in watchlist
+    const alreadyInWatchlist = user.watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
+
+    if (alreadyInWatchlist) {
+      res.json({ alreadyInWatchlist: true });
+      return;
+    }
+
     const newMovie = {
       _id: movie._id, // Add the movie's ID to the newMovie object
       Release_Date: movie["Release_Date"],
@@ -34,11 +45,12 @@ async function addToWatchlist(req, res) {
       { $push: { watchlist: newMovie } }
     );
 
-    res.redirect("/");
+    res.json({ redirect: '/' });
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");
   }
 }
+
 
 module.exports = { addToWatchlist };
