@@ -22,12 +22,18 @@
   </div>
   </br>
   <div id="filter-button-content"></div>
+  <div class="d-flex justify-content-center">
+    <div class="btn-group" role="group" aria-label="Watchlist Buttons">
+      <button id="btnAll" class="btn flex-fill btn-responsive">All Movies</button>
+      <button id="btnPlanToWatch" class="btn flex-fill btn-responsive">Plan to Watch</button>
+      <button id="btnCurrentlyWatching" class="btn flex-fill btn-responsive">Currently Watching</button>
+      <button id="btnWatched" class="btn flex-fill btn-responsive">Completed</button>
+      <button id="btnDropped" class="btn flex-fill btn-responsive">Dropped</button>
+      </div>
+  </div>
+  </br>
   <div style="justify-content: center; display: flex;">
-    <button id="btnAll">All Movies</button>
-    <button id="btnPlanToWatch">Plan to Watch</button>
-    <button id="btnCurrentlyWatching">Currently Watching</button>
-    <button id="btnWatched">Completed</button>
-    <button id="btnDropped">Dropped</button>
+    <button id="btnRandomMovie" class="btn btn-responsive">Random Movie</button> <!-- New button for random movie selection -->
   </div>
   </br>
   <div id="movie-container" class="pb-5 mx-2">
@@ -136,6 +142,21 @@
     window.location.href = '/watchlist';
   });
 
+  $('#btnRandomMovie').click(function () {
+  // Filter movies from the "Plan to Watch" category
+  const randomSelectedMovie = moviesList.filter(movie => movie.Watched === 'Currently Watching');
+
+  if (randomSelectedMovie.length === 0) {
+    // Handle case when there are no movies in the "Currently Watching" category
+    alert("No movies found in the 'Currently Watching' category.");
+  } else {
+    // Select a random movie from the filtered list
+    const randomIndex = Math.floor(Math.random() * randomSelectedMovie.length);
+    const randomMovie = randomSelectedMovie[randomIndex];
+    window.location.href = `/movie/watchlist/${randomMovie._id}`;
+  }
+});
+
   function displayMovies(movies) {
   const filteredMovies = movies.filter(movie => movie.Watched === 'Currently Watching');
   let moviesHtml = '';
@@ -165,4 +186,60 @@
       $('#movie-container').html(moviesHtml);
     }
   </script>
+
+<style>
+.btn-responsive {
+  font-size: 16px; /* Default font size */
+  color:black;
+  background-color: #bbbbbb;
+}
+
+#btnCurrentlyWatching {
+  background-color: #ff8800;
+  
+} 
+
+#btnRandomMovie {
+  margin-right: -32px
+}
+
+@media (max-width: 600px) {
+  .btn-responsive {
+    font-size: 12px; /* Adjusted font size for smaller screens */
+    color:black;
+    background-color: #bbbbbb;
+  }
+  .btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+  }
+  #btnCurrentlyWatching {
+  background-color: #ff8800;
+  } 
+  #btnRandomMovie {
+  margin-right: -23px
+}
+}
+
+@media (max-width: 475px) {
+  .btn-responsive {
+    font-size: 10px; /* Adjusted font size for smaller screens */
+    color:black;
+    background-color: #bbbbbb;
+  }
+  .btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+  }
+  #btnCurrentlyWatching {
+  background-color: #ff8800;
+  } 
+  #btnRandomMovie {
+  margin-right: -10px
+}
+}
+
+.btn-responsive:hover {
+  background-color: #ff8800 !important; /* Change the color to your desired hover color */
+}
+</style>
+
   <%- include("templates/bottomnav") %>
