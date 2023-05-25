@@ -210,9 +210,9 @@ app.get("/movie/:id", movieDetails);
 
 app.get("/movie/watchlist/:id", movieDetailsWatchlist);
 
-app.get("/add-to-interested", sessionValidation, isMovieInWatchlist, addToWatchlist);
+app.post("/add-to-interested", sessionValidation, isMovieInWatchlist, addToWatchlist);
 
-app.get("/add-to-not-interested", isMovieInWatchlist, addToRejectedMovies);
+app.post("/add-to-not-interested", isMovieInWatchlist, addToRejectedMovies);
 
 app.get("*", (req, res) => {
   res.status(404);

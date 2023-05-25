@@ -22,7 +22,7 @@ async function addToRejectedMovies(req, res) {
     const alreadyInWatchlist = user.watchlist.some(watchlistMovie => watchlistMovie._id.toString() === movieId);
 
     if (alreadyInWatchlist) {
-      res.send("The movie is already in your watchlist.");
+      res.json({ alreadyInWatchlist: true });
       return;
     }
 
@@ -44,7 +44,7 @@ async function addToRejectedMovies(req, res) {
       { $push: { rejectedMovies: newMovie } }
     );
 
-    res.redirect("/");
+    res.json({ redirect: '/' });
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");

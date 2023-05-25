@@ -1,11 +1,14 @@
 <%- include("templates/header") %>
-<div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; justify-content: space-around; top: 0; width: 100%; margin: auto; z-index: 9999;">
-  <a class="nav-link" href="/">
+  <div class="navbar navbar-light bg-light text-black"
+    style="overflow: hidden; position: fixed; justify-content: space-around; top: 0; width: 100%; margin: auto; z-index: 9999;">
+    <a class="nav-link" href="/">
       <img src="/arrow.png" width="30" height="30" alt="back icon">
-  </a>
-  <h3><%= movie.Title %></h3>
-</div>
-<br>
+    </a>
+    <h3>
+      <%= movie.Title %>
+    </h3>
+  </div>
+  <br>
 
   <div class="container" style="margin-top: 100px;">
     <div class="card p-3">
@@ -33,7 +36,50 @@
     </div>
   </div>
 
+
   <script>
+    async function addToWatchlist() {
+      const movieId = '<%= movie._id %>';
+      const response = await fetch(`/add-to-interested?movieId=${movieId}`, { method: 'POST' });
+  
+      if (!response.ok) {
+        throw new Error("An error occurred");
+      }
+  
+      const data = await response.json();
+      if (data.alreadyInWatchlist) {
+        // Display the modal
+        $("#alreadyInWatchlistModal").modal("show");
+      } else if (data.redirect) {
+        // Redirect to the specified location
+        window.location.href = data.redirect;
+      } else {
+        // Refresh the page to reflect the changes
+        location.reload();
+      }
+    }
+
+    async function addToRejected() {
+      const movieId = '<%= movie._id %>';
+      const response = await fetch(`/add-to-not-interested?movieId=${movieId}`, { method: 'POST' });
+  
+      if (!response.ok) {
+        throw new Error("An error occurred");
+      }
+  
+      const data = await response.json();
+      if (data.alreadyInWatchlist) {
+        // Display the modal
+        $("#alreadyInWatchlistModal").modal("show");
+      } else if (data.redirect) {
+        // Redirect to the specified location
+        window.location.href = data.redirect;
+      } else {
+        // Refresh the page to reflect the changes
+        location.reload();
+      }
+    }
+  
     function egg() {
       console.log("egg");
       if (<%= watchlistLength %> == 4) {
@@ -41,16 +87,34 @@
       }
     }
   </script>
-  
+
   <br><br><br>
 
+
   <nav class="navbar navbar-light bg-light" style="overflow: hidden; position: fixed; justify-content: space-evenly; bottom: 0; width: 100%;">
-    <a class="navbar-link" href="/add-to-not-interested?movieId=<%= movie._id %>">
+    <a class="navbar-link" href="javascript:void(0);" onclick="addToRejected()">
       <img src="/remove.png" width="45" height="45" alt="x icon">
     </a>
-    <a class="nav-link" href="/add-to-interested?movieId=<%= movie._id %>" onclick="egg()">
+    <a class="nav-link" href="javascript:void(0);" onclick="egg(); addToWatchlist();">
       <img src="/check.png" width="45" height="45" alt="checkmark icon">
     </a>
   </nav>
-</body>
-</html>
+
+
+  <div id="alreadyInWatchlistModal" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>The movie is already in your watchlist.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  </body>
+
+  </html>
