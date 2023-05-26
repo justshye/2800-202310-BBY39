@@ -1,3 +1,5 @@
+// ChatGPT-3.5 and the open ai api documentation [https://platform.openai.com/docs/introduction] 
+// as well as an open api tutorial [https://youtu.be/LX_DXLlaymg] were heavily used for the code below
 const { configuration, OpenAIApi } = require("../setup/config.js");
 const openai = new OpenAIApi(configuration);
 

@@ -1,3 +1,4 @@
+// ChatGPT-3.5 and Comp 2537 code was heavily used for the code below
 const { bcrypt, expireTime, Joi, userCollection } = require("../setup/config.js");
 
 async function validateInput(username, password) {

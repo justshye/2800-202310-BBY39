@@ -1,4 +1,4 @@
-
+// ChatGPT-3.5 was heavily used for the code below
 const csv = require("csv-parser");
 const fs = require("fs");
 

@@ -1,3 +1,4 @@
+// ChatGPT-4.0 was heavily used for the code below
 const { bcrypt, Joi, saltRounds, userCollection } = require("../setup/config.js");
 
 // Function to validate new password and confirm password

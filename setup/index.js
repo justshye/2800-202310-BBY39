@@ -1,3 +1,4 @@
+// ChatGPT-3.5 was heavily used to refactor the code below
 const {
   app,
   express,

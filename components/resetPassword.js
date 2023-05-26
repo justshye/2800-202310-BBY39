@@ -1,3 +1,4 @@
+// ChatGPT-4.0 and the nodemailer documentation [https://nodemailer.com/about/] was heavily used for the code below
 const {
   email_auto,
   email_password,

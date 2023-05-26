@@ -1,3 +1,4 @@
+// ChatGPT-3.5 was heavily used for the code below
 const { movieCollection, userCollection, ObjectId } = require("../setup/config.js");
 
 // Add movie to the user's watchlist

@@ -1,3 +1,4 @@
+// ChatGPT-3.5 and Comp 2537 code was heavily used for the code below
 require('dotenv').config();
 
 const mongodb_host = process.env.MONGODB_HOST;

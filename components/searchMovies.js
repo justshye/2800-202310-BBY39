@@ -1,3 +1,4 @@
+// ChatGPT-4.0 was heavily used for the code below
 const { userCollection, movieCollection } = require("../setup/config.js");
 const Fuse = require('fuse.js');
 
