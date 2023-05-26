@@ -16,16 +16,9 @@ Here are the files and directories in the repository:
 ```
 root
 │   .gitignore
-│   config.js
-│   databaseConnection.js
-│   datasetInformationInsertion.js
-│   index.js
-│   navbar.html
-│   openai.txt
 │   package.json
-│   procfile
+│   Procfile
 │   README.md
-│   utils.js
 │
 ├───components
 │       addToRejectedMovies.js
@@ -51,19 +44,22 @@ root
 ├───public
 │   │   arrow.png
 │   │   check.png
-│   │   Guardians3.jpg
 │   │   home.png
-│   │   homepage-wireframe.png
 │   │   homepage-wireframeHD.png
-│   │   Mario_Movie.jpg
-│   │   moviepreview-wireframe.png
+│   │   Landing Page Instructions 1.png
+│   │   Landing Page Instructions 2.png
+│   │   Landing Page Instructions 3.png
+│   │   Landing Page Instructions 4.png
+│   │   Landing Page Instructions 5.png
+│   │   Landing Page Instructions 6.png
+│   │   moviemate404.png
 │   │   moviepreview-wireframeHD.png
 │   │   profile-user.png
 │   │   profilepage-wireframe.png
 │   │   profilepage-wireframeHD.png
 │   │   remove.png
 │   │   search.png
-│   │   Suzume.jpg
+│   │   style.css
 │   │   to-do-list.png
 │   │
 │   └───avatars
@@ -75,8 +71,16 @@ root
 │           wednesday.png
 │           will smith.png
 │
+├───setup
+│       config.js
+│       databaseConnection.js
+│       datasetInformationInsertion.js
+│       index.js
+│       utils.js
+│
 └───views
     │   404.ejs
+    │   email-not-found.ejs
     │   friends.ejs
     │   homepage.ejs
     │   link-expired.ejs
@@ -96,7 +100,6 @@ root
     │   watchlist-currentlyWatching.ejs
     │   watchlist-dropped.ejs
     │   watchlist-planToWatch.ejs
-    │   watchlist-popup.ejs
     │   watchlist-watched.ejs
     │   watchlist.ejs
     │
@@ -105,6 +108,7 @@ root
             back-to-resetPassword.ejs
             back-to-signup.ejs
             bottomnav.ejs
+            filter-checkboxes.ejs
             footer.ejs
             header.ejs
             tindernavbar.ejs
