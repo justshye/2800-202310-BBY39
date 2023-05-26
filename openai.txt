@@ -1,8 +1,0 @@
-      let prompt = movies[randomIndex].Overview + "\nPlease give me a summary of this in 20 words or less"; // Get the prompt from the query parameter or use an empty string as the default
-      console.log("Prompt:", prompt);
-      let response;
-      if (prompt != "") {
-        response = await getOpenAIResponse(prompt);
-      } else {
-        response = "";
-      }

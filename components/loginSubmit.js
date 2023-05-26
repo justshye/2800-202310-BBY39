@@ -1,9 +1,7 @@
-const { bcrypt, expireTime, Joi, userCollection } = require("../config");
+// ChatGPT-3.5 and Comp 2537 code was heavily used for the code below
+const { bcrypt, expireTime, Joi, userCollection } = require("../setup/config.js");
 
-async function loginSubmit(req, res) {
-  var username = req.body.username;
-  var password = req.body.password;
-
+async function validateInput(username, password) {
   const schema = Joi.object({
     username: Joi.string().alphanum().required(),
     password: Joi.string().max(20).required(),
@@ -11,20 +9,55 @@ async function loginSubmit(req, res) {
 
   const validationResult = schema.validate({ username, password });
 
-  if (validationResult.error != null) {
-    res.render("login-submit", {
-      validationError: true,
-      validationMessage: validationResult.error.message,
-    });
-    return;
-  }
+  return validationResult.error != null
+    ? {
+        validationError: true,
+        validationMessage: validationResult.error.message,
+      }
+    : null;
+}
 
+async function findUserByUsername(username) {
   const result = await userCollection
     .find({ username: username })
     .project({ username: 1, password: 1, user_type: 1, _id: 1, email: 1 })
     .toArray();
 
-  if (result.length != 1) {
+  return result.length === 1 ? result[0] : null;
+}
+
+async function authenticateUser(req, res, password, user) {
+  if (await bcrypt.compare(password, user.password)) {
+    req.session.authenticated = true;
+    req.session.cookie.maxAge = expireTime;
+    req.session.username = user.username;
+    req.session.email = user.email;
+    req.session.user_type = user.user_type;
+    req.session.userId = user._id;
+    req.session.save(() => {
+      res.redirect("/");
+    });
+  } else {
+    res.render("login-submit", {
+      validationError: false,
+      userFound: true,
+      correctPassword: false,
+    });
+  }
+}
+
+async function loginSubmit(req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const inputError = await validateInput(username, password);
+  if (inputError) {
+    res.render("login-submit", inputError);
+    return;
+  }
+
+  const user = await findUserByUsername(username);
+  if (!user) {
     res.render("login-submit", {
       validationError: false,
       userFound: false,
@@ -32,25 +65,7 @@ async function loginSubmit(req, res) {
     return;
   }
 
-  if (await bcrypt.compare(password, result[0].password)) {
-    req.session.authenticated = true;
-    req.session.cookie.maxAge = expireTime;
-    req.session.username = result[0].username;
-    req.session.email = result[0].email;
-    req.session.user_type = result[0].user_type;
-    req.session.userId = result[0]._id;
-    req.session.save(() => {
-      res.redirect("/");
-    });
-    return;
-  } else {
-    res.render("login-submit", {
-      validationError: false,
-      userFound: true,
-      correctPassword: false,
-    });
-    return;
-  }
+  await authenticateUser(req, res, password, user);
 }
 
-module.exports = { loginSubmit }; 
+module.exports = { loginSubmit };

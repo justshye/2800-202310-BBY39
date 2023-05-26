@@ -1,116 +1,178 @@
+<!-- ChatGPT-3.5 and Bootstrap documentation was heavily used below [https://getbootstrap.com/docs/5.3/getting-started/introduction/] -->
 <%- include("templates/header") %>
-    <div class="navbar navbar-light bg-light text-black"
-        style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-        <h3>
-            <%= user %>'s Profile
-        </h3>
+<div
+  class="navbar navbar-light bg-light text-black"
+  style="
+    overflow: hidden;
+    position: fixed;
+    justify-content: space-around;
+    top: 0;
+    width: 100%;
+    margin: auto;
+  "
+>
+  <h3><%= user %>'s Profile</h3>
+</div>
+<br /><br /><br />
+
+<style>
+  .bg-success {
+      background-color: #f0f0f0 !important; /* Change the color to your desired hover color */
+    }
+</style>
+
+<div class="container d-flex justify-content-center">
+  <div class="p-3 mb-2 bg-success text-black" style="border-radius: 10px">
+    <div class="col text-center">
+      <img src="avatars/<%= avatar %>" style="width: 256px" />
     </div>
-    <br><br><br>
-
-    <div class="container d-flex justify-content-center">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="col text-center">
-                <img src="avatars/<%= avatar %>" style="width: 256px;" />
-            </div>
-            <div class="text-center" style="padding-top:2%;">
-                <label for="avatar-select">Select an avatar:</label>
-                <select id="avatar-select" name="avatar">
-                    <option value="default.png">Default</option>
-                    <option value="will smith.png">Will Smith</option>
-                    <option value="sonic.png">Sonic</option>
-                    <option value="detective pikachu.png">Detective Pikachu</option>
-                    <option value="lucifer.png">Lucifer</option>
-                    <option value="wednesday.png">Wednesday</option>
-                    <% if (movieMateUnlocked) { %>
-                        <option value="moviemate.png">MovieMate</option>
-                        <% } %>
-                </select>
-            </div>
-
-            <div class="text-center">
-                <p style="color:lightgray;">
-                    <%= email %>
-                </p>
-                <form action="/friends" style="padding-bottom: 2%;">
-                    <button type="submit" class='btn btn-info promote-button'>Friends</button>
-                </form>
-                <form action="/stats" style="padding-bottom: 2%;">
-                    <button type="submit" class='btn btn-info promote-button'>Stats</button>
-                </form>
-                <form id="logout-form" action="/logout">
-                    <button type="submit" class='btn btn-danger promote-button'>Log Out</button>
-                </form>
-                <br>
-
-            </div>
-
-
-        </div>
-
+    <div class="text-center" style="padding-top: 2%">
+      <label for="avatar-select">Select an avatar:</label>
+      <select id="avatar-select" name="avatar">
+        <option value="default.png">Default</option>
+        <option value="will smith.png">Will Smith</option>
+        <option value="sonic.png">Sonic</option>
+        <option value="detective pikachu.png">Detective Pikachu</option>
+        <option value="lucifer.png">Lucifer</option>
+        <option value="wednesday.png">Wednesday</option>
+        <% if (movieMateUnlocked) { %>
+        <option value="moviemate.png">MovieMate</option>
+        <% } %>
+      </select>
     </div>
 
-    <div class="modal fade" id="notavailable" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content lavender-blush">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Feature to be Implemented</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
+    <div class="text-center">
+      <p style="color: rgb(124, 124, 124); margin-top: 2%;"><%= email %></p>
+      <form action="javascript:void(0)" style="padding-bottom: 2%">
+        <button type="submit" class="btn btn-info promote-button" data-bs-toggle="modal" data-bs-target="#notavailable" style="background-color: #60cdff; border-color:#60cdff;">
+          Friends
+        </button>
+      </form>
+      <form action="/stats" style="padding-bottom: 2%">
+        <button type="submit" class="btn btn-info promote-button" style="background-color: #60cdff; border-color:#60cdff;">Stats</button>
+      </form>
+      <form id="logout-form" action="/logout">
+        <button type="submit" class="btn btn-danger promote-button">
+          Log Out
+        </button>
+      </form>
+      <br />
     </div>
-    <script>
-        // const select = document.getElementById('avatar-select');
-        // const img = document.querySelector('img');
-        // select.addEventListener('change', (event) => {
-        //     const selectedAvatar = select.value;
-        //     img.src = `avatars/${selectedAvatar}`;
-        //     console.log('Selected avatar:', selectedAvatar);
-        //     fetch('/user-options', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({ avatar: selectedAvatar })
-        //     })
-        //         .then(response => response.json())
-        //         .then(data => console.log('Response:', data))
-        //         .catch(err => console.error('Error:', err));
-        // });
-        const select = document.getElementById('avatar-select');
-        const img = document.querySelector('img');
-        const selectedAvatar = "<%= avatar %>"; // Get the currently selected avatar from the server-side code
+  </div>
+</div>
 
-        // Set the initial selected avatar in the dropdown
-        select.value = selectedAvatar;
-        img.src = `avatars/${selectedAvatar}`;
+<div
+  class="modal fade"
+  id="notavailable"
+  tabindex="-1"
+  aria-labelledby="addModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content lavender-blush">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">
+          Feature to be Implemented
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        select.addEventListener('change', (event) => {
-            const selectedAvatar = select.value;
-            img.src = `avatars/${selectedAvatar}`;
-            console.log('Selected avatar:', selectedAvatar);
+<!-- Toasts -->
+<div
+  class="position-fixed top-0 end-0 p-3"
+  style="z-index: 11; right: 0; top: 0"
+>
+  <div
+    id="toastNotification"
+    class="toast"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="toast-body">Profile picture updated!</div>
+  </div>
+</div>
 
-            const params = new URLSearchParams();
-            params.append('avatar', selectedAvatar);
+<style>
+  #toastNotification {
+    max-width: 150px;
+    font-size: 14px;
+  }
+  .toast-body {
+    max-width: 200px; /* Adjust the width as per your requirement */
+    word-break: break-word;
+    font-size: 10px;
+  }
+</style>
 
-            fetch('/user-options', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: params
-            })
-                .then(response => response.json())
-                .then(data => console.log('Response:', data))
-                .catch(err => console.error('Error:', err));
-        });
+<script>
+  const select = document.getElementById("avatar-select");
+  const img = document.querySelector("img");
+  const selectedAvatar = "<%= avatar %>"; // Get the currently selected avatar from the server-side code
 
-        // Add event listener to the logout button
-        const logoutForm = document.getElementById('logout-form');
-        logoutForm.addEventListener('submit', () => {
-            localStorage.clear(); // Clear local storage
-        });
-    </script>
+  // Set the initial selected avatar in the dropdown
+  select.value = selectedAvatar;
+  img.src = `avatars/${selectedAvatar}`;
 
+  select.addEventListener("change", (event) => {
+    const selectedAvatar = select.value;
+    img.src = `avatars/${selectedAvatar}`;
+    console.log("Selected avatar:", selectedAvatar);
 
-    <%- include("templates/bottomnav") %>
+    const params = new URLSearchParams();
+    params.append("avatar", selectedAvatar);
+
+    fetch("/user-options", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Response:", data);
+        localStorage.setItem("toastMessage", "Profile picture updated!"); // Store the toast message
+        window.location.reload(); // Reload the page to display the toast
+      })
+      .catch((err) => console.error("Error:", err));
+  });
+
+  // Add event listener to the logout button
+  const logoutForm = document.getElementById("logout-form");
+  logoutForm.addEventListener("submit", () => {
+    localStorage.clear(); // Clear local storage
+  });
+
+  // Set the toast message
+  const toastMessage = localStorage.getItem("toastMessage");
+  if (toastMessage) {
+    document.querySelector("#toastNotification .toast-body").textContent =
+      toastMessage;
+    var toast = new bootstrap.Toast(
+      document.querySelector("#toastNotification"),
+      { delay: 1000 }
+    );
+    toast.show();
+    localStorage.removeItem("toastMessage"); // Remove the toast message from localStorage
+  }
+</script>
+
+<%- include("templates/bottomnav") %>

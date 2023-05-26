@@ -1,27 +1,91 @@
+<!-- ChatGPT-3.5 and Bootstrap documentation was heavily used below [https://getbootstrap.com/docs/5.3/getting-started/introduction/] -->
 <%- include("templates/header") %>
-    <div class="navbar navbar-light bg-light text-black"
-        style="overflow: hidden; position: fixed; justify-content:space-around; top: 0; width: 100%; margin: auto;">
-        <h3>
-            <%= user %>'s Profile
-        </h3>
+  <div class="navbar navbar-light bg-light text-black" style="overflow: hidden; position: fixed; top: 0; width: 100%; margin: 
+auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
+    <div style="flex-shrink: 0;">
+      <a class="nav-link" href="/profile" style="display: flex; align-items: center;">
+        <img src="/arrow.png" width="30" height="30" alt="back icon">
+      </a>
     </div>
-    <br><br><br>
-    <form action="/profile">
-        <button style="margin-left: 5%; margin-bottom: 5%;">Back</button>
-    </form>
-    <div class="container d-flex justify-content-center">
-        <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
-            <div class="col text-center">
-                <h1>Stats</h1>
-            </div>
-            <h5>Movies on watchlist: <%= watchlistSize %>
-            </h5>
-            <h5>Total movies watched: <%= moviesWatched %>
-            </h5>
-            <h5>Total watch time: <%= watchHours %>h <%= watchMinutes %>min</h5>
-            <h5>Plan to watch: <%= moviesPlanned %></h5>
-            <h5>Rejected movies: <%= rejectedMovieCount %>
-            </h5>
+    <div style="flex-grow: 1; text-align: center; overflow: hidden;">
+      <h3 id="movieTitle" style="white-space: nowrap; overflow: hidden; margin: 0; max-width: 100%;">
+        <%= user %>'s Profile
+      </h3>
+    </div>
+    <div style="flex-shrink: 0; width: 30px;"></div>
+  </div>
+
+  <br><br><br>
+
+  <style>
+    .bg-secondary {
+        background-color: #f0f0f0 !important; /* Change the color to your desired hover color */
+      }
+  </style>
+
+  <div class="container d-flex justify-content-center">
+    <div class="p-3 mb-2 bg-secondary text-black" style="border-radius: 10px; width: 95%;">
+      <div class="col text-center" style="margin-bottom: 5%;">
+        <h1>Stats</h1>
+      </div>
+      <h5 style="text-align: left;">Movies on watchlist <span style="float: right;">
+          <%= watchlistSize %>
+        </span></h5>
+      <h5 style="text-align: left;">Watching <span style="float: right;">
+          <%= moviesWatching %>
+        </span></h5>
+      <h5 style="text-align: left;">Completed <span style="float: right;">
+          <%= moviesWatched %>
+        </span></h5>
+      <h5 style="text-align: left;">Watch time <span style="float: right;">
+          <%= watchHours %>h <%= watchMinutes %>min
+        </span></h5>
+      <h5 style="text-align: left;">Plan to watch <span style="float: right;">
+          <%= moviesPlanned %>
+        </span></h5>
+      <h5 style="text-align: left;">Dropped <span style="float: right;">
+          <%= moviesDropped %>
+        </span></h5>
+      <h5 style="text-align: left;">Rejected <span style="float: right;">
+          <%= rejectedMovieCount %>
+        </span></h5>
+
+      <div class="progress-bar-container"
+        style="width: 100%; height: 20px; margin-top: 20px; margin-bottom: 10px; background-color: #c5c5c5; border-radius: 10px; overflow: hidden;">
+        <div class="progress-bar"
+          style="width: <%= (moviesWatching / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #e2ce5c;">
         </div>
+        <div class="progress-bar"
+          style="width: <%= (moviesWatched / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #78a6e4;">
+        </div>
+        <div class="progress-bar"
+          style="width: <%= (moviesDropped / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #e67878;">
+        </div>
+        <div class="progress-bar"
+          style="width: <%= (moviesPlanned / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left;">
+        </div>
+      </div>
+
+      <div class="legend">
+        <div style="display: flex; align-items: center;">
+          <span style="color: #e2ce5c; margin-right: 5px;">●</span>
+          <p style="margin: 0;">Watching</p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span style="color: #78a6e4; margin-right: 5px;">●</span>
+          <p style="margin: 0;">Completed</p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span style="color: #e67878; margin-right: 5px;">●</span>
+          <p style="margin: 0;">Dropped</p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span style="color: #c5c5c5; margin-right: 5px;">●</span>
+          <p style="margin: 0;">Plan to watch</p>
+        </div>
+      </div>
+
+
     </div>
-    <%- include("templates/bottomnav") %>
+  </div>
+  <%- include("templates/bottomnav") %>

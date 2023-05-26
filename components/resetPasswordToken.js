@@ -1,4 +1,5 @@
-const { userCollection } = require("../config");
+// ChatGPT-3.5 was heavily used for the code below
+const { userCollection } = require("../setup/config.js");
 
 async function resetPasswordToken(req, res) {
   const { token } = req.params;

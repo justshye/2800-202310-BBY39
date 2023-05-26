@@ -1,4 +1,5 @@
-const { userCollection, movieCollection } = require("../config");
+// ChatGPT-3.5 was heavily used for the code below
+const { userCollection, movieCollection } = require("../setup/config.js");
 
 let cachedMovies = null;
 

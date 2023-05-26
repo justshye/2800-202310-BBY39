@@ -1,4 +1,5 @@
-const { userCollection, movieCollection } = require("../config");
+// ChatGPT-3.5 was heavily used for the code below
+const { userCollection, movieCollection } = require("../setup/config.js");
 
 let cachedMovies = null;
 
@@ -33,7 +34,6 @@ async function randomMovie(req, res) {
     const update = { $set: { randomMovies: randomMovies } };
 
     const result = await userCollection.findOne(filter);
-    // console.log(result);
 
     if (result) {
       await userCollection.updateOne(filter, update);

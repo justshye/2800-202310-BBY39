@@ -1,10 +1,9 @@
+// ChatGPT-3.5 was heavily used for the code below
 const e = require("express");
-const { userCollection } = require("../config");
+const { userCollection } = require("../setup/config.js");
 
 async function movieDetails(req, res) {
   const movieId = req.params.id;
-  const filter = { _id: movieId };
-  const projection = { randomMovies: 5 };
 
   try {
     const result = await userCollection.findOne({

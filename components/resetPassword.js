@@ -1,3 +1,4 @@
+// ChatGPT-4.0 and the nodemailer documentation [https://nodemailer.com/about/] was heavily used for the code below
 const {
   email_auto,
   email_password,
@@ -5,31 +6,31 @@ const {
   nodemailer,
   userCollection,
   uuidv4,
-} = require("../config");
+} = require("../setup/config.js");
 
-async function sendEmail(email, resetToken, user) {
-  // Generate test SMTP service account from ethereal.email
-  // Only needed if you don't have a real mail account for testing
-  // let testAccount = await nodemailer.createTestAccount();
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
+function createTransporter(email, password) {
+  return nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: email_auto, // generated ethereal user
-      pass: email_password, // generated ethereal password
+      user: email, // generated ethereal user
+      pass: password, // generated ethereal password
     },
   });
+}
+
+function getResetUrl(env, resetToken) {
   let url = "";
-  console.log("resetToken ", resetToken);
-  if (node_env === "development") {
+  if (env === "development") {
     url = `http://localhost:4420/reset/${resetToken}`;
-  } else if (node_env === "production") {
+  } else if (env === "production") {
     url = `http://fwurnptkem.eu09.qoddiapp.com/reset/${resetToken}`;
   }
-  // Plain text body
+  return url;
+}
+
+function getEmailContent(user, url) {
   const textBody = `Dear ${user},
 
 You have requested to reset your password. To proceed with the password reset process, please click on the following link:
@@ -41,7 +42,6 @@ If you did not initiate this request, please ignore this email. Your current pas
 Thank you,
 The Support Team`;
 
-  // HTML body
   const htmlBody = `<p>Dear ${user},</p>
 <p>You have requested to reset your password. To proceed with the password reset process, please click on the following link:</p>
 <p><a href="${url}">Reset Password</a></p>
@@ -49,21 +49,26 @@ The Support Team`;
 <p>Thank you,<br>
 The MovieMate Support Team</p>`;
 
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: `"MovieMate 👻" <${email_auto}>`, // sender address
-    to: email, // list of receivers
-    subject: "Password Reset", // Subject line
-    text: textBody, // plain text body
-    html: htmlBody, // html body
-  });
+  return { textBody, htmlBody };
+}
 
-  // console.log("Message sent: %s", info.messageId);
-  // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+async function sendEmail(email, resetToken, user) {
+  const transporter = createTransporter(email_auto, email_password);
+  const url = getResetUrl(node_env, resetToken);
+  const { textBody, htmlBody } = getEmailContent(user, url);
 
-  console.log("Message sent: %s", info.messageId);
-  console.log("resetToken ", resetToken);
-  console.log("Preview URL: %s", url);
+  try {
+    const info = await transporter.sendMail({
+      from: `"MovieMate" <${email_auto}>`, // sender address
+      to: email, // list of receivers
+      subject: "Password Reset", // Subject line
+      text: textBody, // plain text body
+      html: htmlBody, // html body
+    });
+    console.log("Email sent:", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
 }
 
 async function resetPassword(req, res) {
@@ -74,10 +79,9 @@ async function resetPassword(req, res) {
     // 2. Check if the email exists in the database
     const user = await userCollection.findOne({ email });
     console.log(email);
-    console.log(user.username);
     if (!user) {
-      res.status(404).send("Email not found.");
-      return;
+      // Render a different page when email doesn't exist
+      return res.render("email-not-found", { login: "/login" });
     }
 
     // 3. Generate a unique password reset token (you can use a library like uuid or crypto)
@@ -89,19 +93,15 @@ async function resetPassword(req, res) {
       { $set: { resetToken: resetToken } }
     );
     // 4. Store the reset token securely in the user's document in the database and send the email
-    sendEmail(email, resetToken, user.username);
+    sendEmail(email, resetToken, user && user.username); // Pass user.username only if user exists
 
     // 5. Handle successful email sending
-    // res.status(200).send("Password reset link has been sent to your email.");
     res.render("post-recover-password", { login: "/login" });
   } catch (error) {
-    // 6. Handle error
     console.error("Error sending password reset email:", error);
-    res
-      .status(500)
-      .send("An error occurred while sending the password reset email.");
-    res.render("post-recover-password");
+    res.status(500).send("An error occurred while sending the password reset email.");
   }
 }
+
 
 module.exports = { resetPassword };
