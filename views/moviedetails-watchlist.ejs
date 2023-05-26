@@ -49,7 +49,7 @@
       <form id="watchlist-form" action="/change-watchlist?movieId=<%= movie._id %>" method="POST"
         style="display: flex; justify-content: space-between; align-items: start; position: relative;">
         <label>
-          <h5 id="spanLeft">Status:</h5>
+          <h5 class="lead" id="spanLeft">Status:</h5>
         </label>
         <select name="status">
           <% const watchedStatus=movie.Watched; %>
