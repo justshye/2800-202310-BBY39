@@ -4,8 +4,6 @@ const { userCollection } = require("../setup/config.js");
 
 async function movieDetails(req, res) {
   const movieId = req.params.id;
-  const filter = { _id: movieId };
-  const projection = { randomMovies: 5 };
 
   try {
     const result = await userCollection.findOne({
