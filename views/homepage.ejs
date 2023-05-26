@@ -13,9 +13,25 @@
     </div>
     <br>
 
+    <!-- Loading icon modal -->
+    <div id="loading-modal" class="modal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" width="200px" height=" 200px"> <!-- Added 'modal-sm' class -->
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <div class="text-center mb-2">Loading...</div>
+
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="movie-container" class="pb-5 mx-2">
       <!-- Your movie HTML here -->
     </div>
+
 
     <!-- Toasts -->
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; right: 0; top: 0;">
@@ -55,6 +71,13 @@
         word-break: break-word;
         font-size: 10px;
       }
+
+      #loading-icon {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     </style>
 
     <!-- Include Fuse.js from a CDN -->
@@ -63,9 +86,19 @@
 
 
     <script>
+
+
       $(document).ready(function () {
         let movies = [];
         let originalMovies = [];
+
+        function showLoadingIcon() {
+          $('#loading-modal').modal('show');
+        }
+
+        function hideLoadingIcon() {
+          $('#loading-modal').modal('hide');
+        }
 
         $('#random-movie-button').click(function () {
           $.ajax({
@@ -131,8 +164,6 @@
             success: function (data) {
               movies = data;  // update the movies array
               displayMovies(movies);
-              // localStorage.clear();
-              // localStorage.setItem('movies', JSON.stringify(movies));
             }
           });
         }, 250);  // delay of 250ms
@@ -151,6 +182,41 @@
             displayMovies(movies);
           }
         });
+
+        $('#random-movie-button').click(function () {
+          // Show loading icon
+          showLoadingIcon();
+
+          $.ajax({
+            url: '/random-movie',
+            method: 'GET',
+            success: function (data) {
+              // ...
+            },
+            complete: function () {
+              // Hide loading icon
+              hideLoadingIcon();
+            }
+          });
+        });
+
+        $('#curated-movie-button').click(function () {
+          // Show loading icon
+          showLoadingIcon();
+
+          $.ajax({
+            url: '/curated-movies',
+            method: 'GET',
+            success: function (data) {
+              // ...
+            },
+            complete: function () {
+              // Hide loading icon
+              hideLoadingIcon();
+            }
+          });
+        });
+
       });
 
       function displayMovies(movies) {
