@@ -105,6 +105,7 @@
         }
 
         $('#random-movie-button').click(function () {
+          showLoadingIcon();
           $.ajax({
             url: '/random-movie',
             method: 'GET',
@@ -114,11 +115,16 @@
               displayMovies(movies);
               localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
+            },
+            complete: function () {
+              // Hide loading icon
+              hideLoadingIcon();
             }
           });
         });
 
         $('#curated-movie-button').click(function () {
+          showLoadingIcon();
           $.ajax({
             url: '/curated-movies',
             method: 'GET',
@@ -129,6 +135,10 @@
               displayMovies(movies);
               localStorage.clear();
               localStorage.setItem('movies', JSON.stringify(movies));
+            },
+            complete: function () {
+              // Hide loading icon
+              hideLoadingIcon();
             }
           });
         });
