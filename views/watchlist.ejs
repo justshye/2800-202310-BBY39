@@ -219,7 +219,7 @@
 
       moviesHtml += `
         <a href="/movie/watchlist/${movie._id}">
-          <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+          <div class="p-3 mb-2 bg-secondary text-black" style="border-radius: 10px;">
             <div class="row">
               <div class="col-4 d-flex justify-content-center">
                 <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
@@ -313,6 +313,10 @@
   .btn-responsive:hover {
     background-color: #fff7e1 !important;
     /* Change the color to your desired hover color */
+  }
+
+  .bg-secondary {
+    background-color: #f0f0f0 !important; /* Change the color to your desired hover color */
   }
 </style>
 
