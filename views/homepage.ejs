@@ -183,39 +183,40 @@
           }
         });
 
-        $('#random-movie-button').click(function () {
-          // Show loading icon
-          showLoadingIcon();
+        // $('#random-movie-button').click(function () {
+        //   // Show loading icon
+        //   showLoadingIcon();
 
-          $.ajax({
-            url: '/random-movie',
-            method: 'GET',
-            success: function (data) {
-              // ...
-            },
-            complete: function () {
-              // Hide loading icon
-              hideLoadingIcon();
-            }
-          });
-        });
+        //   $.ajax({
+        //     url: '/random-movie',
+        //     method: 'GET',
+        //     success: function (data) {
+        //       // ...
+        //     },
+        //     complete: function () {
+        //       // Hide loading icon
+        //       hideLoadingIcon();
+        //     }
+        //   });
+        // });
 
-        $('#curated-movie-button').click(function () {
-          // Show loading icon
-          showLoadingIcon();
+        // $('#curated-movie-button').click(function () {
+        //   // Show loading icon
+        //   showLoadingIcon();
 
-          $.ajax({
-            url: '/curated-movies',
-            method: 'GET',
-            success: function (data) {
-              // ...
-            },
-            complete: function () {
-              // Hide loading icon
-              hideLoadingIcon();
-            }
-          });
-        });
+        //   $.ajax({
+        //     url: '/curated-movies',
+        //     method: 'GET',
+        //     success: function (data) {
+        //       console.log(data);
+        //       // ...
+        //     },
+        //     complete: function () {
+        //       // Hide loading icon
+        //       hideLoadingIcon();
+        //     }
+        //   });
+        // });
 
       });
 

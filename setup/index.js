@@ -228,9 +228,9 @@ app.get("/openai", openAI);
 
 app.get("/random-movie", randomMovie);
 
-app.get("/curated-movies", curatedMovies)
+app.get("/curated-movies", curatedMovies);
 
-app.post("/search-home", searchMovies)
+app.post("/search-home", searchMovies);
 
 app.get("/display-watchlist", displayWatchlist);
 
