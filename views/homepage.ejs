@@ -1,238 +1,282 @@
-<%- include("templates/header") %>
-  <% if (authenticated) { %>
-    <h3 class="lead text-center">Movie recommendations for <%= (user) %>
-    </h3>
+<%- include("templates/header") %> <% if (authenticated) { %>
+<h3 class="lead text-center">Movie recommendations for <%= (user) %></h3>
 
-    <!-- Add a new search bar here -->
-    <input type="text" id="search-bar" placeholder="Search for a movie" class="form-control">
-    <br>
-    <div class="container" style="display: flex; justify-content: center;">
-      <button id="random-movie-button" class="btn btn-primary btn-responsive">Random Movie</button>
-      &nbsp;&nbsp;
-      <button id="curated-movie-button" class="btn btn-primary btn-responsive">Curated Movie</button>
-    </div>
-    <br>
+<!-- Add a new search bar here -->
+<input
+  type="text"
+  id="search-bar"
+  placeholder="Search for a movie"
+  class="form-control"
+/>
+<br />
+<div class="container" style="display: flex; justify-content: center">
+  <button id="random-movie-button" class="btn btn-primary btn-responsive">
+    Random Movie
+  </button>
+  &nbsp;&nbsp;
+  <button id="curated-movie-button" class="btn btn-primary btn-responsive">
+    Curated Movie
+  </button>
+</div>
+<br />
 
-    <!-- Loading icon modal -->
-    <div id="loading-modal" class="modal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" width="200px" height=" 200px"> <!-- Added 'modal-sm' class -->
-        <div class="modal-content">
-          <div class="modal-body text-center">
-            <div class="text-center mb-2">Loading...</div>
+<!-- Loading icon modal -->
+<div id="loading-modal" class="modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" width="200px" height=" 200px">
+    <!-- Added 'modal-sm' class -->
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <div class="text-center mb-2">Loading...</div>
 
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <div id="movie-container" class="pb-5 mx-2">
-      <!-- Your movie HTML here -->
+<div id="movie-container" class="pb-5 mx-2">
+  <!-- Your movie HTML here -->
+</div>
+
+<!-- Toasts -->
+<div
+  class="position-fixed top-0 end-0 p-3"
+  style="z-index: 11; right: 0; top: 0"
+>
+  <div
+    id="toastNotification"
+    class="toast"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
     </div>
-
-
-    <!-- Toasts -->
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; right: 0; top: 0;">
-      <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">Notification</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          <!-- Notification message will go here -->
-        </div>
-      </div>
+    <div class="toast-body">
+      <!-- Notification message will go here -->
     </div>
+  </div>
+</div>
 
-    <div class="position-fixed top-0 end-0 p-3 mt-5" style="z-index: 10; right: 0; margin-top: 90px!important;">
-      <!-- Notice the added mt-5 (margin-top: 3rem; )-->
-      <div id="toastNotificationEgg" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">Notification</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          <!-- Notification message will go here -->
-        </div>
-      </div>
+<div
+  class="position-fixed top-0 end-0 p-3 mt-5"
+  style="z-index: 10; right: 0; margin-top: 90px !important"
+>
+  <!-- Notice the added mt-5 (margin-top: 3rem; )-->
+  <div
+    id="toastNotificationEgg"
+    class="toast"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header">
+      <strong class="me-auto">Notification</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
     </div>
+    <div class="toast-body">
+      <!-- Notification message will go here -->
+    </div>
+  </div>
+</div>
 
-    <style>
-      #toastNotification {
-        max-width: 150px;
-        font-size: 14px;
-      }
+<style>
+  #toastNotification {
+    max-width: 150px;
+    font-size: 14px;
+  }
 
-      .toast-body {
-        max-width: 200px;
-        /* Adjust the width as per your requirement */
-        word-break: break-word;
-        font-size: 10px;
-      }
+  .toast-body {
+    max-width: 200px;
+    /* Adjust the width as per your requirement */
+    word-break: break-word;
+    font-size: 10px;
+  }
 
-      #loading-icon {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    </style>
+  #loading-icon {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>
 
-    <!-- Include Fuse.js from a CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
+<!-- Include Fuse.js from a CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.basic.min.js"></script>
 
+<script>
+  let isLoading = false;
+  let loadingTimeout;
 
+  $(document).on('click', function () {
+    if (isLoading) {
+      clearTimeout(loadingTimeout);
+      showLoadingIcon();
+    }
+  });
+  
+  function showLoadingIcon() {
+    isLoading = true;
+    loadingTimeout = setTimeout(function () {
+      $('#loading-modal').modal('show');
+    }, 100);
+  }
+  
+  function hideLoadingIcon() {
+    clearTimeout(loadingTimeout);
+    $('#loading-modal').modal('hide');
+    isLoading = false;
+  }
 
-    <script>
-
-
-      $(document).ready(function () {
-        let movies = [];
-        let originalMovies = [];
-
-        function showLoadingIcon() {
-          $('#loading-modal').modal('show');
-        }
-
-        function hideLoadingIcon() {
-          $('#loading-modal').modal('hide');
-        }
-
-        $('#random-movie-button').click(function () {
-          $.ajax({
-            url: '/random-movie',
-            method: 'GET',
-            success: function (data) {
-              movies = data;
-              originalMovies = data;  // update the originalMovies array
-              displayMovies(movies);
-              localStorage.clear();
-              localStorage.setItem('movies', JSON.stringify(movies));
-            }
-          });
-        });
-
-        $('#curated-movie-button').click(function () {
-          $.ajax({
-            url: '/curated-movies',
-            method: 'GET',
-            success: function (data) {
-              movies = data;
-              originalMovies = data;  // update the originalMovies array
-              console.log(movies);
-              displayMovies(movies);
-              localStorage.clear();
-              localStorage.setItem('movies', JSON.stringify(movies));
-            }
-          });
-        });
-
-        const storedMovies = JSON.parse(localStorage.getItem('movies'));
-        if (storedMovies) {
-          movies = storedMovies;
-          originalMovies = storedMovies;  // update the originalMovies array
+  $(document).ready(function () {
+    let movies = [];
+    let originalMovies = [];
+    
+    $("#random-movie-button").click(function () {
+      $.ajax({
+        url: "/random-movie",
+        method: "GET",
+        success: function (data) {
+          movies = data;
+          originalMovies = data; // update the originalMovies array
           displayMovies(movies);
-        }
-
-        function debounce(func, wait) {
-          let timeout;
-
-          return {
-            debouncedFunction: function executedFunction(...args) {
-              const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-              };
-
-              clearTimeout(timeout);
-              timeout = setTimeout(later, wait);
-            },
-            cancel: function cancelDebouncedFunction() {
-              clearTimeout(timeout);
-            }
-          };
-        };
-
-        // Fuzzy search with Fuse.js whenever the user types in the search bar
-        const debouncedSearch = debounce(function (searchString) {
-          $.ajax({
-            url: '/search-home',
-            method: 'POST',
-            data: { searchString },
-            success: function (data) {
-              movies = data;  // update the movies array
-              displayMovies(movies);
-            }
-          });
-        }, 250);  // delay of 250ms
-
-
-        $('#search-bar').on('input', function () {
-          const searchString = $(this).val();
-
-          if (searchString) {
-            // if search string is not empty, post it to the server
-            debouncedSearch.debouncedFunction(searchString);
-          } else {
-            debouncedSearch.cancel();  // cancel any pending debounced search
-            // if search string is empty, display the original list of movies
-            movies = originalMovies;  // restore the movies array
-            displayMovies(movies);
-          }
-        });
-
-        $('#random-movie-button').click(function () {
-          // Show loading icon
-          showLoadingIcon();
-
-          $.ajax({
-            url: '/random-movie',
-            method: 'GET',
-            success: function (data) {
-              // ...
-            },
-            complete: function () {
-              // Hide loading icon
-              hideLoadingIcon();
-            }
-          });
-        });
-
-        $('#curated-movie-button').click(function () {
-          // Show loading icon
-          showLoadingIcon();
-
-          $.ajax({
-            url: '/curated-movies',
-            method: 'GET',
-            success: function (data) {
-              // ...
-            },
-            complete: function () {
-              // Hide loading icon
-              hideLoadingIcon();
-            }
-          });
-        });
-
+          localStorage.clear();
+          localStorage.setItem("movies", JSON.stringify(movies));
+        },
       });
+    });
 
-      function displayMovies(movies) {
-        let moviesHtml = '';
-        for (let i = 0; i < movies.length; i++) {
-          const movie = movies[i];
-          console.log(movie);
-          // Splitting the overview into an array of words
-          const words = movie.Overview.split(' ');
-          const limitedWords = words.slice(0, 20);
-          const limitedOverview = limitedWords.join(' ');
+    $("#curated-movie-button").click(function () {
+      $.ajax({
+        url: "/curated-movies",
+        method: "GET",
+        success: function (data) {
+          movies = data;
+          originalMovies = data; // update the originalMovies array
+          console.log(movies);
+          displayMovies(movies);
+          localStorage.clear();
+          localStorage.setItem("movies", JSON.stringify(movies));
+        },
+      });
+    });
 
-          // Adding ellipsis if the original overview has more than 20 words
-          const ellipsis = words.length > 20 ? '...' : '';
+    const storedMovies = JSON.parse(localStorage.getItem("movies"));
+    if (storedMovies) {
+      movies = storedMovies;
+      originalMovies = storedMovies; // update the originalMovies array
+      displayMovies(movies);
+    }
 
-          moviesHtml += `
+    function debounce(func, wait) {
+      let timeout;
+
+      return {
+        debouncedFunction: function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        },
+        cancel: function cancelDebouncedFunction() {
+          clearTimeout(timeout);
+        },
+      };
+    }
+
+    // Fuzzy search with Fuse.js whenever the user types in the search bar
+    const debouncedSearch = debounce(function (searchString) {
+      $.ajax({
+        url: "/search-home",
+        method: "POST",
+        data: { searchString },
+        success: function (data) {
+          movies = data; // update the movies array
+          displayMovies(movies);
+        },
+      });
+    }, 250); // delay of 250ms
+
+    $("#search-bar").on("input", function () {
+      const searchString = $(this).val();
+
+      if (searchString) {
+        // if search string is not empty, post it to the server
+        debouncedSearch.debouncedFunction(searchString);
+      } else {
+        debouncedSearch.cancel(); // cancel any pending debounced search
+        // if search string is empty, display the original list of movies
+        movies = originalMovies; // restore the movies array
+        displayMovies(movies);
+      }
+    });
+
+    $("#random-movie-button").click(function () {
+      // Show loading icon
+      showLoadingIcon();
+
+      $.ajax({
+        url: "/random-movie",
+        method: "GET",
+        success: function (data) {
+          // ...
+        },
+        complete: function () {
+          // Hide loading icon
+          hideLoadingIcon();
+        },
+      });
+    });
+
+    $("#curated-movie-button").click(function () {
+      // Show loading icon
+      showLoadingIcon();
+
+      $.ajax({
+        url: "/curated-movies",
+        method: "GET",
+        success: function (data) {
+          // ...
+        },
+        complete: function () {
+          // Hide loading icon
+          hideLoadingIcon();
+        },
+      });
+    });
+  });
+
+  function displayMovies(movies) {
+    let moviesHtml = "";
+    for (let i = 0; i < movies.length; i++) {
+      const movie = movies[i];
+      console.log(movie);
+      // Splitting the overview into an array of words
+      const words = movie.Overview.split(" ");
+      const limitedWords = words.slice(0, 20);
+      const limitedOverview = limitedWords.join(" ");
+
+      // Adding ellipsis if the original overview has more than 20 words
+      const ellipsis = words.length > 20 ? "..." : "";
+
+      moviesHtml += `
           <a href="/movie/${movie._id}" class="movie-link">
           <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
             <div class="row">
@@ -247,105 +291,133 @@
           </div>
         </a>
       `;
-        }
-        $('#movie-container').html(moviesHtml);
-      }
+    }
+    $("#movie-container").html(moviesHtml);
+  }
 
-      window.onload = function () {
-        const toastMessage = localStorage.getItem('toastMessage');
-        const toastMessageEgg = localStorage.getItem('toastMessageEgg');
+  window.onload = function () {
+    const toastMessage = localStorage.getItem("toastMessage");
+    const toastMessageEgg = localStorage.getItem("toastMessageEgg");
 
-        if (toastMessage != null && toastMessageEgg != null) {
-          // Set the toast message
-          document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
-          document.querySelector('#toastNotificationEgg .toast-body').textContent = toastMessageEgg;
+    if (toastMessage != null && toastMessageEgg != null) {
+      // Set the toast message
+      document.querySelector("#toastNotification .toast-body").textContent =
+        toastMessage;
+      document.querySelector("#toastNotificationEgg .toast-body").textContent =
+        toastMessageEgg;
 
-          // Show the toast
-          var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
-          var toastEgg = new bootstrap.Toast(document.querySelector('#toastNotificationEgg'), { delay: 1000 });
-          toast.show();
-          toastEgg.show();
+      // Show the toast
+      var toast = new bootstrap.Toast(
+        document.querySelector("#toastNotification"),
+        { delay: 1000 }
+      );
+      var toastEgg = new bootstrap.Toast(
+        document.querySelector("#toastNotificationEgg"),
+        { delay: 1000 }
+      );
+      toast.show();
+      toastEgg.show();
 
-          // Remove the toast message from local storage
-          localStorage.removeItem('toastMessage');
-          localStorage.removeItem('toastMessageEgg');
-        } else if (toastMessage != null) {
-          // Set the toast message
-          document.querySelector('#toastNotification .toast-body').textContent = toastMessage;
+      // Remove the toast message from local storage
+      localStorage.removeItem("toastMessage");
+      localStorage.removeItem("toastMessageEgg");
+    } else if (toastMessage != null) {
+      // Set the toast message
+      document.querySelector("#toastNotification .toast-body").textContent =
+        toastMessage;
 
-          // Show the toast
-          var toast = new bootstrap.Toast(document.querySelector('#toastNotification'), { delay: 1000 });
-          toast.show();
+      // Show the toast
+      var toast = new bootstrap.Toast(
+        document.querySelector("#toastNotification"),
+        { delay: 1000 }
+      );
+      toast.show();
 
-          // Remove the toast message from local storage
-          localStorage.removeItem('toastMessage');
-        }
-      }
-    </script>
-    <%- include("templates/bottomnav") %>
-      <% } else { %>
-        <section class="py-5 text-center container">
-          <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-              <img src="/avatars/moviemate.png" style="border-radius: 20px; width: 200px; margin-bottom: 40px;"
-                class="card-img-top" alt="...">
-              <h1 class="fw-light">MovieMate</h1>
-              <p class="lead text-body-secondary" style="font-size: 18px;"> A movie curation web application
-                to help movie enthusiasts discover personalized movie recommendations
-                while promoting social equity and diversity, using personalized filtering,
-                and data from an online movie dataset.
-              </p>
-              <p>
-                <a href="/signup" class="btn btn-primary my-2">
-                  Sign Up
-                </a>
-                <a href="/login" class="btn btn-secondary my-2">
-                  Log In
-                </a>
-              </p>
-            </div>
-          </div>
-        </section>
-        <div class="album py-5 bg-body-tertiary">
-          <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-              <div class="col">
-                <div class="card shadow-sm">
-                  <div class="card-body">
-                    <img src="homepage-wireframeHD.png" class="card-img-top" alt="...">
-                    <p class="card-text">First, click the random movie button in the homepage to get 5 randomly selected
-                      movies from the movie database.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="card shadow-sm">
-                  <div class="card-body">
-                    <img src="profilepage-wireframeHD.png" class="card-img-top" alt="...">
-                    <p class="card-text">Second, click on the movie to see more information about it. From there, click
-                      on the Plus button to add it to the Watchlist,
-                      or click on the "X" button to reject that movie.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="card shadow-sm">
-                  <div class="card-body">
-                    <img src="moviepreview-wireframeHD.png" class="card-img-top" alt="...">
-                    <p class="card-text">Third, click on the watchlist button in the bottom left to see all added
-                      movies. From there, click on a movie to see more details
-                      or change the watched status. Choose 1 of 4 options and click the submit button to change the
-                      status.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+      // Remove the toast message from local storage
+      localStorage.removeItem("toastMessage");
+    }
+  };
+</script>
+<%- include("templates/bottomnav") %> <% } else { %>
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <img
+        src="/avatars/moviemate.png"
+        style="border-radius: 20px; width: 200px; margin-bottom: 40px"
+        class="card-img-top"
+        alt="..."
+      />
+      <h1 class="fw-light">MovieMate</h1>
+      <p class="lead text-body-secondary" style="font-size: 18px">
+        A movie curation web application to help movie enthusiasts discover
+        personalized movie recommendations while promoting social equity and
+        diversity, using personalized filtering, and data from an online movie
+        dataset.
+      </p>
+      <p>
+        <a href="/signup" class="btn btn-primary my-2"> Sign Up </a>
+        <a href="/login" class="btn btn-secondary my-2"> Log In </a>
+      </p>
+    </div>
+  </div>
+</section>
+<div class="album py-5 bg-body-tertiary">
+  <div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="col">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <img
+              src="homepage-wireframeHD.png"
+              class="card-img-top"
+              alt="..."
+            />
+            <p class="card-text">
+              First, click the random movie button in the homepage to get 5
+              randomly selected movies from the movie database.
+            </p>
           </div>
         </div>
-        <script>
-          // Clear local storage when entering the "else" clause
-          localStorage.clear();
-        </script>
-        <% } %>
+      </div>
+      <div class="col">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <img
+              src="profilepage-wireframeHD.png"
+              class="card-img-top"
+              alt="..."
+            />
+            <p class="card-text">
+              Second, click on the movie to see more information about it. From
+              there, click on the Plus button to add it to the Watchlist, or
+              click on the "X" button to reject that movie.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <img
+              src="moviepreview-wireframeHD.png"
+              class="card-img-top"
+              alt="..."
+            />
+            <p class="card-text">
+              Third, click on the watchlist button in the bottom left to see all
+              added movies. From there, click on a movie to see more details or
+              change the watched status. Choose 1 of 4 options and click the
+              submit button to change the status.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Clear local storage when entering the "else" clause
+  localStorage.clear();
+</script>
+<% } %>
