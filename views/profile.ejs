@@ -14,8 +14,14 @@
 </div>
 <br /><br /><br />
 
+<style>
+  .bg-success {
+      background-color: #f0f0f0 !important; /* Change the color to your desired hover color */
+    }
+</style>
+
 <div class="container d-flex justify-content-center">
-  <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px">
+  <div class="p-3 mb-2 bg-success text-black" style="border-radius: 10px">
     <div class="col text-center">
       <img src="avatars/<%= avatar %>" style="width: 256px" />
     </div>
@@ -35,14 +41,14 @@
     </div>
 
     <div class="text-center">
-      <p style="color: lightgray"><%= email %></p>
+      <p style="color: rgb(124, 124, 124); margin-top: 2%;"><%= email %></p>
       <form action="/friends" style="padding-bottom: 2%">
-        <button type="submit" class="btn btn-info promote-button">
+        <button type="submit" class="btn btn-info promote-button" style="background-color: #60cdff; border-color:#60cdff;">
           Friends
         </button>
       </form>
       <form action="/stats" style="padding-bottom: 2%">
-        <button type="submit" class="btn btn-info promote-button">Stats</button>
+        <button type="submit" class="btn btn-info promote-button" style="background-color: #60cdff; border-color:#60cdff;">Stats</button>
       </form>
       <form id="logout-form" action="/logout">
         <button type="submit" class="btn btn-danger promote-button">
