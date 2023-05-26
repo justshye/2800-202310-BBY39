@@ -198,7 +198,7 @@
 
       moviesHtml += `
         <a href="/movie/watchlist/${movie._id}">
-          <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px;">
+          <div class="p-3 mb-2 bg-secondary text-black" style="border-radius: 10px;">
             <div class="row">
               <div class="col-4 d-flex justify-content-center">
                 <img src="${movie.Poster_Url}" style="max-height: 100px; max-width: auto;">
@@ -217,15 +217,24 @@
 </script>
 
 <style>
+  #toastNotification {
+    max-width: 150px;
+    font-size: 14px;
+  }
+  .toast-body {
+    max-width: 200px; /* Adjust the width as per your requirement */
+    word-break: break-word;
+    font-size: 10px;
+  }
+
   .btn-responsive {
-    font-size: 16px;
-    /* Default font size */
-    color: black;
+    font-size: 16px; /* Default font size */
     background-color: #bbbbbb;
+    color: black;
   }
 
   #btnWatched {
-    background-color: #ff8800;
+    background-color: #fff7e1;
   }
 
   #btnRandomMovie {
@@ -234,21 +243,16 @@
 
   @media (max-width: 600px) {
     .btn-responsive {
-      font-size: 12px;
-      /* Adjusted font size for smaller screens */
-      color: black;
+      font-size: 12px; /* Adjusted font size for smaller screens */
       background-color: #bbbbbb;
+      color: black;
     }
-
     .btn-responsive:hover {
-      background-color: #ff8800 !important;
-      /* Change the color to your desired hover color */
+      background-color: #fff7e1 !important; /* Change the color to your desired hover color */
     }
-
     #btnWatched {
-      background-color: #ff8800;
+      background-color: #fff7e1;
     }
-
     #btnRandomMovie {
       margin-right: -23px;
     }
@@ -256,29 +260,28 @@
 
   @media (max-width: 475px) {
     .btn-responsive {
-      font-size: 10px;
-      /* Adjusted font size for smaller screens */
+      font-size: 10px; /* Adjusted font size for smaller screens */
       color: black;
       background-color: #bbbbbb;
     }
-
     .btn-responsive:hover {
-      background-color: #ff8800 !important;
-      /* Change the color to your desired hover color */
+      background-color: #fff7e1 !important; /* Change the color to your desired hover color */
     }
-
     #btnWatched {
-      background-color: #ff8800;
+      background-color: #fff7e1;
     }
-
     #btnRandomMovie {
       margin-right: -10px;
     }
   }
 
   .btn-responsive:hover {
-    background-color: #ff8800 !important;
+    background-color: #fff7e1 !important;
     /* Change the color to your desired hover color */
+  }
+
+  .bg-secondary {
+    background-color: #f0f0f0 !important; /* Change the color to your desired hover color */
   }
 </style>
 
