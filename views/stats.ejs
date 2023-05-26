@@ -16,8 +16,14 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
 
   <br><br><br>
 
+  <style>
+    .bg-secondary {
+        background-color: #f0f0f0 !important; /* Change the color to your desired hover color */
+      }
+  </style>
+
   <div class="container d-flex justify-content-center">
-    <div class="p-3 mb-2 bg-secondary text-white" style="border-radius: 10px; width: 95%;">
+    <div class="p-3 mb-2 bg-secondary text-black" style="border-radius: 10px; width: 95%;">
       <div class="col text-center" style="margin-bottom: 5%;">
         <h1>Stats</h1>
       </div>
@@ -44,15 +50,15 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
         </span></h5>
 
       <div class="progress-bar-container"
-        style="width: 100%; height: 20px; margin-top: 20px; margin-bottom: 10px; background-color: #eee; border-radius: 10px; overflow: hidden;">
+        style="width: 100%; height: 20px; margin-top: 20px; margin-bottom: 10px; background-color: #c5c5c5; border-radius: 10px; overflow: hidden;">
         <div class="progress-bar"
-          style="width: <%= (moviesWatching / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c4bc66;">
+          style="width: <%= (moviesWatching / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #e2ce5c;">
         </div>
         <div class="progress-bar"
-          style="width: <%= (moviesWatched / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #668fc4;">
+          style="width: <%= (moviesWatched / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #78a6e4;">
         </div>
         <div class="progress-bar"
-          style="width: <%= (moviesDropped / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #c46666;">
+          style="width: <%= (moviesDropped / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left; background-color: #e67878;">
         </div>
         <div class="progress-bar"
           style="width: <%= (moviesPlanned / (moviesPlanned + moviesWatched + moviesDropped + moviesWatching)) * 100 %>%; height: 100%; float: left;">
@@ -61,19 +67,19 @@ auto; z-index: 9999; display: flex; align-items: center; padding-left: 15px;">
 
       <div class="legend">
         <div style="display: flex; align-items: center;">
-          <span style="color: #c4bc66; margin-right: 5px;">●</span>
+          <span style="color: #e2ce5c; margin-right: 5px;">●</span>
           <p style="margin: 0;">Watching</p>
         </div>
         <div style="display: flex; align-items: center;">
-          <span style="color: #668fc4; margin-right: 5px;">●</span>
+          <span style="color: #78a6e4; margin-right: 5px;">●</span>
           <p style="margin: 0;">Completed</p>
         </div>
         <div style="display: flex; align-items: center;">
-          <span style="color: #c46666; margin-right: 5px;">●</span>
+          <span style="color: #e67878; margin-right: 5px;">●</span>
           <p style="margin: 0;">Dropped</p>
         </div>
         <div style="display: flex; align-items: center;">
-          <span style="color: #eee; margin-right: 5px;">●</span>
+          <span style="color: #c5c5c5; margin-right: 5px;">●</span>
           <p style="margin: 0;">Plan to watch</p>
         </div>
       </div>
