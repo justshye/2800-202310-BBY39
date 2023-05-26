@@ -140,7 +140,7 @@ To start working on this web application, follow these steps:
 4. Create a mongodb account with atlas, and ask a team member to give you access to the database
 5. Configure your .env file to include the information found in passwords.txt which will have important server/email/server login IDs and passwords
 6. Obtain API keys for open ai api and add that to your .env file
-7. Refer to the testing plan [linked here] for testing history and potential bugfix contributions
+7. Refer to the testing plan [https://docs.google.com/spreadsheets/d/1UIhqntL1AezH-u0fq1aIW8L1h4QlU8DDP-XTuM899Os/edit#gid=0] for testing history and potential bugfix contributions
 8. To run the project, make sure you also install the node module nodemon
 9. To use nodemon, make sure to type 'nodemon index.js' in terminal (make sure you are in the root folder of the cloned repo)
 
@@ -178,9 +178,9 @@ Our application used code from the following sources:
 
 ## **How We Used AI**
 
-- **App Creation** : ChatGPT was heavily used to create the code for our application. It was used to refactor code (make it cleaner), (find out solutions to problems), as well as to learn new things along the way.
+- **App Creation** : ChatGPT was heavily used to create the code for our application. It was used to refactor code (make it cleaner), find out solutions to problems, as well as to learn new things along the way.
 - **Data Sets** : We did not use any AI to create/clean up datasets.
-- **App Functionality** : [Specify if the app uses AI and how] The MovieMate application does not currently use AI for any functionality. It has the open ai api already setup to use, however we did not implement anything for it as of this moment.
+- **App Functionality** : The MovieMate application does not currently use AI for any functionality. It has the open ai api already setup to use, however we did not implement anything for it as of this moment.
 - **Limitations and Solutions** : We were planning originally to use AI to generate a shorter description for movies, but we found that it would take too long, and make for a poor user experience. We ended up simply displaying only the first 20 words of the description instead.
 
 ## **Contact Information**
