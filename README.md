@@ -174,6 +174,7 @@ Our application used code from the following sources:
 4. Open ai tutorial: https://youtu.be/LX_DXLlaymg
 5. Nodemailer: https://nodemailer.com/about/ 
 6. Bootstrap: https://getbootstrap.com/docs/5.3/getting-started/introduction/ 
+7. 9000+ Movies Dataset: https://www.kaggle.com/datasets/disham993/9000-movies-dataset
 
 ## **How We Used AI**
 
